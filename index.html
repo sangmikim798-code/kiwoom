@@ -293,6 +293,58 @@ body{
 .v21self .fav .ic svg{width:22px;height:22px}
 .v21self .home-bottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
 
+/* ===== 1544-9900 (음성ARS) 전용 메인 ===== */
+/* 헤더 [큰글씨] 토글 (고객센터 현황 자리) */
+.bigfont-toggle{display:flex;align-items:center;gap:7px;background:none;border:none;
+  padding:0;font-size:calc(12px*var(--scale));font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.bigfont-toggle:active{transform:scale(.97)}
+.bigfont-toggle .bf-sw{position:relative;width:34px;height:20px;border-radius:999px;background:#d1d5db;transition:.18s;flex:none}
+.bigfont-toggle .bf-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.18s}
+.bigfont-toggle.on{color:var(--primary)}
+.bigfont-toggle.on .bf-sw{background:var(--primary)}
+.bigfont-toggle.on .bf-knob{transform:translateX(14px)}
+/* 고객센터 현황 배너 (공지사항 자리) — digital_ars.html 시안1 스타일: 풀폭 흰 카드 */
+.cust-status{margin:2px 16px 12px;padding:10px 14px;background:#fff;border:1.5px solid var(--line);
+  border-radius:12px;display:flex;align-items:center;justify-content:space-between;
+  font-size:calc(12px*var(--scale));color:#374151;font-weight:600;cursor:pointer}
+.cust-status .l{display:flex;align-items:center;gap:8px}
+.cust-status .l svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:1.7;flex:none}
+.cust-status .badge-ok{display:inline-flex;align-items:center;gap:5px;font-size:calc(11px*var(--scale));color:#16a34a;font-weight:800}
+.cust-status .badge-ok::before{content:"";width:7px;height:7px;border-radius:50%;background:#16a34a}
+.cust-status.on{border-color:var(--primary)}
+/* ARS 6 대메뉴 그리드 */
+.ars6-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.ars6-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;
+  background:#fff;border-radius:16px;padding:16px 10px;min-height:100px;cursor:pointer;
+  box-shadow:var(--shadow-sm);border:1.5px solid transparent;transition:.15s}
+.ars6-cell:active{transform:scale(.97)}
+.ars6-cell:hover{border-color:var(--primary-soft)}
+.ars6-cell .ic{width:46px;height:46px;border-radius:14px;background:var(--primary-soft);
+  display:grid;place-items:center;color:var(--primary)}
+.ars6-cell .ic svg{width:25px;height:25px}
+.ars6-cell .lb{font-size:calc(13px*var(--scale));font-weight:700;color:var(--ink);line-height:1.3;word-break:keep-all}
+/* [큰글씨] 토글은 기존 전역 큰글씨(applyScale → documentElement --scale +0.12) 재사용 → 메인 폰트 일괄 확대 */
+/* [큰글씨] ON: 6 대메뉴 = 큰 카드 + 인라인 아코디언 */
+.ars6-cards{display:flex;flex-direction:column;gap:10px;padding:0 16px}
+.ars6-card{background:#fff;border:1.5px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.ars6-card.open{border-color:var(--primary)}
+.a6c-head{display:flex;align-items:center;gap:13px;padding:16px 16px;cursor:pointer}
+.a6c-ic{width:46px;height:46px;border-radius:14px;background:var(--primary-soft);display:grid;place-items:center;color:var(--primary);flex:none}
+.a6c-ic svg{width:25px;height:25px}
+.a6c-nm{flex:1;font-size:calc(15.5px*var(--scale));font-weight:800;color:var(--ink);line-height:1.3}
+.a6c-chev{color:var(--sub);display:flex;transition:.2s}
+.a6c-chev svg{width:21px;height:21px}
+.ars6-card.open .a6c-chev{transform:rotate(90deg);color:var(--primary)}
+.a6c-sub{border-top:1px solid var(--line);padding:5px 12px 9px}
+.a6c-row{display:flex;align-items:center;gap:8px;padding:14px 12px;border-radius:12px;cursor:pointer}
+.a6c-row:active{background:var(--primary-soft)}
+.a6c-row + .a6c-row{border-top:1px solid #f2f2f6}
+.a6c-t{flex:1;font-size:calc(14px*var(--scale));font-weight:600;color:var(--ink-2);line-height:1.35;word-break:keep-all}
+.a6c-arw{color:var(--sub);display:flex}
+.a6c-arw svg{width:19px;height:19px}
+.a6c-tag{font-size:calc(11px*var(--scale));font-weight:800;color:var(--primary);background:var(--primary-soft);border-radius:8px;padding:3px 9px;white-space:nowrap}
+.a6c-end{font-size:calc(11px*var(--scale));color:var(--sub);font-weight:700}
+
 /* ISA 배너 */
 .banner{margin:18px 16px 8px;border-radius:20px;padding:18px 20px;color:#fff;position:relative;overflow:hidden;
   background:linear-gradient(120deg,#7C2FE0 0%,#B43DD0 60%,#FF7BB0 130%);box-shadow:0 12px 28px rgba(124,47,224,.35)}
@@ -1774,6 +1826,7 @@ body{
     <div class="ref-item" data-sian="s1" data-ver="v11"><span class="rf-nm">Ver 1.1</span><span class="rf-tel">디지털 ARS + 보이는 ARS (화면구현) + 상담원연결 (해당 스킬로 연결)</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v2" style="display:none"><span class="rf-nm">Ver 2.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결)</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v21"><span class="rf-nm">Ver 2.1</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결, 현행과 동일) 메인화면에 모든 탭 추가, 전체메뉴 수정</span></div>
+    <div class="ref-item" data-sian="s1" data-ver="v9900"><span class="rf-nm">1544-9900</span><span class="rf-tel">음성ARS (Ver 2.1 복사본)</span></div>
     <div class="ref-item" data-sian="dars1"><span class="rf-nm">Ver 3.0</span><span class="rf-tel">Ver 2 에서 UI/UX만 변경</span></div>
     <div class="ref-item" data-sian="dars2" style="display:none"><span class="rf-nm">Ver 1.2.1</span><span class="rf-tel">큰 카드 + 인라인</span></div>
     <div class="ref-title func-title">시연 · 기능</div>

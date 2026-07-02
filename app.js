@@ -184,9 +184,9 @@ const RESULT = {
     const items = [
       {k:'아이디(ID) 조회', d:'가입 정보로 아이디 찾기', ic:'search', go:'idpwfind'},
       {k:'계좌번호 조회', d:'본인 명의 계좌번호 확인', ic:'wallet', go:'acctfind'},
-      {k:(s1Ver==='v21'?'ID비밀번호 재설정':'ID비밀번호 초기화'), d:'본인인증 후 로그인 비밀번호 재설정', ic:'key', go:'idpwreset'},
+      {k:(isV21Ver()?'ID비밀번호 재설정':'ID비밀번호 초기화'), d:'본인인증 후 로그인 비밀번호 재설정', ic:'key', go:'idpwreset'},
     ];
-    if(s1Ver==='v21') items.push({k:'장기미사용 ID 제한해제', d:'1년 이상 미사용 계정의 로그인 제한 해제', ic:'clock', go:'idrelease'});
+    if(isV21Ver()) items.push({k:'장기미사용 ID 제한해제', d:'1년 이상 미사용 계정의 로그인 제한 해제', ic:'clock', go:'idrelease'});
     return menuList(items);
   },
 
@@ -420,7 +420,7 @@ const RESULT = {
       <div class="data-row"><div class="k">계좌</div><div class="v">키움 종합 1234-5678</div></div>
       <div class="data-row"><div class="k">현재 사고 등록</div><div class="v up">3건 등록됨</div></div>
     </div>`
-    + (s1Ver==='v21' ? '' : untactSteps(['신고 접수','사고 등록','해지·거래재개'], 1)) +
+    + (isV21Ver() ? '' : untactSteps(['신고 접수','사고 등록','해지·거래재개'], 1)) +
     `<div class="sec-title" style="padding-top:0">사고 신고 등록</div>
     <div class="list">
       <div class="row" style="cursor:default">
@@ -549,7 +549,7 @@ const RESULT = {
 
   /* 신용·대출 만기연장 신청 */
   creditext(){
-    return (s1Ver==='v21' ? '' : untactSteps(['연장 신청','연장 심사','연장 완료'], 0)) +
+    return (isV21Ver() ? '' : untactSteps(['연장 신청','연장 심사','연장 완료'], 0)) +
     `<div class="data-card" style="margin-bottom:14px">
       <div class="data-row"><div class="k">대출 계좌</div><div class="v">키움 종합 1234-5678</div></div>
       <div class="data-row"><div class="k">신용·대출 잔액</div><div class="v">15,400,000원</div></div>
@@ -1569,7 +1569,7 @@ function openMenuDrawer(){
   const screen = document.getElementById('screen'); if(!screen) return;
   const el = document.createElement('div');
   el.className = 'menu-ov'; el.id = 'menuDrawer';
-  const isV21 = (s1Ver==='v21' || s1state.menuExpandAll);
+  const isV21 = (isV21Ver() || s1state.menuExpandAll);
   // V2.1/전체메뉴 펼치기: 홈버튼을 헤더 왼쪽에 배치 + 상단 pills 제거(좌측 3대메뉴로 대체)
   const head = isV21
     ? `<div class="menu-head">
@@ -1684,6 +1684,7 @@ const SELF_MENU = [
 ];
 window.SELF_MENU = SELF_MENU;   // 시안2(dars1) 전체메뉴 드로어에서 참조
 function v21LeafAttr(m, label, cat){
+  if(m.staff) return `data-arspop="${m.staff}"`;   // 수요 카테고리(ARS_CAT6) 직원연결 매핑 → 상담원 연결 화면
   if(isAgent(m.t)) return `data-arspop="${m.t}"`;
   if(cat==='staff') return `data-staffconnect="${label}"`;
   if(cat==='self')  return `data-s1go="result" data-rk="${m.rk}" data-fk="${label}"`;
@@ -1713,7 +1714,7 @@ function renderV21Menu(forceOpen){
   const cat = s1state.amCat || 'self';
   const cats = [['self','셀프서비스'],['ars','ARS'],['staff','상담원연결']];
   const left = cats.map(([k,nm])=>`<div class="am-dae ${k===cat?'on':''}" data-amcat="${k}">${nm}</div>`).join('');
-  const tree = cat==='ars' ? IVR : cat==='staff' ? FAV_MENU : SELF_MENU;
+  const tree = cat==='ars' ? (s1Ver==='v9900' ? ARS_CAT6 : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
   const right = `<div class="amv-list">${renderAccTree(tree, '', cat, forceOpen)}</div>`;
   return `<div class="am2col v21col"><div class="am-left">${left}</div><div class="am-right">${right}</div></div>`;
 }
@@ -1721,10 +1722,10 @@ function renderAllMenu(forceTab){
   // 전체메뉴 펼치기(시연·기능): 버전 무관하게 3 대메뉴 + 모든 중·소메뉴 펼침
   if(s1state.menuExpandAll && !forceTab) return renderV21Menu(true);
   // 시안1 V2.1 · 전체메뉴를 3 대메뉴 + 중첩 아코디언 구조로 분기
-  if(s1Ver==='v21' && !forceTab) return renderV21Menu();
+  if(isV21Ver() && !forceTab) return renderV21Menu();
   const tab = forceTab || s1state.amTab || 'ars';
   // 시안1 V2.0/V2.1 · ARS메뉴는 '단순 ARS 메뉴트리'(음성ARS 번호 드릴다운)로 분기
-  if(tab==='ars' && (s1Ver==='v2' || s1Ver==='v21')) return renderSimpleArs();
+  if(tab==='ars' && (s1Ver==='v2' || isV21Ver())) return renderSimpleArs();
   // 탭에 따라 메뉴 데이터 선택 (자주찾는서비스 / 보이는 ARS) — 동일한 2단 아코디언 형태
   const menu = (tab==='fav') ? FAV_MENU : IVR;
   const sel = s1state.amOpen < 0 ? 0 : Math.min(s1state.amOpen, menu.length-1);
@@ -1811,10 +1812,13 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
-    // 리프: 상담원연결=연결(에이전트 화면) / 음성ARS=최종(화면 미연결)
-    const leafAttr = isStaff ? `data-staffconnect="${name}"` : `data-sarsleaf="${name}"`;
-    const tag = isStaff ? `<span class="sars-end staff">연결</span>` : `<span class="sars-end">최종</span>`;
-    return `<div class="sars-item leaf ${isStaff?'staffleaf':''}" ${leafAttr}>
+    // 리프 라우팅: (mapStaff 시) 직원연결 매핑·0.직원연결 → 상담원 연결 화면 / 상담원연결 트리 → 연결 / 음성ARS → 최종(화면 미연결)
+    const wantStaff = opts.mapStaff && (m.staff || isAgent(m.t));
+    let leafAttr, tag, cls = '';
+    if(wantStaff){ leafAttr = `data-arspop="${m.staff || stripNum(m.t)}"`; tag = `<span class="sars-end staff">직원연결</span>`; cls = 'staffleaf'; }
+    else if(isStaff){ leafAttr = `data-staffconnect="${name}"`; tag = `<span class="sars-end staff">연결</span>`; cls = 'staffleaf'; }
+    else { leafAttr = `data-sarsleaf="${name}"`; tag = `<span class="sars-end">최종</span>`; }
+    return `<div class="sars-item leaf ${cls}" ${leafAttr}>
       <span class="sars-num leaf">${num||'·'}</span><div class="ivt">${name}</div>
       ${tag}</div>`;
   }).join('');
@@ -1823,8 +1827,77 @@ function renderArsTree(tree, opts){
     <div class="sars-list">${rows}</div>
   </div>`;
 }
-/* 음성 ARS 메뉴트리 (V2.0/V2.1 ARS메뉴) */
-function renderSimpleArs(){ return renderArsTree(IVR, {guide:'음성 ARS 메뉴 · 원하시는 번호를 선택하세요.', crumb:'음성 ARS · '}); }
+/* v9900(1544-9900) 전용: 업무유형별 상담문의 순위 + 챗봇 답변 순위 분석 기반 '수요 6 카테고리'.
+   각 항목은 IVR 실제 노드를 참조(드릴다운 소메뉴 전량 보존)하거나, 대응 소메뉴가 없으면 {staff}=관련 대메뉴 직원연결(상담원 연결 화면)로 매핑.
+   IVR 인덱스: 0=일반주문 1=시세및시황 2=체결및주문내역 3=계좌잔고 4=은행이체 5=주문비밀번호 6=사고등록 7=유상청약및공모주 */
+function ivN(d, m){ const s = (IVR[d]||{}).subs; return s ? s[m] : undefined; }
+function drillNode(name, node){ return node ? Object.assign({}, node, {t:name}) : {t:name}; }   // IVR 노드 참조(소메뉴 보존) + 표시명 교체
+function staffLeaf(name){ return {t:name, staff:name}; }                                          // 대응 소메뉴 없음 → 직원연결(상담원 연결 화면)
+function catNode(title, ic, items){
+  return {t:title, ic, subs: items.map((it,i)=>Object.assign({}, it, {t:(i+1)+'. '+it.t}))};      // 카테고리 내 항목 1..N 재번호(하위 소메뉴 번호는 원본 유지)
+}
+const ARS_CAT6 = [
+  catNode('1. 계좌·잔고 조회', 'wallet', [
+    drillNode('예수금·추정예탁자산 조회', ivN(3,0)),
+    drillNode('현금주식 잔고조회',        ivN(3,2)),
+    drillNode('신용 잔고조회',            ivN(3,3)),
+    drillNode('주문가능 금액조회',        ivN(3,1)),
+    drillNode('거래내역 조회',            ivN(3,4)),
+    drillNode('금일 체결내역 조회',       ivN(2,0)),
+    drillNode('금일 미체결 내역 조회',    ivN(2,1)),
+    drillNode('금일 주문내역 조회',       ivN(2,2)),
+    staffLeaf('미수·반대매매 조회'),
+    staffLeaf('계좌번호·MY계좌 정보확인'),
+  ]),
+  catNode('2. 인증·비밀번호', 'shield', [
+    drillNode('주문비밀번호 등록·변경',   ivN(5,0)),
+    staffLeaf('계좌 비밀번호 변경'),
+    staffLeaf('ID조회·PW초기화 / 재설정'),
+    staffLeaf('간편/공동인증 등록·해지'),
+    staffLeaf('장기미사용 ID 제한해제'),
+  ]),
+  catNode('3. 입출금·이체', 'transfer', [
+    drillNode('연계은행 송금',    ivN(4,0)),
+    drillNode('증권계좌 송금',    ivN(4,1)),
+    drillNode('타사 송금',        ivN(4,2)),
+    drillNode('계좌 간 자금이체',  ivN(4,4)),
+    drillNode('송금결과확인 조회', ivN(4,3)),
+    staffLeaf('출금불가·출금제한 임시조치 해지'),
+    staffLeaf('환전'),
+  ]),
+  catNode('4. 계좌개설·사고', 'idcard', [
+    drillNode('사고등록',          ivN(6,1)),
+    drillNode('주소·전화번호 변경', ivN(6,0)),
+    staffLeaf('계좌 사고등록 해지'),
+    staffLeaf('비대면 계좌개설'),
+    staffLeaf('계좌폐쇄'),
+    staffLeaf('신분증 진위확인'),
+    staffLeaf('모바일 OTP 발급'),
+  ]),
+  catNode('5. 주문·체결·시세', 'chart', [
+    drillNode('현금매도', ivN(0,0)),
+    drillNode('현금매수', ivN(0,1)),
+    drillNode('현금정정', ivN(0,2)),
+    drillNode('현금취소', ivN(0,3)),
+    drillNode('신용매도', ivN(0,4)),
+    drillNode('신용매수', ivN(0,5)),
+    drillNode('K-OTC 주문', ivN(0,6)),
+    drillNode('현재가 및 호가안내', ivN(1,0)),
+    drillNode('지수정보 안내',      ivN(1,2)),
+    staffLeaf('ETF 거래'),
+  ]),
+  catNode('6. 청약·서류·상품', 'cert', [
+    drillNode('유상청약',    ivN(7,0)),
+    drillNode('공모주 청약', ivN(7,1)),
+    staffLeaf('제증명·금융거래목적확인서·고객확인(KYC)'),
+    staffLeaf('신용/대출 만기연장'),
+    staffLeaf('중개형ISA 이관/이수·자격검증'),
+    staffLeaf('해외주식 입출고·양도세'),
+  ]),
+];
+
+/* 음성 ARS 메뉴트리 (V2.0/V2.1 ARS메뉴) — v9900은 수요 6 카테고리(ARS_CAT6, 직원연결 매핑 활성), 그 외는 원본 IVR */
+function renderSimpleArs(){ return renderArsTree(s1Ver==='v9900' ? ARS_CAT6 : IVR, {guide:'원하시는 서비스를 선택하세요.', crumb:'음성 ARS · ', mapStaff:(s1Ver==='v9900')}); }
 /* 상담원 연결 메뉴트리 (V2.1 메인 · ARS메뉴와 동일 번호 드릴다운 구성) */
 function renderStaffTree(){ return renderArsTree(FAV_MENU, {guide:'상담 분야의 번호를 선택하세요.', crumb:'상담원 연결 · ', leaf:'staff'}); }
 
@@ -1916,6 +1989,52 @@ function noticeCard(){
     <div class="more">전체 ${I.chev}</div>
   </div>`;
 }
+/* ===== 1544-9900 (음성ARS) 전용 메인 요소 ===== */
+/* 헤더: 고객센터 현황 대신 [큰글씨] 토글 (고객센터 현황은 공지 자리로 이동) */
+function header9900(){
+  const big = !!bigFont;   // 기존 전역 큰글씨 상태 재사용 (data-bigfont 핸들러 + applyScale)
+  return `<div class="app-head">
+    <div class="logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div>
+    <div class="head-spacer"></div>
+    <div class="bigfont-toggle ${big?'on':''}" data-bigfont title="큰글씨 ${big?'끄기':'켜기'}"><span class="bf-t">큰글씨</span><span class="bf-sw"><span class="bf-knob"></span></span></div>
+    <div class="back" data-menu title="전체메뉴">${I.menu}</div>
+  </div>`;
+}
+/* 고객센터 현황 (공지사항 자리) — digital_ars.html 시안1 스타일(풀폭 카드), 본인인증 생략(data-skipauth) 유지 */
+function custStatus9900(){
+  return `<div class="cust-status" data-skipauth title="본인인증 생략 (시연)">
+    <span class="l">${I.headset}<span>고객센터 현황</span></span>
+    <span class="badge-ok">원활</span>
+  </div>`;
+}
+/* ARS 6 대메뉴 그리드 (루트) — 셀 클릭 시 data-sarsdown로 해당 카테고리 드릴다운 진입 (renderSimpleArs=ARS_CAT6 재사용) */
+function ars6Grid(){
+  return `<div class="ars6-grid">` + ARS_CAT6.map((m,i)=>
+    `<div class="ars6-cell" data-sarsdown="${i}"><div class="ic">${I[m.ic]||I.order}</div><div class="lb">${stripNum(m.t)}</div></div>`
+  ).join('') + `</div>`;
+}
+/* [큰글씨] ON 전용: 6 카테고리를 큰 카드 + 인라인 아코디언으로 (카드 탭→서비스 인라인 펼침 / 서비스 탭→드릴다운·직원연결) */
+function ars6BigCards(){
+  const open = (s1state.big6Open==null ? -1 : s1state.big6Open);
+  return `<div class="ars6-cards">` + ARS_CAT6.map((cat,i)=>{
+    const isOpen = (open===i);
+    let sub = '';
+    if(isOpen){
+      sub = `<div class="a6c-sub">` + cat.subs.map((s,j)=>{
+        const name = stripNum(s.t);
+        if(s.staff)                 return `<div class="a6c-row" data-arspop="${s.staff}"><span class="a6c-t">${name}</span><span class="a6c-tag">직원연결</span></div>`;
+        if(s.subs && s.subs.length)  return `<div class="a6c-row" data-big6go="${i}_${j}"><span class="a6c-t">${name}</span><span class="a6c-arw">${I.chev}</span></div>`;
+        return `<div class="a6c-row" data-sarsleaf="${name}"><span class="a6c-t">${name}</span><span class="a6c-end">최종</span></div>`;
+      }).join('') + `</div>`;
+    }
+    return `<div class="ars6-card ${isOpen?'open':''}">
+      <div class="a6c-head" data-big6="${i}">
+        <span class="a6c-ic">${I[cat.ic]||I.order}</span>
+        <span class="a6c-nm">${stripNum(cat.t)}</span>
+        <span class="a6c-chev">${I.chev}</span>
+      </div>${sub}</div>`;
+  }).join('') + `</div>`;
+}
 function banner(){
   return `<div class="banner">
     <div class="big">최대 551<small>만원</small></div>
@@ -1945,7 +2064,7 @@ function appFooter(){
 /* ============================================================
    시안 1 화면 렌더
    ============================================================ */
-const s1state = {page:'home', cat:'금융상품', open:-1, open2:-1, title:'', listKey:'', resultKey:'', ivI:-1, ivJ:-1, midOpen:-1, amOpen:-1, amOpen2:-1, amTab:'ars', sarsPath:[], v21Tab:'self', amCat:'self', amTreeOpen:{}, menuExpandAll:false, priceTab:'hoga', fromFav:false, authNext:'', authMethod:'', acctPw:'', otpSent:false, noBack:false, noHome:false, history:[]};
+const s1state = {page:'home', cat:'금융상품', open:-1, open2:-1, title:'', listKey:'', resultKey:'', ivI:-1, ivJ:-1, midOpen:-1, amOpen:-1, amOpen2:-1, amTab:'ars', sarsPath:[], v21Tab:'self', amCat:'self', amTreeOpen:{}, menuExpandAll:false, big6Open:-1, priceTab:'hoga', fromFav:false, authNext:'', authMethod:'', acctPw:'', otpSent:false, noBack:false, noHome:false, history:[]};
 // 본인인증 세션 유지 플래그 (메모리 변수 → 새로고침 시 자동 초기화)
 let sessionAuthed = false;
 
@@ -2617,7 +2736,7 @@ function renderS1(){
   if(s1state.page==='home'){
     /* 자주 찾는 서비스 9개로 한눈에 구성 */
     // Ver 2.1은 9번째 셀(간편/공동인증 관리)을 셀프서비스 메뉴구조도 9번 '권리업무'로 대체 (v11 등 다른 버전은 원본 유지)
-    const favSrc = (s1Ver==='v21')
+    const favSrc = (isV21Ver())
       ? FAV.map((f,i)=> i===8 ? {k:'권리업무', lb:'권리업무', ic:'ipo', go:'result', rk:'rights'}
                       : i===0 ? {k:'ID·계좌조회 PW재설정', lb:'ID·계좌조회<br>PW재설정', ic:'key', go:'result', rk:'idpw'}
                       : f)
@@ -2644,14 +2763,33 @@ function renderS1(){
         + banner()
         + appFooter()
         + `</div>`;
+    } else if(s1Ver==='v9900'){
+      /* 1544-9900 (음성ARS) 전용 메인 (사용자 지시):
+         ① 공지사항 배너 숨김 — noticeCard() 미렌더(소스 존치)
+         ② 고객센터 현황을 공지사항 자리(헤더 아래)로 이동 — custStatus9900()
+         ③ 헤더 고객센터 현황 자리에 [큰글씨] 토글 — header9900()
+         ④ 인사멘트 아래 ARS 6대메뉴 그리드 — ars6Grid() (하위 진입 시 기존 드릴다운)
+         ⑤ 셀프서비스/상담원연결 탭 숨김 — v21-tabs 미렌더(소스 존치) */
+      let wrapCls = 'home-wrap v21home v9900home';
+      const path = s1state.sarsPath || [];
+      html = `<div class="${wrapCls}">`
+        + header9900()
+        + custStatus9900();
+      if(path.length===0){
+        html += `<div class="home-guide"><div class="hg-hi">안녕하세요, 키움증권입니다</div><div class="hg-sub">이용하실 서비스를 선택해 주세요</div></div>`
+          + (bigFont ? ars6BigCards() : ars6Grid());   // 큰글씨 ON → 큰 카드 + 인라인 아코디언
+      } else {
+        html += `<div class="v21-pane"><div class="v21-arspanel">` + renderSimpleArs() + `</div></div>`;   // 하위 레벨: 수요 카테고리 드릴다운(ARS_CAT6)
+      }
+      html += chargeNote + `</div>`;
     } else {
       /* V2.1은 인사글+탭 위에 콘텐츠가 쌓여 스크롤 발생 → v21home(인사글 축소, 전 탭) + v21self(셀프 9그리드 축소)로 한 화면에 */
       let wrapCls = 'home-wrap';
-      if(s1Ver==='v21'){ wrapCls += ' v21home'; if((s1state.v21Tab||'self')==='self') wrapCls += ' v21self'; }
+      if(isV21Ver()){ wrapCls += ' v21home'; if((s1state.v21Tab||'self')==='self') wrapCls += ' v21self'; }
       html = `<div class="${wrapCls}">`
         + header('ARS', true) + noticeCard()
         + `<div class="home-guide"><div class="hg-hi">안녕하세요, 키움증권입니다</div><div class="hg-sub">이용하실 서비스를 선택해 주세요</div></div>`;
-      if(s1Ver==='v21'){
+      if(isV21Ver()){
         /* V2.1 (ECS 피드백 반영): 인사글 아래 셀프서비스/ARS메뉴/상담원연결 인라인 탭 */
         const vt = s1state.v21Tab || 'self';
         const tabs = [['self','셀프서비스'],['ars','ARS메뉴'],['staff','상담원연결']];
@@ -3252,6 +3390,11 @@ document.addEventListener('click', (e)=>{
   // V2.1 메인 인라인 탭(셀프서비스/ARS메뉴/상담원연결) 전환 — 트리 상태 초기화
   const v21 = t.closest('[data-v21tab]');
   if(v21){ s1state.v21Tab=v21.dataset.v21tab; s1state.sarsPath=[]; s1state.amOpen=-1; s1state.amOpen2=-1; renderS1(); return; }
+  // [큰글씨] ON · 큰 카드 아코디언: 카드 탭=인라인 펼침/접힘, 서비스 탭=해당 카테고리 소메뉴 드릴다운
+  const big6 = t.closest('[data-big6]');
+  if(big6){ const i=+big6.dataset.big6; s1state.big6Open = (s1state.big6Open===i ? -1 : i); renderS1(); return; }
+  const big6go = t.closest('[data-big6go]');
+  if(big6go){ const pr=big6go.dataset.big6go.split('_').map(Number); s1state.sarsPath=pr; renderS1(); return; }
   // 전체메뉴(햄버거) → 오른쪽에서 슬라이딩하는 드로어로 열기
   if(t.closest('[data-menu]')){ setExpandAll(false); s1state.amTab='ars'; s1state.amOpen=0; s1state.amOpen2=-1; s1state.sarsPath=[]; s1state.amCat='self'; s1state.amTreeOpen={}; openMenuDrawer(); return; }
   // 시연·기능 '전체메뉴 펼치기' → 전체메뉴를 모든 중·소메뉴 펼친 상태로 열기 / 재클릭 시 닫기
@@ -3571,6 +3714,8 @@ const SCHEME_META = {
 let refFirm = 'kiwoom';   // 참고 탭에서 현재 선택된 증권사 (기본: 키움증권 현행)
 let sianScheme = 's1';    // 시안 탭에서 현재 선택된 시안 (s1=시안1 / dars1=시안2 / dars2=시안3)
 let s1Ver = 'v21';        // 시안1 기본 버전. 좌측 패널에서 v1/v11/v2/dars2 숨김 처리 → 첫 노출 버전 Ver 2.1(v21)을 기본 진입으로
+/* Ver 2.1 계열(원본 v21 + 복사본 v9900=1544-9900 음성ARS) — 메인 3탭·드로어·favSrc 등 v21 동작을 공유 */
+function isV21Ver(){ return s1Ver==='v21' || s1Ver==='v9900'; }
 function switchScheme(s){
   setExpandAll(false); // 탭/버전 전환 시 '전체메뉴 펼치기' 상태 해제
   closeMenuDrawer();   // 탭/버전 전환 시 열려있던 전체메뉴 드로어 닫기
@@ -3626,6 +3771,7 @@ const DEFAULT_SCENARIO = {
   v11: '[Ver 1.1 · 보이는 ARS 화면구현]\n안녕하세요, 키움증권입니다.\n새로워진 메인 화면에서 원하시는 서비스를 한눈에 선택해 주세요.',
   v2:  '[Ver 2.0 · 단순 ARS 메뉴연결]\n안녕하세요, 키움증권입니다.\n음성 ARS 순서 그대로 번호를 선택해 원하시는 메뉴로 이동하세요.',
   v21: '[Ver 2.1 · 보이는 ARS 화면구현 제외, 메인화면 및 전체메뉴 변경]\n안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
+  v9900: '[1544-9900 · 음성ARS (Ver 2.1 복사본)]\n안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
   dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n이용하실 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
 };
@@ -3872,6 +4018,7 @@ switchScheme('sian');
       'v11':['s1','v11'],'1.1':['s1','v11'],
       'v2':['s1','v2'],'2.0':['s1','v2'],
       'v21':['s1','v21'],'2.1':['s1','v21'],
+      'v9900':['s1','v9900'],'9900':['s1','v9900'],'1544-9900':['s1','v9900'],
       'dars1':['dars1'],'3.0':['dars1'],'v3':['dars1'],'v30':['dars1'],
       'dars2':['dars2'],'1.2.1':['dars2'],'s3':['dars2']
     };
