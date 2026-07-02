@@ -403,14 +403,19 @@ const RESULT = {
     `<div class="sec-title" style="padding-top:0">사고 신고 등록</div>
     <div class="list">
       <div class="row" style="cursor:default">
-        <div class="ic">${I.shield}</div>
-        <div class="tx"><div class="t">분실·도난 사고신고</div><div class="d">전 계좌 출금·이체 즉시 정지</div></div>
-        <span class="mini-btn" data-flash="분실·도난 사고신고가 등록되었습니다. (시연용)">등록</span>
+        <div class="ic">${I.power}</div>
+        <div class="tx"><div class="t">계좌출금 정지 사고등록</div><div class="d">해당 계좌 출금·이체 즉시 정지</div></div>
+        <span class="mini-btn" data-flash="계좌출금 정지 사고등록이 완료되었습니다. (시연용)">등록</span>
       </div>
       <div class="row" style="cursor:default">
-        <div class="ic">${I.power}</div>
-        <div class="tx"><div class="t">명의도용 의심 신고</div><div class="d">비대면 개설·이체 차단</div></div>
-        <span class="mini-btn" data-flash="명의도용 의심 신고가 등록되었습니다. (시연용)">등록</span>
+        <div class="ic">${I.idcard}</div>
+        <div class="tx"><div class="t">제휴카드 분실 사고등록</div><div class="d">제휴 체크·신용카드 사용 정지</div></div>
+        <span class="mini-btn" data-flash="제휴카드 분실 사고등록이 완료되었습니다. (시연용)">등록</span>
+      </div>
+      <div class="row" style="cursor:default">
+        <div class="ic">${I.key}</div>
+        <div class="tx"><div class="t">OTP 사고등록</div><div class="d">OTP 분실·도난 · 보안매체 사용 정지</div></div>
+        <span class="mini-btn" data-flash="OTP 사고등록이 완료되었습니다. (시연용)">등록</span>
       </div>
     </div>
     <div class="sec-title">등록된 사고 해지</div>
@@ -611,6 +616,67 @@ const RESULT = {
       {k:'공동인증서 갱신/재발급', d:'인증서 갱신·타기관 등록', ic:'cert', go:'authcert'},
       {k:'간편/공동인증 해지', d:'등록된 인증수단 해지', ic:'x', go:'authrevoke'},
     ]);
+  },
+
+  /* ===== 9. 권리업무 (셀프서비스 메뉴구조도 9번 · 대 > 중 > 소) ===== */
+  /* 권리업무 (대분류) → 중분류 4종 */
+  rights(){
+    return `<div class="data-card" style="margin-bottom:14px">
+      <div class="data-row"><div class="k">계좌</div><div class="v">키움 종합 1234-5678</div></div>
+      <div class="data-row"><div class="k">진행중 권리</div><div class="v up">2건</div></div>
+    </div>` + menuList([
+      {k:'유상청약',       d:'유상증자 청약 신청·예약·취소·내역', ic:'ipo',    go:'rightsOffer'},
+      {k:'주주반대의사',   d:'주총 안건 반대의사 통지 신청·취소·내역', ic:'doc',   go:'rightsDissent'},
+      {k:'주식매수청구',   d:'주식매수청구권 행사 신청·취소·내역', ic:'wallet', go:'rightsAppraisal'},
+      {k:'권리현황',       d:'보유 종목 권리배정·일정 조회', ic:'search', go:'rightsStatus'},
+    ]);
+  },
+  /* 권리업무 ── 1) 유상청약 (중분류) → 소분류 4종 */
+  rightsOffer(){
+    return `<div class="sec-title" style="padding-top:0">유상청약</div>`
+    + menuList([
+      {k:'유상청약 신청',     d:'당일 유상증자 청약 신청'},
+      {k:'유상청약예약 신청', d:'예약 청약 신청 (청약기간 내 자동접수)'},
+      {k:'유상청약 취소',     d:'당일·예약 청약 취소'},
+      {k:'유상청약신청내역',  d:'청약 신청·배정·환불 내역 조회'},
+    ], '‘유상청약’ 세부 업무는 시연 준비 중입니다. (시연용)');
+  },
+  /* 권리업무 ── 2) 주주반대의사 (중분류) → 소분류 3종 */
+  rightsDissent(){
+    return `<div class="sec-title" style="padding-top:0">주주반대의사</div>`
+    + menuList([
+      {k:'주주반대의사 신청',    d:'주주총회 안건 반대의사 통지'},
+      {k:'주주반대의사 신청취소', d:'통지한 반대의사 철회'},
+      {k:'주주반대의사신청내역',  d:'반대의사 통지 내역 조회'},
+    ], '‘주주반대의사’ 세부 업무는 시연 준비 중입니다. (시연용)');
+  },
+  /* 권리업무 ── 3) 주식매수청구 (중분류) → 소분류 3종 */
+  rightsAppraisal(){
+    return `<div class="sec-title" style="padding-top:0">주식매수청구</div>`
+    + menuList([
+      {k:'주식매수청구 신청',    d:'주식매수청구권 행사 신청'},
+      {k:'주식매수청구 신청취소', d:'행사 신청 취소'},
+      {k:'주식매수청구신청내역',  d:'매수청구 신청·정산 내역 조회'},
+    ], '‘주식매수청구’ 세부 업무는 시연 준비 중입니다. (시연용)');
+  },
+  /* 권리업무 ── 4) 권리현황 (중분류 · 소분류 없음, 조회 화면) */
+  rightsStatus(){
+    return `<div class="sec-title" style="padding-top:0">보유 종목 권리현황</div>
+    <div class="list">
+      <div class="row" style="cursor:default">
+        <div class="ic">${I.ipo}</div>
+        <div class="tx"><div class="t">삼성전자 <span class="tag live">유상증자</span></div><div class="d">신주배정기준일 2026.07.10 · 청약 07.21~07.22</div></div>
+      </div>
+      <div class="row" style="cursor:default">
+        <div class="ic">${I.doc}</div>
+        <div class="tx"><div class="t">SK하이닉스 <span class="tag wait">주총</span></div><div class="d">정기주총 2026.07.15 · 반대의사 접수 ~07.14</div></div>
+      </div>
+      <div class="row" style="cursor:default">
+        <div class="ic">${I.wallet}</div>
+        <div class="tx"><div class="t">현대차 <span class="tag">배당</span></div><div class="d">배당기준일 2026.06.30 · 주당 1,500원</div></div>
+      </div>
+    </div>
+    <div class="notice">권리배정·청약 일정은 발행회사·명의개서대리인 사정에 따라 변경될 수 있습니다.</div>`;
   },
 
   /* 인증관리 ── 생체인증 등록 */
@@ -2528,7 +2594,11 @@ function renderS1(){
   let html = '';
   if(s1state.page==='home'){
     /* 자주 찾는 서비스 9개로 한눈에 구성 */
-    const favGrid = `<div class="fav-grid">` + FAV.map((f,i)=>
+    // Ver 2.1은 9번째 셀(간편/공동인증 관리)을 셀프서비스 메뉴구조도 9번 '권리업무'로 대체 (v11 등 다른 버전은 원본 유지)
+    const favSrc = (s1Ver==='v21')
+      ? FAV.map((f,i)=> i===8 ? {k:'권리업무', lb:'권리업무', ic:'ipo', go:'result', rk:'rights'} : f)
+      : FAV;
+    const favGrid = `<div class="fav-grid">` + favSrc.map((f,i)=>
           `<div class="fav" data-fav data-s1go="${f.go}" data-fk="${f.k}"${f.rk?` data-rk="${f.rk}"`:''}><div class="ic">${I[f.ic]}</div><div class="lb">${f.lb||f.k}</div></div>`
         ).join('') + `</div>`;
     const chargeNote = `<div class="home-bottom">`
