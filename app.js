@@ -2892,7 +2892,7 @@ function renderSam(){
   if(!root) return;
   const cap = SAM_CAP[samState.page] || SAM_CAP.main;
   root.innerHTML = `<div class="sam-cap">
-    <img src="../레퍼런스/${cap.img}" alt="삼성증권 보이는 ARS 참고">
+    <img src="레퍼런스/${cap.img}" alt="삼성증권 보이는 ARS 참고">
     ${cap.hots.map(h=>`<div class="sam-hot" data-samgo="${h.go}" style="left:${h.l}%;top:${h.t}%;width:${h.w}%;height:${h.h}%"></div>`).join('')}
   </div>`;
 }
@@ -2927,7 +2927,7 @@ function renderHK(){
   if(!root) return;
   const cap = HK_CAP[hkState.page] || HK_CAP.main;
   root.innerHTML = `<div class="sam-cap">
-    <img src="../레퍼런스/${cap.img}" alt="한국투자증권 보이는 ARS 참고">
+    <img src="레퍼런스/${cap.img}" alt="한국투자증권 보이는 ARS 참고">
     ${cap.hots.map(h=>`<div class="sam-hot" data-hkgo="${h.go}" style="left:${h.l}%;top:${h.t}%;width:${h.w}%;height:${h.h}%"></div>`).join('')}
   </div>`;
 }
@@ -2945,7 +2945,7 @@ function renderKiwoom(){
   if(!root) return;
   const cap = KW_CAP[kwState.page] || KW_CAP.main;
   root.innerHTML = `<div class="sam-cap">
-    <img src="../레퍼런스/${cap.img}" alt="키움증권 현행 보이는 ARS 참고">
+    <img src="레퍼런스/${cap.img}" alt="키움증권 현행 보이는 ARS 참고">
     ${cap.hots.map(h=>`<div class="sam-hot" data-kwgo="${h.go}" style="left:${h.l}%;top:${h.t}%;width:${h.w}%;height:${h.h}%"></div>`).join('')}
   </div>`;
 }
@@ -2972,7 +2972,7 @@ function openAiChat(){
   const el = document.createElement('div');
   el.id = 'aiChatOv';
   el.className = 'aichat-ov';
-  el.innerHTML = `<img class="aichat-img" src="../영웅문/AI업무챗봇.png" alt="AI 업무챗봇">
+  el.innerHTML = `<img class="aichat-img" src="영웅문/AI업무챗봇.png" alt="AI 업무챗봇">
     <div class="ars-float" data-arsopen><span class="af-ic">${I.headset}</span> 보이는 ARS 열기</div>`;
   screen.appendChild(el);
 }
