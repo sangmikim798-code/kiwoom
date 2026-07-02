@@ -3458,8 +3458,8 @@ document.getElementById('schemeTabs').addEventListener('click',(e)=>{
 const SCHEME_META = {
   s1:{cap:'시안 1 · 메인 (그리드 + 메뉴 + 이벤트)', label:'화면 1 · 메인 (자주 찾는 서비스 → 메뉴 → 이벤트)',
       kpi:[['3.5초↓','메뉴 탐색 평균 시간'],['+38%p','핵심 메뉴 도달률'],['65%↓','음성 인입 콜 비중']]},
-  dars1:{cap:'Ver 1.2 · 밝은 버전 디자인', label:'Ver 1.2 · 밝은 버전 디자인 · 단일 화면 내 뷰 전환',
-      kpi:[['단일 화면','뷰 전환 인터랙션'],['아이콘','그리드 메인'],['Ver 1.2','밝은 버전']]},
+  dars1:{cap:'Ver 3.0 · 밝은 버전 디자인', label:'Ver 3.0 · 밝은 버전 디자인 · 단일 화면 내 뷰 전환',
+      kpi:[['단일 화면','뷰 전환 인터랙션'],['아이콘','그리드 메인'],['Ver 3.0','밝은 버전']]},
   dars2:{cap:'Ver 1.2.1 · 큰 카드 + 인라인', label:'Ver 1.2.1 · 큰 카드 아코디언 · 인라인 펼침',
       kpi:[['큰 카드','아코디언 메인'],['인라인','화면전환 없는 결과'],['Ver 1.2.1','큰 카드']]},
   kiwoom:{cap:'키움증권 · 보이는 ARS (현행 ASIS)', label:'키움증권 현행 보이는 ARS · 메인 → 일반주문 → 현금매도',
@@ -3476,7 +3476,7 @@ const SCHEME_META = {
 
 let refFirm = 'kiwoom';   // 참고 탭에서 현재 선택된 증권사 (기본: 키움증권 현행)
 let sianScheme = 's1';    // 시안 탭에서 현재 선택된 시안 (s1=시안1 / dars1=시안2 / dars2=시안3)
-let s1Ver = 'v1';         // 시안1 버전 (v1=디지털ARS+보이는ARS / v2=디지털ARS+단순ARS 메뉴트리). 현재 v2는 v1과 동일 복사
+let s1Ver = 'v21';        // 시안1 기본 버전. 좌측 패널에서 v1/v11/v2/dars2 숨김 처리 → 첫 노출 버전 Ver 2.1(v21)을 기본 진입으로
 function switchScheme(s){
   setExpandAll(false); // 탭/버전 전환 시 '전체메뉴 펼치기' 상태 해제
   closeMenuDrawer();   // 탭/버전 전환 시 열려있던 전체메뉴 드로어 닫기
@@ -3532,16 +3532,16 @@ const DEFAULT_SCENARIO = {
   v11: '[Ver 1.1 · 메인화면 재구성]\n안녕하세요, 키움증권입니다.\n새로워진 메인 화면에서 원하시는 서비스를 한눈에 선택해 주세요.',
   v2:  '[Ver 2.0 · 단순 ARS 메뉴연결]\n안녕하세요, 키움증권입니다.\n음성 ARS 순서 그대로 번호를 선택해 원하시는 메뉴로 이동하세요.',
   v21: '[Ver 2.1 · 메인 탭 추가]\n안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
-  dars1: '[Ver 1.2 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n밝고 깔끔한 화면에서 원하시는 서비스를 선택해 주세요.',
+  dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n밝고 깔끔한 화면에서 원하시는 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
 };
 function loadScenario(key){
-  try{ const m = JSON.parse(localStorage.getItem('darsScenarios') || '{}'); if(m[key]!=null) return m[key]; }catch(_){}
+  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v2') || '{}'); if(m[key]!=null) return m[key]; }catch(_){}
   return DEFAULT_SCENARIO[key] || '안녕하세요, 키움증권입니다.\n원하시는 서비스를 선택해 주세요.\n\n(더블클릭하여 음성 시나리오를 입력하세요)';
 }
 function saveScenario(key, text){
   if(!key) return;
-  try{ const m = JSON.parse(localStorage.getItem('darsScenarios') || '{}'); m[key]=text; localStorage.setItem('darsScenarios', JSON.stringify(m)); }catch(_){}
+  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v2') || '{}'); m[key]=text; localStorage.setItem('darsScenarios_v2', JSON.stringify(m)); }catch(_){}
 }
 function updateSceneLabel(){
   const panel = document.getElementById('scenePanel'); if(!panel) return;
@@ -3554,6 +3554,21 @@ function updateSceneLabel(){
   if(nmEl) nmEl.textContent = nm;
   if(dcEl) dcEl.textContent = tel;
   if(scEl && !scEl.isContentEditable) scEl.textContent = loadScenario(tabItemKey(ai));   // 편집 중 아니면 시나리오 갱신
+  // 현재 버전 접속 QR (시안 탭에서만 · 버전별 이미지)
+  const QR_MAP = {
+    v1:['kiwoom-qr-ver1.0.png','Ver 1.0'], v11:['kiwoom-qr-ver1.1.png','Ver 1.1'],
+    v2:['kiwoom-qr-ver2.0.png','Ver 2.0'], v21:['kiwoom-qr-ver2.1.png','Ver 2.1'],
+    dars1:['kiwoom-qr-ver3.0.png','Ver 3.0'], dars2:['kiwoom-qr-ver1.2.1.png','Ver 1.2.1']
+  };
+  const qrKey = (scheme!=='ref') ? ((sianScheme==='s1') ? s1Ver : sianScheme) : null;
+  const qrWrap = document.getElementById('spQrWrap'), qrImg = document.getElementById('spQr'), qrCap = document.getElementById('spQrCap');
+  if(qrWrap){
+    if(qrKey && QR_MAP[qrKey]){
+      if(qrImg) qrImg.src = QR_MAP[qrKey][0];
+      if(qrCap) qrCap.textContent = '스캔 시 ' + QR_MAP[qrKey][1] + ' 화면으로 열립니다';
+      qrWrap.classList.add('show');
+    } else qrWrap.classList.remove('show');
+  }
 }
 /* 참고 리스트: 증권사 선택 → 해당 목업 표시 */
 function selectRefFirm(firm){ refFirm = firm; switchScheme('ref'); }
@@ -3588,7 +3603,7 @@ function selectSian(v, ver){
   enableDragSort(snl, 'darsSianTabOrder');
   enableDragSort(rl, 'darsRefTabOrder');
   // 더블클릭 시 탭명/설명 인라인 편집 + 저장
-  enableTabEdit(snl, 'darsSianTabLabels');
+  enableTabEdit(snl, 'darsSianTabLabels_v2');   // 키 버전업: Ver명 개편(1.2→3.0) 후 옛 저장 라벨 무효화
   enableTabEdit(rl, 'darsRefTabLabels');
   // 우측 패널 시나리오 더블클릭 편집 (버전별 저장)
   const sc = document.getElementById('spScenario');
@@ -3631,7 +3646,7 @@ function applyScenePanelEdit(){
   if(nmEl) nmEl.textContent = nm;
   if(telEl) telEl.textContent = tel;
   const list = ai.closest('.ref-list');
-  if(list) saveTabLabels(list, list.id==='refList' ? 'darsRefTabLabels' : 'darsSianTabLabels');
+  if(list) saveTabLabels(list, list.id==='refList' ? 'darsRefTabLabels' : 'darsSianTabLabels_v2');
 }
 /* 좌측 패널 탭 더블클릭 → 탭명/설명 인라인 편집(저장: localStorage) */
 function enableTabEdit(list, labelKey){
@@ -3753,7 +3768,7 @@ function flash(msg){
 rerender();
 switchScheme('sian');
 
-/* URL 파라미터로 초기 버전 지정 (모바일 데모용): index.html?v=dars1 / ?v=1.2 / ?v=v21 등 */
+/* URL 파라미터로 초기 버전 지정 (모바일 데모용): index.html?v=dars1(=Ver3.0) / ?v=v30 / ?v=v21 등 */
 (function(){
   try{
     var raw = (new URLSearchParams(location.search).get('v') || new URLSearchParams(location.search).get('ver') || '').trim().toLowerCase();
@@ -3763,7 +3778,7 @@ switchScheme('sian');
       'v11':['s1','v11'],'1.1':['s1','v11'],
       'v2':['s1','v2'],'2.0':['s1','v2'],
       'v21':['s1','v21'],'2.1':['s1','v21'],
-      'dars1':['dars1'],'1.2':['dars1'],'s2':['dars1'],
+      'dars1':['dars1'],'3.0':['dars1'],'v3':['dars1'],'v30':['dars1'],
       'dars2':['dars2'],'1.2.1':['dars2'],'s3':['dars2']
     };
     var sel = MAP[raw];

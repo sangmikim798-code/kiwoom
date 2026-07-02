@@ -121,6 +121,11 @@ body{
   padding:11px 13px;cursor:text;transition:.15s;min-height:60px}
 .sp-scenario:hover{background:rgba(255,255,255,.1)}
 .sp-scenario.editing{outline:none;background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+/* 우측 패널: 현재 버전 접속 QR (시안 탭 전용) */
+.sp-qr{display:none}
+.sp-qr.show{display:block}
+.sp-qr img{width:100%;max-width:150px;display:block;background:#fff;border-radius:12px;padding:9px;margin-top:2px}
+.sp-qrcap{margin-top:7px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.5);line-height:1.45}
 
 /* ===== 폰 프레임 ===== */
 .stage{display:flex;gap:30px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
@@ -1763,12 +1768,12 @@ body{
   <!-- 시안 탭: 폰 왼쪽 시안 선택 리스트 (시안 스킴 활성 시에만 표시) -->
   <div class="ref-list sian-list" id="sianList">
     <div class="ref-title">시안 · 디지털 ARS</div>
-    <div class="ref-item" data-sian="s1" data-ver="v1"><span class="rf-nm">Ver 1.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (화면구현)</span></div>
+    <div class="ref-item" data-sian="s1" data-ver="v1" style="display:none"><span class="rf-nm">Ver 1.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (화면구현)</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v11"><span class="rf-nm">Ver 1.1</span><span class="rf-tel">메인화면 재구성</span></div>
-    <div class="ref-item" data-sian="s1" data-ver="v2"><span class="rf-nm">Ver 2.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결)</span></div>
+    <div class="ref-item" data-sian="s1" data-ver="v2" style="display:none"><span class="rf-nm">Ver 2.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결)</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v21"><span class="rf-nm">Ver 2.1</span><span class="rf-tel">메인화면 탭 추가, 전체메뉴 수정</span></div>
-    <div class="ref-item" data-sian="dars1"><span class="rf-nm">Ver 1.2</span><span class="rf-tel">밝은 버전 디자인</span></div>
-    <div class="ref-item" data-sian="dars2"><span class="rf-nm">Ver 1.2.1</span><span class="rf-tel">큰 카드 + 인라인</span></div>
+    <div class="ref-item" data-sian="dars1"><span class="rf-nm">Ver 3.0</span><span class="rf-tel">밝은 버전 디자인</span></div>
+    <div class="ref-item" data-sian="dars2" style="display:none"><span class="rf-nm">Ver 1.2.1</span><span class="rf-tel">큰 카드 + 인라인</span></div>
     <div class="ref-title func-title">시연 · 기능</div>
     <div class="func-item" data-skipauth><span class="rf-nm">본인인증 생략</span><span class="rf-tel">클릭 시 이후 인증 생략 (시연용)</span></div>
     <div class="func-item" data-expandall><span class="rf-nm">전체메뉴 펼치기</span><span class="rf-tel">전체메뉴의 모든 중·소메뉴 펼쳐보기 (재클릭 시 닫기)</span></div>
@@ -2222,6 +2227,11 @@ body{
       <div class="sp-desc" id="spDesc" title="더블클릭하여 탭설명 수정"></div>
       <div class="sp-title">시나리오</div>
       <div class="sp-scenario" id="spScenario" data-scenedit title="더블클릭하여 수정"></div>
+      <div class="sp-qr" id="spQrWrap">
+        <div class="sp-title">모바일 접속 QR</div>
+        <img id="spQr" alt="현재 버전 접속 QR">
+        <div class="sp-qrcap" id="spQrCap"></div>
+      </div>
     </div>
   </div>
 </div>
