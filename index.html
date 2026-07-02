@@ -2094,12 +2094,8 @@ body{
               <div class="vc-ic"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="6" rx="1.5"/><rect x="17" y="14" width="5" height="6" rx="1.5"/><path d="M20 20a3 3 0 0 1-3.2 2.5H15"/></svg></div>
               <div class="vc-t">상담원 연결</div>
               <div class="vc-d" id="d1agentDesc">상담원(직원)에게 바로 연결해 드립니다.<br>아래 버튼을 눌러 상담을 시작하세요.</div>
-              <div class="vc-card">
-                <div class="vc-row" id="d1agentFieldRow" hidden><span class="k">상담 분야</span><span class="v" id="d1agentField">-</span></div>
-                <div class="vc-row"><span class="k">상담 가능 시간</span><span class="v">평일 08:00 ~ 18:00</span></div>
-                <div class="vc-row"><span class="k">예상 대기</span><span class="v">약 1분</span></div>
-              </div>
-              <div class="vc-btn" data-d1flash="상담원에게 연결합니다. (시연용)">상담원 연결하기</div>
+              <div class="vc-card" id="d1agentInfo"></div>
+              <div class="vc-btn" id="d1agentBtn" data-d1flash="상담원에게 연결합니다. (시연용)">상담원 연결하기</div>
               <div class="vc-note">연결 시 음성 통화 또는 채팅 상담으로 진행됩니다.</div>
             </div>
           </div>
@@ -2344,20 +2340,48 @@ body{
       if(d1tab === 'ars'){ var a = document.getElementById('d1ars'); if(a) a.innerHTML = d1treeHTML(window.IVR || [], d1arsPath, false); }
       else if(d1tab === 'staff'){ var s = document.getElementById('d1staff'); if(s) s.innerHTML = d1treeHTML(window.FAV_MENU || [], d1staffPath, true); }
     }
-    // 상담원 연결 화면 진입 (선택한 상담 분야 반영) — Ver 2.1 상담원연결 참고, Ver 3.0 디자인
+    // 상담 분야(FAV_MENU 대분류)별 담당 부서 실데이터 — 직통 내선/대기/채널
+    var D1_STAFF_DESK = {
+      '국내주식':        {dept:'국내주식 상담팀',        ext:'1', wait:'3명 · 약 1분',  ch:'전화 · 채팅'},
+      'ID/PW · 인증서':  {dept:'디지털인증 상담팀',       ext:'2', wait:'1명 · 약 30초', ch:'전화 · 채팅'},
+      '미수 · 신용대출': {dept:'신용대출 상담팀',        ext:'3', wait:'5명 · 약 2분',  ch:'전화 상담'},
+      '권리':            {dept:'권리·공모 상담팀',        ext:'4', wait:'2명 · 약 1분',  ch:'전화 · 채팅'},
+      '시스템':          {dept:'IT시스템 상담팀 (HTS/MTS)', ext:'5', wait:'4명 · 약 2분', ch:'전화 · 채팅 · 원격지원'},
+      '선물옵션':        {dept:'파생상품 상담팀',        ext:'6', wait:'1명 · 약 40초', ch:'전화 상담'},
+      '해외주식':        {dept:'글로벌주식 상담팀',       ext:'7', wait:'3명 · 약 1분',  ch:'전화 · 채팅'},
+      '금융상품':        {dept:'금융상품 상담팀 (연금·펀드)', ext:'8', wait:'2명 · 약 1분', ch:'전화 · 채팅'},
+      'CFD':             {dept:'CFD·파생 상담팀',        ext:'9', wait:'1명 · 약 50초', ch:'전화 상담'},
+      '_default':        {dept:'대표 상담센터',          ext:'0', wait:'약 1분',        ch:'전화 · 채팅'}
+    };
+    function d1staffDeskFor(field){
+      var cat = '';
+      (window.FAV_MENU || []).forEach(function(c){
+        (c.subs || []).forEach(function(s){ if(d1stripNum(s.t) === field) cat = d1stripNum(c.t); });
+      });
+      return { cat: cat, desk: D1_STAFF_DESK[cat] || D1_STAFF_DESK['_default'] };
+    }
+    // 상담원 연결 화면 진입 (선택한 상담 분야 → 담당 부서 실데이터 반영) — Ver 2.1 상담원연결 참고, Ver 3.0 디자인
     function d1openAgent(field){
       field = field || '';
       var descEl = d1.querySelector('#d1agentDesc');
-      var rowEl  = d1.querySelector('#d1agentFieldRow');
-      var valEl  = d1.querySelector('#d1agentField');
-      if(field){
-        if(valEl) valEl.textContent = field;
-        if(rowEl) rowEl.hidden = false;
-        if(descEl) descEl.innerHTML = '‘' + field + '’ 관련 상담부서로<br>상담원(직원)에게 연결해 드립니다.';
-      }else{
-        if(rowEl) rowEl.hidden = true;
-        if(descEl) descEl.innerHTML = '상담원(직원)에게 바로 연결해 드립니다.<br>아래 버튼을 눌러 상담을 시작하세요.';
+      var infoEl = d1.querySelector('#d1agentInfo');
+      var btnEl  = d1.querySelector('#d1agentBtn');
+      var info = d1staffDeskFor(field);
+      var d = info.desk;
+      var rows = '';
+      if(field) rows += '<div class="vc-row"><span class="k">상담 분야</span><span class="v">' + field + '</span></div>';
+      rows += '<div class="vc-row"><span class="k">담당 부서</span><span class="v">' + d.dept + '</span></div>'
+        + '<div class="vc-row"><span class="k">직통 번호</span><span class="v">1544-9000 · 내선 ' + d.ext + '</span></div>'
+        + '<div class="vc-row"><span class="k">상담 채널</span><span class="v">' + d.ch + '</span></div>'
+        + '<div class="vc-row"><span class="k">현재 대기</span><span class="v">' + d.wait + '</span></div>'
+        + '<div class="vc-row"><span class="k">운영 시간</span><span class="v">평일 08:00 ~ 18:00</span></div>';
+      if(infoEl) infoEl.innerHTML = rows;
+      if(descEl){
+        descEl.innerHTML = field
+          ? '‘' + field + '’ 문의는<br><b>' + d.dept + '</b>으로 연결해 드립니다.'
+          : '상담원(직원)에게 바로 연결해 드립니다.<br>아래 버튼을 눌러 상담을 시작하세요.';
       }
+      if(btnEl) btnEl.setAttribute('data-d1flash', d.dept + '(내선 ' + d.ext + ')으로 상담원을 연결합니다. (시연용)');
       d1show('agent', true);
     }
     function d1setTab(tab){
