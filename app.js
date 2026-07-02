@@ -3606,12 +3606,12 @@ const DEFAULT_SCENARIO = {
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
 };
 function loadScenario(key){
-  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v2') || '{}'); if(m[key]!=null) return m[key]; }catch(_){}
+  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v3') || '{}'); if(m[key]!=null) return m[key]; }catch(_){}
   return DEFAULT_SCENARIO[key] || '안녕하세요, 키움증권입니다.\n원하시는 서비스를 선택해 주세요.\n\n(더블클릭하여 음성 시나리오를 입력하세요)';
 }
 function saveScenario(key, text){
   if(!key) return;
-  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v2') || '{}'); m[key]=text; localStorage.setItem('darsScenarios_v2', JSON.stringify(m)); }catch(_){}
+  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v3') || '{}'); m[key]=text; localStorage.setItem('darsScenarios_v3', JSON.stringify(m)); }catch(_){}
 }
 function updateSceneLabel(){
   const panel = document.getElementById('scenePanel'); if(!panel) return;
@@ -3670,10 +3670,10 @@ function selectSian(v, ver){
     if(it) selectSian(it.dataset.sian, it.dataset.ver);
   });
   // 좌측 패널 탭 드래그로 순서 변경 (HTML5 DnD) + 새로고침 후 순서 유지(localStorage)
-  enableDragSort(snl, 'darsSianTabOrder');
+  enableDragSort(snl, 'darsSianTabOrder_v2');
   enableDragSort(rl, 'darsRefTabOrder');
   // 더블클릭 시 탭명/설명 인라인 편집 + 저장
-  enableTabEdit(snl, 'darsSianTabLabels_v2');   // 키 버전업: Ver명 개편(1.2→3.0) 후 옛 저장 라벨 무효화
+  enableTabEdit(snl, 'darsSianTabLabels_v3');   // 키 버전업: Ver명 개편(1.2→3.0) 후 옛 저장 라벨 무효화
   enableTabEdit(rl, 'darsRefTabLabels');
   // 우측 패널 시나리오 더블클릭 편집 (버전별 저장)
   const sc = document.getElementById('spScenario');
@@ -3716,7 +3716,7 @@ function applyScenePanelEdit(){
   if(nmEl) nmEl.textContent = nm;
   if(telEl) telEl.textContent = tel;
   const list = ai.closest('.ref-list');
-  if(list) saveTabLabels(list, list.id==='refList' ? 'darsRefTabLabels' : 'darsSianTabLabels_v2');
+  if(list) saveTabLabels(list, list.id==='refList' ? 'darsRefTabLabels' : 'darsSianTabLabels_v3');
 }
 /* 좌측 패널 탭 더블클릭 → 탭명/설명 인라인 편집(저장: localStorage) */
 function enableTabEdit(list, labelKey){
