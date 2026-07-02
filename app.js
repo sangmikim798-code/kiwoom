@@ -420,7 +420,7 @@ const RESULT = {
       <div class="data-row"><div class="k">계좌</div><div class="v">키움 종합 1234-5678</div></div>
       <div class="data-row"><div class="k">현재 사고 등록</div><div class="v up">3건 등록됨</div></div>
     </div>`
-    + untactSteps(['신고 접수','사고 등록','해지·거래재개'], 1) +
+    + (s1Ver==='v21' ? '' : untactSteps(['신고 접수','사고 등록','해지·거래재개'], 1)) +
     `<div class="sec-title" style="padding-top:0">사고 신고 등록</div>
     <div class="list">
       <div class="row" style="cursor:default">
@@ -549,7 +549,7 @@ const RESULT = {
 
   /* 신용·대출 만기연장 신청 */
   creditext(){
-    return untactSteps(['연장 신청','연장 심사','연장 완료'], 0) +
+    return (s1Ver==='v21' ? '' : untactSteps(['연장 신청','연장 심사','연장 완료'], 0)) +
     `<div class="data-card" style="margin-bottom:14px">
       <div class="data-row"><div class="k">대출 계좌</div><div class="v">키움 종합 1234-5678</div></div>
       <div class="data-row"><div class="k">신용·대출 잔액</div><div class="v">15,400,000원</div></div>
