@@ -181,55 +181,55 @@ const RESULT = {
 
   /* ID·계좌번호 조회 / PW초기화 */
   idpw(){
-    return menuList([
+    const items = [
       {k:'아이디(ID) 조회', d:'가입 정보로 아이디 찾기', ic:'search', go:'idpwfind'},
       {k:'계좌번호 조회', d:'본인 명의 계좌번호 확인', ic:'wallet', go:'acctfind'},
-      {k:'ID비밀번호 초기화', d:'본인인증 후 로그인 비밀번호 재설정', ic:'key', go:'idpwreset'},
-    ]);
+      {k:(s1Ver==='v21'?'ID비밀번호 재설정':'ID비밀번호 초기화'), d:'본인인증 후 로그인 비밀번호 재설정', ic:'key', go:'idpwreset'},
+    ];
+    if(s1Ver==='v21') items.push({k:'장기미사용 ID 제한해제', d:'1년 이상 미사용 계정의 로그인 제한 해제', ic:'clock', go:'idrelease'});
+    return menuList(items);
   },
 
   /* ID·계좌번호 조회 ── 본인 명의 계좌번호 조회 */
   acctfind(){
+    const authed = sessionAuthed;   // 본인인증 완료 시 마스킹 해제하고 전체 계좌번호 표시
     const acc=[
-      {n:'키움 종합 1234-56**-**', d:'종합위탁 · 2019.03.14 개설', rep:true},
-      {n:'키움 CMA 9876-54**-**', d:'CMA · 2021.08.02 개설'},
-      {n:'키움 연금저축 5555-12**-**', d:'연금저축계좌 · 2022.05.10 개설'},
+      {full:'키움 종합 1234-5678-90',  mask:'키움 종합 1234-56**-**',  d:'종합위탁 · 2019.03.14 개설', rep:true},
+      {full:'키움 CMA 9876-5432-10',   mask:'키움 CMA 9876-54**-**',   d:'CMA · 2021.08.02 개설'},
+      {full:'키움 연금저축 5555-1234-56', mask:'키움 연금저축 5555-12**-**', d:'연금저축계좌 · 2022.05.10 개설'},
     ];
     return `<div class="data-card" style="margin-bottom:14px">
       <div class="data-row"><div class="k">실명 확인</div><div class="v">홍길동</div></div>
-      <div class="data-row"><div class="k">본인인증</div><div class="v up">휴대폰 인증 완료</div></div>
+      <div class="data-row"><div class="k">본인인증</div><div class="v up">${authed?'본인인증 완료':'인증 필요'}</div></div>
     </div>
     <div class="sec-title" style="padding-top:0">본인 명의 계좌 ${acc.length}</div>
     <div class="list">` + acc.map(a=>`
       <div class="row" style="cursor:default">
         <div class="ic">${I.wallet}</div>
-        <div class="tx"><div class="t">${a.n}${a.rep?` <span class="tag live">대표</span>`:''}</div><div class="d">${a.d}</div></div>
+        <div class="tx"><div class="t">${authed?a.full:a.mask}${a.rep?` <span class="tag live">대표</span>`:''}</div><div class="d">${a.d}</div></div>
       </div>`).join('') + `</div>
-    <div class="notice">보안을 위해 계좌번호 일부는 마스킹(**)되어 표시됩니다.</div>`;
+    <div class="notice">${authed?'본인인증이 완료되어 계좌번호 전체가 표시됩니다.':'보안을 위해 계좌번호 일부는 마스킹(**)되어 표시됩니다.'}</div>`;
   },
 
   /* ID조회 ── 아이디(ID) 조회 결과 */
   idpwfind(){
+    const authed = sessionAuthed;   // 본인인증 완료 시 마스킹 해제하고 전체 아이디 표시
+    const ids=[
+      {full:'kiwoom_hong',   mask:'kiwoom_h****', d:'2019.03.14 가입 · 최근 로그인 2026.06.21', rep:true},
+      {full:'honggildong90', mask:'hong****90',   d:'2021.08.02 가입 · 최근 로그인 2025.11.02'},
+    ];
     return `<div class="data-card" style="margin-bottom:14px">
       <div class="data-row"><div class="k">실명 확인</div><div class="v">홍길동</div></div>
-      <div class="data-row"><div class="k">본인인증</div><div class="v up">휴대폰 인증 완료</div></div>
+      <div class="data-row"><div class="k">본인인증</div><div class="v up">${authed?'본인인증 완료':'인증 필요'}</div></div>
       <div class="data-row"><div class="k">가입일</div><div class="v">2019.03.14</div></div>
     </div>
     <div class="sec-title" style="padding-top:0">회원님의 아이디</div>
-    <div class="list">
+    <div class="list">` + ids.map(x=>`
       <div class="row" style="cursor:default">
         <div class="ic">${I.search}</div>
-        <div class="tx"><div class="t">kiwoom_h**** <span class="tag live">대표</span></div><div class="d">2019.03.14 가입 · 최근 로그인 2026.06.21</div></div>
-        <span class="mini-btn" data-flash="해당 아이디로 로그인 화면으로 이동합니다. (시연용)">로그인</span>
-      </div>
-      <div class="row" style="cursor:default">
-        <div class="ic">${I.search}</div>
-        <div class="tx"><div class="t">hong****90</div><div class="d">2021.08.02 가입 · 최근 로그인 2025.11.02</div></div>
-        <span class="mini-btn" data-flash="해당 아이디로 로그인 화면으로 이동합니다. (시연용)">로그인</span>
-      </div>
-    </div>
-    <div class="notice">보안을 위해 아이디 일부는 마스킹(****)되어 표시됩니다. 전체 아이디는 가입 시 등록한 이메일로 발송할 수 있습니다.</div>
-    <div class="primary-btn" data-flash="가입 이메일(ho**@kiwoom.com)로 아이디 전체를 발송했습니다. (시연용)">이메일로 전체 아이디 받기</div>`;
+        <div class="tx"><div class="t">${authed?x.full:x.mask}${x.rep?` <span class="tag live">대표</span>`:''}</div><div class="d">${x.d}</div></div>
+      </div>`).join('') + `</div>
+    <div class="notice">${authed?'본인인증이 완료되어 전체 아이디가 표시됩니다.':'보안을 위해 아이디 일부는 마스킹(****)되어 표시됩니다.'}</div>`;
   },
 
   /* PW초기화 ── 비밀번호 초기화(재설정) */
@@ -246,6 +246,27 @@ const RESULT = {
     </div>
     <div class="notice" style="margin-top:12px">영문·숫자·특수문자를 조합해 8~20자로 설정해 주세요. 직전에 사용한 비밀번호는 다시 사용할 수 없습니다.</div>
     <div class="primary-btn" data-flash="비밀번호가 재설정되었습니다. 새 비밀번호로 다시 로그인해 주세요. (시연용)">비밀번호 재설정</div>`;
+  },
+
+  /* 장기미사용 ID 제한해제 — 1년 이상 미로그인 계정 제한 상태 + 해제 (실데이터) */
+  idrelease(){
+    const authed = sessionAuthed;   // 인증 완료 시 아이디 전체 표시
+    return `<div class="data-card" style="margin-bottom:14px">
+      <div class="data-row"><div class="k">아이디</div><div class="v">${authed?'honggildong90':'hong****90'}</div></div>
+      <div class="data-row"><div class="k">계정 상태</div><div class="v down">로그인 제한 (장기미사용)</div></div>
+      <div class="data-row"><div class="k">마지막 로그인</div><div class="v">2025.11.02</div></div>
+      <div class="data-row"><div class="k">제한 적용일</div><div class="v">2026.11.02</div></div>
+      <div class="data-row"><div class="k">본인인증</div><div class="v up">${authed?'본인인증 완료':'인증 필요'}</div></div>
+    </div>
+    <div class="sec-title" style="padding-top:0">제한 안내</div>
+    <div class="list">
+      <div class="row" style="cursor:default">
+        <div class="ic">${I.clock}</div>
+        <div class="tx"><div class="t">장기미사용 로그인 제한 <span class="tag wait">제한중</span></div><div class="d">최근 1년 이상 로그인 이력이 없어 계정이 잠금되었습니다.</div></div>
+      </div>
+    </div>
+    <div class="notice">본인인증 후 제한을 해제하면 다시 로그인하실 수 있습니다. 해제 후에도 장기간 미접속 시 재제한될 수 있습니다.</div>
+    <div class="primary-btn" data-flash="장기미사용 ID 제한이 해제되었습니다. 다시 로그인하실 수 있습니다. (시연용)">제한 해제</div>`;
   },
 
   /* 간편비밀번호(PIN) 변경 */
@@ -1621,10 +1642,11 @@ function amPills(){
 /* V2.1 전체메뉴: 좌측 3 대메뉴(셀프서비스/ARS/상담원연결) + 우측 중첩 아코디언 */
 /* 셀프서비스 트리: 중메뉴=FAV 서비스, 소메뉴=각 서비스 하위 항목(rk=결과화면 키). 폼형 서비스는 리프 */
 const SELF_MENU = [
-  {t:'ID·계좌조회 / PW초기화', subs:[
+  {t:'ID·계좌조회 / PW재설정', subs:[
     {t:'아이디(ID) 조회', rk:'idpwfind'},
     {t:'계좌번호 조회',   rk:'acctfind'},
-    {t:'ID비밀번호 초기화', rk:'idpwreset'},
+    {t:'ID비밀번호 재설정', rk:'idpwreset'},
+    {t:'장기미사용 ID 제한해제', rk:'idrelease'},
   ]},
   {t:'비대면업무 신청현황', subs:[
     {t:'비대면 계좌개설', rk:'untactacct'},
@@ -2596,7 +2618,9 @@ function renderS1(){
     /* 자주 찾는 서비스 9개로 한눈에 구성 */
     // Ver 2.1은 9번째 셀(간편/공동인증 관리)을 셀프서비스 메뉴구조도 9번 '권리업무'로 대체 (v11 등 다른 버전은 원본 유지)
     const favSrc = (s1Ver==='v21')
-      ? FAV.map((f,i)=> i===8 ? {k:'권리업무', lb:'권리업무', ic:'ipo', go:'result', rk:'rights'} : f)
+      ? FAV.map((f,i)=> i===8 ? {k:'권리업무', lb:'권리업무', ic:'ipo', go:'result', rk:'rights'}
+                      : i===0 ? {k:'ID·계좌조회 PW재설정', lb:'ID·계좌조회<br>PW재설정', ic:'key', go:'result', rk:'idpw'}
+                      : f)
       : FAV;
     const favGrid = `<div class="fav-grid">` + favSrc.map((f,i)=>
           `<div class="fav" data-fav data-s1go="${f.go}" data-fk="${f.k}"${f.rk?` data-rk="${f.rk}"`:''}><div class="ic">${I[f.ic]}</div><div class="lb">${f.lb||f.k}</div></div>`
