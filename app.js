@@ -2955,13 +2955,15 @@ function renderIodPurpose(){
 }
 /* 금융거래목적확인서 등록 완료 화면 — [입출금] 디자인(iod-top·24px·Ver4.0 톤), 스텝바 완료 */
 function renderIodPurposeDone(){
-  return pageTop(s1state.title||'등록 완료', true)
-    + `<div class="iod-done">
+  // 터미널(완료) 화면 — 상단바 없이 화면 세로 중앙 정렬
+  return `<div class="iod-done-center">
+      <div class="iod-done">
         <div class="iod-done-ic">${I.check}</div>
         <div class="iod-done-t">등록이 완료됐어요</div>
         <div class="iod-done-d">거래 목적 확인이 등록되어<br>계좌의 거래제한이 바로 해제됐어요.<br>이제 정상적으로 입출금하실 수 있어요.</div>
-      </div>`
-    + `<div class="auth-wrap"><div class="primary-btn" data-iodhome>확인</div></div>`;
+      </div>
+      <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
+    </div>`;
 }
 /* 음성 ARS 연결 안내 화면 — 해당 IVR 메뉴로 연결 + (계좌인증 시)계좌정보 연동 + 디지털ARS 종료·인증 무효 안내 */
 function renderVoiceConnect(){
