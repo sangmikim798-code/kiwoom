@@ -2031,7 +2031,7 @@ function tossCatList(){
 /* FAQ 카드 아이콘: 사이버보안 스타일의 자체 제작 원본 라인 SVG (외부 에셋·라이선스 불필요) */
 const V40_FAQ = [
   {t:'입출금이 안돼요',   svg:'<img src="assets/error.png" alt="입출금 오류">'},
-  {t:'각종 증명서 발급', svg:'<img src="assets/증명서.png" alt="증명서 발급">'},
+  {t:'각종 증명서 발급', svg:'<img src="assets/certificate.png" alt="증명서 발급">'},
   {t:'각종 서류 제출',   svg:'<img src="assets/file-upload.png" alt="서류 제출">'},
   {t:'자주 묻는 질문',   svg:'<img src="assets/question.png" alt="자주 묻는 질문">'},
 ];
