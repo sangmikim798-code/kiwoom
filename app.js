@@ -2031,9 +2031,9 @@ function tossCatList(){
 /* FAQ 카드 아이콘: 사이버보안 스타일의 자체 제작 원본 라인 SVG (외부 에셋·라이선스 불필요) */
 const V40_FAQ = [
   {t:'입출금이 안돼요',   svg:'<img src="assets/error.png" alt="입출금 오류">'},
-  {t:'각종 증명서 발급', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="10.5" height="14" rx="2"/><path d="M7.5 7h4.5M7.5 10h4.5"/><circle cx="16" cy="15.5" r="3.3"/><path d="M14.2 18.1l-.5 2.6 2.3-1.2 2.3 1.2-.5-2.6"/></svg>'},
-  {t:'각종 서류 제출',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/><path d="M12 18.5v-5.5"/><path d="M9.6 15.4L12 13l2.4 2.4"/></svg>'},
-  {t:'자주 묻는 질문',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a8 8 0 0 1-11.4 7.2L4 20l1.3-4.9A8 8 0 1 1 20.5 11.5z"/><path d="M9.8 9.6a2.3 2.3 0 0 1 4.4 1c0 1.6-2.1 1.7-2.1 3.1"/><circle cx="12" cy="16.6" r=".7" fill="currentColor" stroke="none"/></svg>'},
+  {t:'각종 증명서 발급', svg:'<img src="assets/증명서.png" alt="증명서 발급">'},
+  {t:'각종 서류 제출',   svg:'<img src="assets/file-upload.png" alt="서류 제출">'},
+  {t:'자주 묻는 질문',   svg:'<img src="assets/question.png" alt="자주 묻는 질문">'},
 ];
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
