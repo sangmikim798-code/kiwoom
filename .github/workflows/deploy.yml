@@ -22,7 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # 성공한 시도의 URL 사용(재시도 대비 coalesce)
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy3.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,6 +36,28 @@ jobs:
         with:
           path: '.'
 
+      # Deploy 스텝은 간헐적으로 실패할 수 있어 최대 3회 시도(원 1 + 재시도 2, 간격 대기).
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: deploy1
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Wait before retry 1
+        if: steps.deploy1.outcome == 'failure'
+        run: sleep 20
+
+      - name: Deploy to GitHub Pages (retry 1)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Wait before retry 2
+        if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
+        run: sleep 30
+
+      # 마지막 시도는 continue-on-error 없음 → 3회 모두 실패 시에만 잡 실패로 표시
+      - name: Deploy to GitHub Pages (retry 2)
+        id: deploy3
+        if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
         uses: actions/deploy-pages@v4
