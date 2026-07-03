@@ -2951,8 +2951,19 @@ function renderIodPurpose(){
           ${F('직업 구분','회사원')}
         </div>
         <div class="auth-note">자금세탁방지(AML) 제도에 따라 거래 목적 확인이 필요해요.<br>등록하시면 장기미사용·다수계좌 거래제한이 바로 풀려요.</div>
-        <div class="primary-btn" data-flash="금융거래목적확인서를 등록했어요. 거래제한이 바로 풀려요. (시연용)">등록하기</div>
+        <div class="primary-btn" data-iodpurposedone>등록하기</div>
       </div>`;
+}
+/* 금융거래목적확인서 등록 완료 화면 — [입출금] 디자인(iod-top·24px·Ver4.0 톤), 스텝바 완료 */
+function renderIodPurposeDone(){
+  return pageTop(s1state.title||'등록 완료', true)
+    + untactSteps(['정보 입력','서류 제출','제출 완료'], 3)
+    + `<div class="iod-done">
+        <div class="iod-done-ic">${I.check}</div>
+        <div class="iod-done-t">등록이 완료됐어요</div>
+        <div class="iod-done-d">거래 목적 확인이 등록되어<br>계좌의 거래제한이 바로 해제됐어요.<br>이제 정상적으로 입출금하실 수 있어요.</div>
+      </div>`
+    + `<div class="auth-wrap"><div class="primary-btn" data-iodhome>확인</div></div>`;
 }
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
@@ -3152,6 +3163,9 @@ function renderS1(){
   }
   else if(s1state.page==='iodacctsel'){
     html = renderIodAcctSel();
+  }
+  else if(s1state.page==='iodpurposedone'){
+    html = renderIodPurposeDone();
   }
   else if(s1state.page==='iodcheck'){
     html = renderIodChecking();
@@ -3684,6 +3698,9 @@ document.addEventListener('click', (e)=>{
     const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
     openMethodSheet(IOD_RESULTS[key].sheet); return;
   }
+  // 금융거래목적확인서 등록 → 완료 화면 / 완료 화면 '확인' → 메인
+  if(t.closest('[data-iodpurposedone]')){ s1nav({page:'iodpurposedone', title:'등록 완료', noBack:true, noHome:true}); return; }
+  if(t.closest('[data-iodhome]')){ s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
 
   // 시연용 토스트 버튼
   const fl = t.closest('[data-flash]');
