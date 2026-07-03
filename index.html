@@ -1057,6 +1057,46 @@ body{
   background:#F1F2F6;color:#5A5A70;font-size:calc(15px*var(--scale));font-weight:800;cursor:pointer}
 .cs-cancel:active{transform:scale(.98)}
 
+/* ===== Ver 4.0 · 입출금 안내 플로우 (계좌인증 → 상태확인 로딩 → 결과 3토글) ===== */
+/* 계좌번호 모름 링크 */
+.iod-findlink{margin:14px 2px 2px;text-align:center;font-size:calc(13.5px*var(--scale));font-weight:700;
+  color:var(--primary);cursor:pointer}
+.iod-findlink:active{opacity:.6}
+/* 상태 확인 로딩 */
+.iod-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 24px 40px;text-align:center}
+.iod-spinwrap{position:relative;width:64px;height:64px;display:grid;place-items:center}
+.iod-spinner{position:absolute;inset:0;border-radius:50%;border:5px solid #F0E1EC;border-top-color:var(--primary);
+  animation:iodspin .9s linear infinite}
+.iod-scan{position:relative;color:var(--primary);display:grid;place-items:center}
+.iod-scan svg{width:24px;height:24px;animation:iodpulse 1.3s ease-in-out infinite}
+@keyframes iodspin{to{transform:rotate(360deg)}}
+@keyframes iodpulse{0%,100%{transform:scale(.82);opacity:.55}50%{transform:scale(1.05);opacity:1}}
+.iod-load-t{margin-top:26px;font-size:calc(17px*var(--scale));font-weight:800;color:var(--ink)}
+.iod-load-d{margin-top:7px;font-size:calc(13.5px*var(--scale));color:var(--sub)}
+/* 결과 3토글 */
+.iod-toggles{display:flex;gap:7px;margin:14px 16px 4px}
+.iod-tg{flex:1;text-align:center;padding:10px 6px;border-radius:12px;background:#F1F2F6;
+  font-size:calc(12.5px*var(--scale));font-weight:700;color:var(--sub);cursor:pointer;transition:.13s;line-height:1.3}
+.iod-tg:active{transform:scale(.97)}
+.iod-tg.on{background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(230,0,127,.28)}
+/* 결과 카드 */
+.iod-card{margin:12px 16px 0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 18px}
+.iod-acct{font-size:calc(12.5px*var(--scale));font-weight:700;color:var(--sub);margin-bottom:11px}
+.iod-badge{display:inline-block;font-size:calc(11.5px*var(--scale));font-weight:800;border-radius:8px;padding:5px 10px}
+.iod-badge.stop{background:#FDE7EE;color:#D81B60}
+.iod-badge.warn{background:#FFF1E0;color:#C07800}
+.iod-title{margin-top:13px;font-size:calc(17px*var(--scale));font-weight:800;color:var(--ink);line-height:1.4;letter-spacing:-.3px}
+.iod-body{margin-top:9px;font-size:calc(13.5px*var(--scale));color:var(--ink-2);line-height:1.6}
+.iod-body b{color:var(--primary);font-weight:800}
+.iod-release{margin-top:13px;padding:12px 14px;background:var(--primary-soft);border-radius:12px;
+  font-size:calc(13px*var(--scale));color:var(--ink-2);line-height:1.55}
+.iod-release b{color:var(--primary);font-weight:800}
+/* 결과 액션 버튼 */
+.iod-actions{margin:16px 16px 0;display:flex;flex-direction:column;gap:9px}
+.iod-actions .primary-btn{margin:0}
+.primary-btn.ghost{background:#fff !important;color:var(--primary) !important;border:1.6px solid var(--primary) !important;box-shadow:none !important}
+.iod-note{margin:14px 18px 8px;font-size:calc(11.5px*var(--scale));color:var(--sub);line-height:1.5;text-align:center}
+
 .kp-ov{position:absolute;inset:0;z-index:150;background:rgba(20,12,40,.35);
   display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .2s}
 .kp-ov.on{opacity:1}

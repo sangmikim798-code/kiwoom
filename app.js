@@ -2038,9 +2038,11 @@ const V40_FAQ = [
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
   const shown = open ? V40_FAQ : V40_FAQ.slice(0, 1);
-  const rows = shown.map(it=>
-    `<div class="tf-row" data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`
-  ).join('');
+  const rows = shown.map(it=>{
+    // '입출금이 안돼요'는 실제 업무 플로우(계좌 인증 → 상태 확인 → 결과) 진입, 나머지는 시연용 안내
+    const act = it.t==='입출금이 안돼요' ? `data-iodstart` : `data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"`;
+    return `<div class="tf-row" ${act}><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`;
+  }).join('');
   return `<div class="toss-faq">
     <div class="tf-head" data-faqtoggle title="${open?'접기':'더보기'}">
       <div class="tf-title">혹시 이런 내용이 궁금하신가요?</div>
@@ -2179,6 +2181,7 @@ function authStep(method){
     </div>
     <div class="auth-note">계좌번호와 비밀번호로 본인인증을 진행합니다.</div>
     <div class="primary-btn" data-authdone>확인</div>
+    ${isIodFlow() ? `<div class="iod-findlink" data-iodfind>계좌번호를 모르겠어요 ›</div>` : ''}
   </div>`;
 }
 
@@ -2611,6 +2614,7 @@ function closePwKeypad(){
 /* ===== 영웅문S# 앱 연결 팝업 (계좌정보 연동 + 해당 화면 바로연동) ===== */
 const APP_LINK = {
   cdd: {title:'고객확인(CDD/EDD) 정보 등록·갱신'},
+  iodpurpose: {title:'금융거래목적확인서 등록'},
 };
 function openAppLink(key){
   closeAppLink();
@@ -2710,6 +2714,81 @@ function closeConsult(){
   if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); }
 }
 
+/* ===== Ver 4.0 · '입출금이 안돼요' 업무 플로우 =====
+   계좌 인증(계좌번호/휴대폰/간편 — 기존 auth 재사용) → 상태 확인(로딩) → 결과(3가지 사유 토글).
+   인증 완료 라우팅은 authNext.go==='iodcheck' 로 식별(gotoAuthNext에서 startIodCheck 호출). */
+function isIodFlow(){ return (s1state.authNext||{}).go==='iodcheck'; }   // 계좌인증 화면의 '계좌번호 모름' 링크·스텝바 노출 게이트
+const IOD_STEPS = ['계좌 인증','상태 확인','결과 안내'];
+const IOD_RESULTS = {
+  multi: {
+    tab:'단기 다수계좌', badge:'출금 제한', badgeCls:'stop',
+    title:'지금은 출금이 제한된 계좌예요',
+    body:'최근 짧은 기간에 여러 계좌를 만드셔서, 안전을 위해 출금이 잠시 막혀 있어요.',
+    release:'<b>금융거래목적확인서</b>를 등록하시면 바로 풀려요.',
+    actions:[{t:'영웅문S#에서 등록하기', kind:'app'},{t:'디지털 ARS로 등록하기', kind:'purpose'}],
+  },
+  dormant: {
+    tab:'장기 미사용', badge:'거래중지 · 출금 제한', badgeCls:'stop',
+    title:'오래 쉬어서 거래가 중지된 계좌예요',
+    body:'안전을 위해 출금이 제한돼 있어요.',
+    release:'<b>금융거래목적확인서</b>를 등록하시면 즉시 해제돼요.',
+    actions:[{t:'영웅문S#에서 등록하기', kind:'app'},{t:'디지털 ARS로 등록하기', kind:'purpose'}],
+  },
+  limit: {
+    tab:'한도 제한', badge:'한도 제한', badgeCls:'warn',
+    title:'한도제한계좌예요',
+    body:'지금은 하루 <b>100만 원까지</b> 출금할 수 있어요.',
+    release:'한도를 풀려면 추가 서류 확인이 필요해요.',
+    actions:[{t:'영웅문S#에서 해제하기', kind:'app'},{t:'상담원 연결', kind:'consult'}],
+  },
+};
+function startIodCheck(){
+  // 인증 완료 → 상태 확인(로딩) → 1.8초 후 결과. 로딩/결과에서 뒤로가기는 홈으로.
+  s1state.iodResult = 'multi';
+  s1nav({page:'iodcheck', title:'계좌 상태 확인', noBack:true, noHome:true, fromFav:false});
+  s1state.history = [];
+  setTimeout(()=>{
+    if(s1state.page!=='iodcheck') return;   // 사용자가 이탈했으면 중단
+    s1state.page='iodresult'; s1state.title='계좌 상태';
+    s1state.noBack=false; s1state.noHome=true;
+    renderS1();
+  }, 1800);
+}
+function renderIodChecking(){
+  return pageTop(s1state.title||'계좌 상태 확인')
+    + untactSteps(IOD_STEPS, 1)
+    + `<div class="iod-loading">
+        <div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div>
+        <div class="iod-load-t">계좌 상태를 확인하고 있어요</div>
+        <div class="iod-load-d">잠시만 기다려 주세요</div>
+      </div>`;
+}
+function renderIodResult(){
+  const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
+  const r = IOD_RESULTS[key];
+  const acct = (authAcct && authAcct.no) ? `${authAcct.type||'종합위탁'} ${authAcct.no}` : '종합위탁 123-45-678901';
+  const toggles = Object.keys(IOD_RESULTS).map(k=>
+    `<div class="iod-tg ${k===key?'on':''}" data-iodres="${k}">${IOD_RESULTS[k].tab}</div>`).join('');
+  const actBtns = r.actions.map(a=>{
+    if(a.kind==='app')     return `<div class="primary-btn" data-applink="iodpurpose">${a.t}</div>`;
+    if(a.kind==='purpose') return `<div class="primary-btn ghost" data-s1go="result" data-rk="purpose" data-fk="금융거래목적확인서">${a.t}</div>`;
+    if(a.kind==='consult') return `<div class="primary-btn ghost" data-arspop="한도제한계좌 해제">${a.t}</div>`;
+    return '';
+  }).join('');
+  return pageTop(s1state.title||'계좌 상태')
+    + untactSteps(IOD_STEPS, 2)
+    + `<div class="iod-toggles">${toggles}</div>`
+    + `<div class="iod-card">
+        <div class="iod-acct">${acct}</div>
+        <span class="iod-badge ${r.badgeCls}">${r.badge}</span>
+        <div class="iod-title">${r.title}</div>
+        <div class="iod-body">${r.body}</div>
+        <div class="iod-release">${r.release}</div>
+      </div>`
+    + `<div class="iod-actions">${actBtns}</div>`
+    + `<div class="iod-note">※ 데모 화면이에요. 위 버튼으로 계좌 상태(사유)를 바꿔볼 수 있어요.</div>`;
+}
+
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
 function pinReset(){ pinState = {buf:'', stage:'new', first:''}; }
@@ -2785,6 +2864,8 @@ function gotoAuthNext(deep){
   const d = s1state.authNext || {};
   const fk = d.fk || '';
   s1state.acctPw = '';
+  // 입출금 안내 플로우: 인증 완료 → 계좌 상태 확인(로딩) → 결과
+  if(d.go==='iodcheck'){ startIodCheck(); return; }
   // 보이는 ARS 일반주문 → 주문화면 / 그 외 대메뉴 → 중메뉴 리스트
   if(d.go==='order'){ resetOrder();
     if(d.stock){ const info = stockInfo(d.stock); orderState.stock = {nm:d.stock, cur:info.cur, chg:info.chg, pct:info.pct, tick:info.tick}; }
@@ -2898,10 +2979,16 @@ function renderS1(){
     }
   }
   else if(s1state.page==='authsel'){
-    html = pageTop(s1state.title||'본인인증') + authSelect();
+    html = pageTop(s1state.title||'본인인증') + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authSelect();
   }
   else if(s1state.page==='authstep'){
-    html = pageTop(s1state.title||'본인인증') + authStep(s1state.authMethod);
+    html = pageTop(s1state.title||'본인인증') + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authStep(s1state.authMethod);
+  }
+  else if(s1state.page==='iodcheck'){
+    html = renderIodChecking();
+  }
+  else if(s1state.page==='iodresult'){
+    html = renderIodResult();
   }
   else if(s1state.page==='favmore'){
     /* 전체 자주 찾는 서비스 (더보기 → 9개 전체 + 빈 아이콘 추가 슬롯 3개) */
@@ -3370,6 +3457,16 @@ document.addEventListener('click', (e)=>{
     return;
   }
   if(t.closest('[data-csclose]') || (t.classList && t.classList.contains('consult-ov'))){ closeConsult(); return; }
+
+  // 입출금 안내 플로우: 진입(계좌 인증) / 계좌번호 모름(본인인증 선택) / 결과 사유 토글
+  if(t.closest('[data-iodstart]')){
+    s1state.authNext = {go:'iodcheck'};
+    s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
+    return;
+  }
+  if(t.closest('[data-iodfind]')){ s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return; }
+  const iodr = t.closest('[data-iodres]');
+  if(iodr){ s1state.iodResult = iodr.dataset.iodres; renderS1(); return; }
 
   // 시연용 토스트 버튼
   const fl = t.closest('[data-flash]');
