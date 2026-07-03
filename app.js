@@ -2919,7 +2919,7 @@ function stkConnect(){
     APP_LINK.stkorder = {title: label + ' 주문'};   // 영웅문S# 앱 연결 팝업(v40 톤)으로 해당 주문화면 연동
     openAppLink('stkorder');
   } else {
-    flash(`음성 ARS로 ${label} 주문 안내를 시작할게요. (시연용)`);
+    s1nav({page:'voiceconnect', title:'음성 ARS 연결', voiceLabel: label, noHome:true});   // 음성 ARS 연결 안내 화면(라벨에 이미 소메뉴 포함)
   }
 }
 /* 휴대폰·간편 인증 완료 → 본인 명의 계좌 선택(선택 시 계좌 인증 화면에 계좌번호 자동 입력) */
@@ -2962,6 +2962,22 @@ function renderIodPurposeDone(){
         <div class="iod-done-d">거래 목적 확인이 등록되어<br>계좌의 거래제한이 바로 해제됐어요.<br>이제 정상적으로 입출금하실 수 있어요.</div>
       </div>`
     + `<div class="auth-wrap"><div class="primary-btn" data-iodhome>확인</div></div>`;
+}
+/* 음성 ARS 연결 안내 화면 — 해당 IVR 메뉴로 연결 + (계좌인증 시)계좌정보 연동 + 디지털ARS 종료·인증 무효 안내 */
+function renderVoiceConnect(){
+  const label = s1state.voiceLabel || '';
+  const menuLine = label ? `선택하신 <b>${label}</b> 메뉴로<br>바로 연결해 드릴게요.` : `선택하신 메뉴로<br>바로 연결해 드릴게요.`;
+  const authLine = sessionAuthed ? `<br>인증하신 계좌 정보를 연동해서 연결해 드려요.` : '';
+  return pageTop(s1state.title||'음성 ARS 연결', true)
+    + `<div class="iod-done">
+        <div class="iod-done-ic">${I.phone}</div>
+        <div class="iod-done-t">음성 ARS로 연결할게요</div>
+        <div class="iod-done-d">${menuLine}${authLine}</div>
+      </div>`
+    + `<div class="auth-wrap">
+        <div class="auth-note">음성 ARS로 연결되면 지금 보고 계신 디지털 ARS는 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+        <div class="primary-btn" data-voicego>음성 ARS 연결</div>
+      </div>`;
 }
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
@@ -3164,6 +3180,9 @@ function renderS1(){
   }
   else if(s1state.page==='iodpurposedone'){
     html = renderIodPurposeDone();
+  }
+  else if(s1state.page==='voiceconnect'){
+    html = renderVoiceConnect();
   }
   else if(s1state.page==='iodcheck'){
     html = renderIodChecking();
@@ -3634,10 +3653,10 @@ document.addEventListener('click', (e)=>{
     const csEl = document.getElementById('consultPop');
     const lbl = csEl ? (csEl.dataset.csLabel||'') : '';
     const k = csch.dataset.cschannel;
+    if(k==='voice'){ closeConsult(); s1nav({page:'voiceconnect', title:'음성 ARS 연결', voiceLabel: lbl, noHome:true}); return; }   // 음성 ARS → 연결 안내 화면
     const CS_MSG = {
       hero:  sessionAuthed ? `영웅문S#으로 연결합니다. ‘${lbl}’ 화면으로 바로 이동해요. (시연용)` : '영웅문S#을 실행합니다. 원하시는 업무 화면으로 이동해요. (시연용)',
       chat:  '24시간 AI 챗봇 상담으로 연결합니다. (시연용)',
-      voice: `음성 ARS 안내로 연결합니다. ‘${lbl}’ 시나리오를 안내해 드려요. (시연용)`,
       call:  '담당 부서 상담원에게 연결합니다. 연결까지 잠시만 기다려 주세요. (시연용)',
     };
     closeConsult();
@@ -3699,6 +3718,8 @@ document.addEventListener('click', (e)=>{
   // 금융거래목적확인서 등록 → 완료 화면 / 완료 화면 '확인' → 메인
   if(t.closest('[data-iodpurposedone]')){ s1nav({page:'iodpurposedone', title:'등록 완료', noBack:true, noHome:true}); return; }
   if(t.closest('[data-iodhome]')){ s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
+  // 음성 ARS 연결 버튼 → 연결(시연) 후 메인 복귀
+  if(t.closest('[data-voicego]')){ flash('음성 ARS로 연결합니다. (시연용)'); s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
 
   // 시연용 토스트 버튼
   const fl = t.closest('[data-flash]');
