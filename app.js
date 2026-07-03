@@ -1799,6 +1799,11 @@ function renderArsTree(tree, opts){
     const num = (m.t.match(/^[0-9#]+/)||[''])[0];
     const name = stripNum(m.t);
     const hasKids = !!(m.subs && m.subs.length);
+    if(m.stk){   // 주식주문: 계단식 주문 선택 플로팅 진입(nav 스타일 · 하위 데이터 없이 시트로 처리)
+      return `<div class="sars-item nav" data-stkorder>
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
     if(hasKids){
       return `<div class="sars-item nav" data-sarsdown="${i}">
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
@@ -1831,13 +1836,7 @@ function catNode(title, ic, items){
 }
 const ARS_CAT6 = [
   catNode('1. 주문·체결확인', 'order', [
-    drillNode('현금매도', ivN(0,0)),
-    drillNode('현금매수', ivN(0,1)),
-    drillNode('현금정정', ivN(0,2)),
-    drillNode('현금취소', ivN(0,3)),
-    drillNode('신용매도', ivN(0,4)),
-    drillNode('신용매수', ivN(0,5)),
-    drillNode('K-OTC 주문', ivN(0,6)),
+    {t:'주식주문', stk:true},            // 현금/신용/K-OTC 매도·매수·정정·취소 통합 → 계단식 주문 플로팅(방법→종류→유형→[음성ARS 신용]소메뉴)
     drillNode('시세 및 시황', IVR[1]),   // 시세및시황 대메뉴(현재가/호가/지수/해외지수/환율/선물/시간외/K-OTC/시황) 전체를 하위 그룹으로 포함
     drillNode('금일 체결내역 조회',    ivN(2,0)),
     drillNode('금일 미체결 내역 조회', ivN(2,1)),
@@ -2089,6 +2088,7 @@ function s1nav(patch){
   closeMenuDrawer();               // 화면 이동 시 전체메뉴 드로어 닫기
   closeConsult();                  // 상담연결 팝업 열려있으면 닫기
   closeMethodSheet();              // 방법 선택 플로팅 열려있으면 닫기
+  closeStkSheet();                 // 주식주문 계단식 플로팅 열려있으면 닫기
   s1state.history.push({page:s1state.page, title:s1state.title, listKey:s1state.listKey, resultKey:s1state.resultKey, fromFav:s1state.fromFav, authNext:s1state.authNext, authMethod:s1state.authMethod, otpSent:s1state.otpSent, noBack:s1state.noBack, noHome:s1state.noHome});
   s1state.noBack = false;          // 기본은 뒤로가기 표시, 진입 화면만 patch로 숨김
   s1state.noHome = false;          // 기본은 홈/메뉴 표시, 세부페이지만 patch로 숨김
@@ -2840,6 +2840,74 @@ function closeMethodSheet(){
   const el = document.getElementById('methodPop');
   if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); }
 }
+
+/* ===== Ver 4.0 · 주식주문 계단식 선택 플로팅 (주문·체결확인 > 주식주문) =====
+   방법(영S#/음성ARS) → 주식종류(현금/신용/K-OTC) → 주문유형(매도/매수/정정/취소)
+   → [음성ARS+신용]이면 소메뉴 → 연결. 상담방법 플로팅(consult-sheet) 스타일 재사용. 멘트=Ver4.0 톤. */
+let stkOrder = {method:'', kind:'', type:'', sub:''};
+const STK_KIND = {cash:'현금주식', credit:'신용주식', kotc:'K-OTC'};
+const STK_TYPE = {sell:'매도', buy:'매수', modify:'정정', cancel:'취소'};
+function stkSheetCfg(step){
+  if(step==='method') return { title:'어떻게 주문할까요?', sub:'편하신 방법으로 주식주문을 도와드릴게요', opts:[
+    {v:'hero',  ic:IOD_HERO_IC,   nm:'영웅문S#으로 주문하기', desc:'앱을 열어 주문 화면으로 바로 이동해요'},
+    {v:'voice', ic:CS_ICON.voice, nm:'음성 ARS로 주문하기',   desc:'음성 안내에 따라 순서대로 주문해요'},
+  ]};
+  if(step==='kind') return { title:'어떤 주식을 주문할까요?', sub:'주식 종류를 선택해 주세요', opts:[
+    {v:'cash',   nm:'현금주식', desc:'예수금으로 매매하는 일반 주식이에요'},
+    {v:'credit', nm:'신용주식', desc:'신용융자·대주로 매매하는 주식이에요'},
+    {v:'kotc',   nm:'K-OTC',   desc:'비상장주식 K-OTC예요'},
+  ]};
+  if(step==='type') return { title:'어떤 주문인가요?', sub:'주문 유형을 선택해 주세요', opts:[
+    {v:'sell',   nm:'매도', desc:'보유하신 주식을 팔아요'},
+    {v:'buy',    nm:'매수', desc:'주식을 새로 사요'},
+    {v:'modify', nm:'정정', desc:'미체결 주문을 정정해요'},
+    {v:'cancel', nm:'취소', desc:'미체결 주문을 취소해요'},
+  ]};
+  if(step==='sub'){   // 음성ARS + 신용 소메뉴 (매도/매수)
+    const opts = (stkOrder.type==='sell')
+      ? [{v:'자기융자 매도상환', nm:'자기융자 매도상환', desc:'자기융자 상환을 위해 매도해요'},
+         {v:'대출 매도상환',     nm:'대출 매도상환',     desc:'대출금 상환을 위해 매도해요'},
+         {v:'대주 매도',         nm:'대주 매도',         desc:'대주(차입주식)를 매도해요'}]
+      : [{v:'자기융자 매수',     nm:'자기융자 매수',     desc:'자기융자로 주식을 매수해요'},
+         {v:'대주 매수상환',     nm:'대주 매수상환',     desc:'대주 상환을 위해 매수해요'}];
+    return { title:'어떤 신용주문인가요?', sub:'세부 유형을 선택해 주세요', opts };
+  }
+  return null;
+}
+function openStkSheet(step){
+  const prev = document.getElementById('stkPop'); if(prev) prev.remove();   // 중복 id 방지
+  const screen = document.getElementById('screen'); const cfg = stkSheetCfg(step);
+  if(!screen || !cfg) return;
+  const el = document.createElement('div'); el.className = 'consult-ov stk-ov'; el.id = 'stkPop';
+  const rows = cfg.opts.map(o=>
+    `<div class="cs-row" data-stkpick="${o.v}" data-stkstep="${step}">
+      ${o.ic ? `<div class="cs-ic">${o.ic}</div>` : ''}
+      <div class="cs-body"><div class="cs-nm">${o.nm}</div>${o.desc?`<div class="cs-desc">${o.desc}</div>`:''}</div>
+      <div class="cs-arw">${I.chev}</div>
+    </div>`).join('');
+  el.innerHTML = `<div class="consult-sheet">
+    <div class="cs-grip"></div>
+    <div class="cs-head"><div class="cs-title">${cfg.title}</div><div class="cs-sub">${cfg.sub}</div></div>
+    <div class="cs-list">${rows}</div>
+    <div class="cs-cancel" data-stkclose>닫기</div>
+  </div>`;
+  screen.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function closeStkSheet(){
+  const el = document.getElementById('stkPop');
+  if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); }
+}
+function stkConnect(){
+  closeStkSheet();
+  const label = `${STK_KIND[stkOrder.kind]||''} ${STK_TYPE[stkOrder.type]||''}`.trim() + (stkOrder.sub ? ` · ${stkOrder.sub}` : '');
+  if(stkOrder.method==='hero'){
+    APP_LINK.stkorder = {title: label + ' 주문'};   // 영웅문S# 앱 연결 팝업(v40 톤)으로 해당 주문화면 연동
+    openAppLink('stkorder');
+  } else {
+    flash(`음성 ARS로 ${label} 주문 안내를 시작할게요. (시연용)`);
+  }
+}
 /* 휴대폰·간편 인증 완료 → 본인 명의 계좌 선택(선택 시 계좌 인증 화면에 계좌번호 자동 입력) */
 function renderIodAcctSel(){
   const rows = ACCOUNTS.map((a,i)=>
@@ -3529,6 +3597,24 @@ document.addEventListener('click', (e)=>{
     flash(CS_MSG[k] || '상담을 연결합니다. (시연용)');
     return;
   }
+  // 주식주문 계단식 플로팅: 진입 / 선택(단계 진행) / 닫기 — consult 닫기보다 먼저(stk-ov도 consult-ov라)
+  if(t.closest('[data-stkorder]')){ stkOrder={method:'',kind:'',type:'',sub:''}; openStkSheet('method'); return; }
+  const stkSel = t.closest('[data-stkpick]');
+  if(stkSel){
+    const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
+    if(step==='method'){ stkOrder.method=v; openStkSheet('kind'); return; }
+    if(step==='kind'){   stkOrder.kind=v;   openStkSheet('type'); return; }
+    if(step==='type'){
+      stkOrder.type=v;
+      // 음성ARS + 신용주식 + (매도/매수) → 소메뉴까지 선택, 그 외 → 바로 연결
+      if(stkOrder.method==='voice' && stkOrder.kind==='credit' && (v==='sell'||v==='buy')){ openStkSheet('sub'); return; }
+      stkConnect(); return;
+    }
+    if(step==='sub'){ stkOrder.sub=v; stkConnect(); return; }
+    return;
+  }
+  if(t.closest('[data-stkclose]') || (t.classList && t.classList.contains('stk-ov'))){ closeStkSheet(); return; }
+
   // 방법 선택 플로팅: 방법 클릭 / 닫기(배경·닫기버튼) — consult 닫기보다 먼저(method-ov도 consult-ov라)
   const mrow = t.closest('[data-iodmethod]');
   if(mrow){
