@@ -3210,6 +3210,25 @@ function openAiChat(){
 }
 function closeAiChat(){ const e=document.getElementById('aiChatOv'); if(e) e.remove(); }
 
+/* 휴대폰 인증 OTP: 6자리 입력 시 자동 완료 + Enter 완료
+   (모바일 소프트키보드가 [인증 완료] 버튼을 가리고 인증 화면이 스크롤되지 않아 버튼을 못 누르는 문제 대응) */
+document.addEventListener('input', (e)=>{
+  const el = e.target;
+  if(!el || el.id !== 'otpNo') return;
+  el.value = el.value.replace(/\D/g, '').slice(0, 6);   // 숫자만, 최대 6자리
+  if(el.value.length === 6){
+    const btn = document.querySelector('[data-otpdone]');
+    if(btn) btn.click();                                 // 자동 인증 완료(버튼 탭 불필요)
+  }
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.target && e.target.id === 'otpNo' && e.key === 'Enter'){
+    e.preventDefault();
+    const btn = document.querySelector('[data-otpdone]');
+    if(btn) btn.click();
+  }
+});
+
 document.addEventListener('click', (e)=>{
   const t = e.target;
 
