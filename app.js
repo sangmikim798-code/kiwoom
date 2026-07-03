@@ -2135,6 +2135,7 @@ function authStep(method){
       ).join('') + `</div>`;
     const iod = isIodFlow();
     const reqNote = iod ? '위 정보로 휴대폰 인증을 진행할게요.' : '위 정보로 휴대폰 본인인증을 진행합니다.';
+    const otpNote = iod ? '인증번호를 보내드렸어요. 문자를 확인해 주세요.' : '인증번호를 발송했습니다. 문자를 확인해주세요.';
     const tail = s1state.otpSent
       ? `<div class="auth-field" style="margin-top:20px">
           <label>인증번호</label>
@@ -2142,16 +2143,17 @@ function authStep(method){
             <input class="auth-input" id="otpNo" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="인증번호 6자리 입력">
             <span class="otp-timer" id="otpTimer">03:00</span>
           </div>
-          <div class="auth-note" style="text-align:center;margin:12px 2px 0;white-space:nowrap;font-size:calc(13px*var(--scale))">인증번호를 발송했습니다. 문자를 확인해주세요.</div>
+          <div class="auth-note" style="text-align:center;margin:12px 2px 0;white-space:nowrap;font-size:calc(13px*var(--scale))">${otpNote}</div>
         </div>
         <div class="primary-btn" data-otpdone>인증 완료</div>`
       : `<div class="auth-note">${reqNote}</div>
         <div class="primary-btn" data-otpreq>인증 요청하기</div>`;
-    // 인증 요청 후에는 '인증번호 입력' 화면처럼 헤딩을 전환(IOD 플로우)
+    // 인증 요청 후에는 '인증번호 입력' 화면처럼 헤딩 전환 + 고객정보카드 숨김(IOD 플로우)
     const head = (iod && s1state.otpSent) ? '인증번호 6자리를<br>입력해주세요' : '본인 명의 휴대폰으로<br>인증을 진행해주세요';
+    const showInfo = !(iod && s1state.otpSent);
     return `<div class="auth-wrap">
       <div class="auth-head">${head}</div>
-      ${info}
+      ${showInfo ? info : ''}
       ${tail}
     </div>`;
   }
