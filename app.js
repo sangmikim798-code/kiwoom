@@ -1827,9 +1827,10 @@ function renderArsTree(tree, opts){
     <div class="sars-list">${rows}</div>
   </div>`;
 }
-/* v9900(1544-9900) 전용: 업무유형별 상담문의 순위 + 챗봇 답변 순위 분석 기반 '수요 6 카테고리'.
-   각 항목은 IVR 실제 노드를 참조(드릴다운 소메뉴 전량 보존)하거나, 대응 소메뉴가 없으면 {staff}=관련 대메뉴 직원연결(상담원 연결 화면)로 매핑.
-   IVR 인덱스: 0=일반주문 1=시세및시황 2=체결및주문내역 3=계좌잔고 4=은행이체 5=주문비밀번호 6=사고등록 7=유상청약및공모주 */
+/* v9900(1544-9900) 전용: 사용자 지정 9 대메뉴 + 상담·챗봇 수요 매핑.
+   각 항목은 IVR 실제 노드를 참조(드릴다운 소메뉴 전량 보존)하거나, 대응 소메뉴가 없으면 {staff}=관련 직원연결(상담원 연결 화면)로 매핑.
+   IVR 인덱스: 0=일반주문 1=시세및시황 2=체결및주문내역 3=계좌잔고 4=은행이체 5=주문비밀번호 6=사고등록 7=유상청약및공모주
+   ※시세및시황(IVR[1])은 1번 대메뉴 '주문·체결확인'에 하위 그룹으로 포함. ※식별자 ARS_CAT6는 레거시명(현재 9개). */
 function ivN(d, m){ const s = (IVR[d]||{}).subs; return s ? s[m] : undefined; }
 function drillNode(name, node){ return node ? Object.assign({}, node, {t:name}) : {t:name}; }   // IVR 노드 참조(소메뉴 보존) + 표시명 교체
 function staffLeaf(name){ return {t:name, staff:name}; }                                          // 대응 소메뉴 없음 → 직원연결(상담원 연결 화면)
@@ -1837,24 +1838,30 @@ function catNode(title, ic, items){
   return {t:title, ic, subs: items.map((it,i)=>Object.assign({}, it, {t:(i+1)+'. '+it.t}))};      // 카테고리 내 항목 1..N 재번호(하위 소메뉴 번호는 원본 유지)
 }
 const ARS_CAT6 = [
-  catNode('1. 계좌·잔고 조회', 'wallet', [
+  catNode('1. 주문·체결확인', 'order', [
+    drillNode('현금매도', ivN(0,0)),
+    drillNode('현금매수', ivN(0,1)),
+    drillNode('현금정정', ivN(0,2)),
+    drillNode('현금취소', ivN(0,3)),
+    drillNode('신용매도', ivN(0,4)),
+    drillNode('신용매수', ivN(0,5)),
+    drillNode('K-OTC 주문', ivN(0,6)),
+    drillNode('시세 및 시황', IVR[1]),   // 시세및시황 대메뉴(현재가/호가/지수/해외지수/환율/선물/시간외/K-OTC/시황) 전체를 하위 그룹으로 포함
+    drillNode('금일 체결내역 조회',    ivN(2,0)),
+    drillNode('금일 미체결 내역 조회', ivN(2,1)),
+    drillNode('금일 주문내역 조회',    ivN(2,2)),
+    drillNode('전일 체결내역 조회',    ivN(2,3)),
+    drillNode('예약주문 내역조회',     ivN(2,4)),
+  ]),
+  catNode('2. 계좌·잔고조회', 'wallet', [
     drillNode('예수금·추정예탁자산 조회', ivN(3,0)),
     drillNode('현금주식 잔고조회',        ivN(3,2)),
     drillNode('신용 잔고조회',            ivN(3,3)),
     drillNode('주문가능 금액조회',        ivN(3,1)),
     drillNode('거래내역 조회',            ivN(3,4)),
-    drillNode('금일 체결내역 조회',       ivN(2,0)),
-    drillNode('금일 미체결 내역 조회',    ivN(2,1)),
-    drillNode('금일 주문내역 조회',       ivN(2,2)),
+    drillNode('금융상품 평가·잔고 조회',  ivN(3,5)),
     staffLeaf('미수·반대매매 조회'),
     staffLeaf('계좌번호·MY계좌 정보확인'),
-  ]),
-  catNode('2. 인증·비밀번호', 'shield', [
-    drillNode('주문비밀번호 등록·변경',   ivN(5,0)),
-    staffLeaf('계좌 비밀번호 변경'),
-    staffLeaf('ID조회·PW초기화 / 재설정'),
-    staffLeaf('간편/공동인증 등록·해지'),
-    staffLeaf('장기미사용 ID 제한해제'),
   ]),
   catNode('3. 입출금·이체', 'transfer', [
     drillNode('연계은행 송금',    ivN(4,0)),
@@ -1865,34 +1872,51 @@ const ARS_CAT6 = [
     staffLeaf('출금불가·출금제한 임시조치 해지'),
     staffLeaf('환전'),
   ]),
-  catNode('4. 계좌개설·사고', 'idcard', [
+  catNode('4. 인증·비밀번호', 'shield', [
+    drillNode('주문비밀번호 등록·변경',   ivN(5,0)),
+    drillNode('퀵넘버 플러스 조회·삭제',   ivN(5,2)),
+    drillNode('영업부 계좌개설 비밀번호 등록', ivN(5,1)),
+    staffLeaf('계좌 비밀번호 변경'),
+    staffLeaf('ID조회·PW초기화 / 재설정'),
+    staffLeaf('간편/공동인증 등록·해지'),
+    staffLeaf('장기미사용 ID 제한해제'),
+  ]),
+  catNode('5. 계좌개설·사고', 'idcard', [
     drillNode('사고등록',          ivN(6,1)),
     drillNode('주소·전화번호 변경', ivN(6,0)),
     staffLeaf('계좌 사고등록 해지'),
     staffLeaf('비대면 계좌개설'),
     staffLeaf('계좌폐쇄'),
     staffLeaf('신분증 진위확인'),
-    staffLeaf('모바일 OTP 발급'),
   ]),
-  catNode('5. 주문·체결·시세', 'chart', [
-    drillNode('현금매도', ivN(0,0)),
-    drillNode('현금매수', ivN(0,1)),
-    drillNode('현금정정', ivN(0,2)),
-    drillNode('현금취소', ivN(0,3)),
-    drillNode('신용매도', ivN(0,4)),
-    drillNode('신용매수', ivN(0,5)),
-    drillNode('K-OTC 주문', ivN(0,6)),
-    drillNode('현재가 및 호가안내', ivN(1,0)),
-    drillNode('지수정보 안내',      ivN(1,2)),
-    staffLeaf('ETF 거래'),
-  ]),
-  catNode('6. 청약·서류·상품', 'cert', [
+  catNode('6. 공모주·유상청약', 'ipo', [
     drillNode('유상청약',    ivN(7,0)),
     drillNode('공모주 청약', ivN(7,1)),
-    staffLeaf('제증명·금융거래목적확인서·고객확인(KYC)'),
+  ]),
+  catNode('7. 서류신청·제출', 'cert', [
+    staffLeaf('제증명 발급신청'),
+    staffLeaf('잔고증명서'),
+    staffLeaf('거래내역서'),
+    staffLeaf('금융거래목적확인서 제출'),
+    staffLeaf('고객확인(KYC/CDD) 등록'),
+    staffLeaf('투자자정보확인서 등록'),
+    staffLeaf('해외 양도소득 관련서류'),
+  ]),
+  catNode('8. 업무신청', 'doc', [
+    staffLeaf('모바일 OTP 발급'),
+    staffLeaf('출금계좌 등록'),
+    staffLeaf('외화 출금계좌 등록'),
+    staffLeaf('온라인 실명확인'),
+    staffLeaf('유가증권 대체출고(타명의)'),
+    staffLeaf('타사대체출고'),
+    staffLeaf('해외주식 입/출고'),
+    staffLeaf('중개형ISA 이관/이수'),
     staffLeaf('신용/대출 만기연장'),
-    staffLeaf('중개형ISA 이관/이수·자격검증'),
-    staffLeaf('해외주식 입출고·양도세'),
+  ]),
+  catNode('9. 공지·이용안내', 'bell', [
+    drillNode('ARS 이용안내 및 공지사항', ivN(6,2)),
+    staffLeaf('서비스 점검·공지사항'),
+    staffLeaf('이벤트 안내'),
   ]),
 ];
 

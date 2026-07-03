@@ -312,17 +312,17 @@ body{
 .cust-status .badge-ok{display:inline-flex;align-items:center;gap:5px;font-size:calc(11px*var(--scale));color:#16a34a;font-weight:800}
 .cust-status .badge-ok::before{content:"";width:7px;height:7px;border-radius:50%;background:#16a34a}
 .cust-status.on{border-color:var(--primary)}
-/* ARS 6 대메뉴 그리드 */
-.ars6-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
-.ars6-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;
-  background:#fff;border-radius:16px;padding:16px 10px;min-height:100px;cursor:pointer;
+/* ARS 대메뉴 그리드 (9칸 = 3×3) */
+.ars6-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px}
+.ars6-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;
+  background:#fff;border-radius:15px;padding:14px 5px;min-height:90px;cursor:pointer;
   box-shadow:var(--shadow-sm);border:1.5px solid transparent;transition:.15s}
 .ars6-cell:active{transform:scale(.97)}
 .ars6-cell:hover{border-color:var(--primary-soft)}
-.ars6-cell .ic{width:46px;height:46px;border-radius:14px;background:var(--primary-soft);
+.ars6-cell .ic{width:42px;height:42px;border-radius:13px;background:var(--primary-soft);
   display:grid;place-items:center;color:var(--primary)}
-.ars6-cell .ic svg{width:25px;height:25px}
-.ars6-cell .lb{font-size:calc(13px*var(--scale));font-weight:700;color:var(--ink);line-height:1.3;word-break:keep-all}
+.ars6-cell .ic svg{width:23px;height:23px}
+.ars6-cell .lb{font-size:calc(12px*var(--scale));font-weight:700;color:var(--ink);line-height:1.28;word-break:keep-all}
 /* [큰글씨] 토글은 기존 전역 큰글씨(applyScale → documentElement --scale +0.12) 재사용 → 메인 폰트 일괄 확대 */
 /* [큰글씨] ON: 6 대메뉴 = 큰 카드 + 인라인 아코디언 */
 .ars6-cards{display:flex;flex-direction:column;gap:10px;padding:0 16px}
