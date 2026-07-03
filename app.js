@@ -2732,7 +2732,7 @@ function closeConsult(){
    계좌 인증(계좌번호/휴대폰/간편 — 기존 auth 재사용) → 상태 확인(로딩) → 결과(3가지 사유 토글).
    인증 완료 라우팅은 authNext.go==='iodcheck' 로 식별(gotoAuthNext에서 startIodCheck 호출). */
 function isIodFlow(){ return (s1state.authNext||{}).go==='iodcheck'; }   // 계좌인증 화면의 '계좌번호 모름' 링크·스텝바 노출 게이트
-const IOD_STEPS = ['계좌 인증','상태 확인','결과 안내'];
+const IOD_STEPS = ['계좌 인증','계좌 조회','결과 안내'];
 const IOD_RESULTS = {
   multi: {
     tab:'단기 다수계좌', badge:'출금 제한', badgeCls:'stop',
@@ -2759,21 +2759,21 @@ const IOD_RESULTS = {
 function startIodCheck(){
   // 인증 완료 → 상태 확인(로딩) → 1.8초 후 결과. 로딩/결과에서 뒤로가기는 홈으로.
   s1state.iodResult = 'multi';
-  s1nav({page:'iodcheck', title:'계좌 상태 확인', noBack:true, noHome:true, fromFav:false});
+  s1nav({page:'iodcheck', title:'계좌 조회', noBack:true, noHome:true, fromFav:false});
   s1state.history = [];
   setTimeout(()=>{
     if(s1state.page!=='iodcheck') return;   // 사용자가 이탈했으면 중단
     s1state.page='iodresult'; s1state.title='계좌 상태';
     s1state.noBack=false; s1state.noHome=true;
     renderS1();
-  }, 1800);
+  }, 5000);   // 계좌 조회 상태 5초 유지
 }
 function renderIodChecking(){
-  return pageTop(s1state.title||'계좌 상태 확인')
+  return pageTop(s1state.title||'계좌 조회')
     + untactSteps(IOD_STEPS, 1)
     + `<div class="iod-loading">
         <div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div>
-        <div class="iod-load-t">계좌 상태를 확인하고 있어요</div>
+        <div class="iod-load-t">계좌를 조회하고 있어요</div>
         <div class="iod-load-d">잠시만 기다려 주세요</div>
       </div>`;
 }
