@@ -2938,6 +2938,22 @@ function renderIodAcctSel(){
         <div class="iodsel-list">${rows}</div>
       </div>`;
 }
+/* 금융거래목적확인서 등록 — [입출금] 플로우와 동일 디자인(iod-top 뒤로가기·auth-wrap 24px 정렬·Ver4.0 톤) */
+function renderIodPurpose(){
+  const F = (k,v)=>`<div class="ir"><span class="k">${k}</span><span class="v">${v} ${I.down}</span></div>`;
+  return pageTop(s1state.title||'금융거래목적확인서', true)
+    + untactSteps(['정보 입력','서류 제출','제출 완료'], 0)
+    + `<div class="auth-wrap">
+        <div class="auth-head">거래 목적을 확인하고<br>등록해 드릴게요</div>
+        <div class="auth-info">
+          ${F('거래 목적','자산운용·투자')}
+          ${F('자금 원천','근로·사업 소득')}
+          ${F('직업 구분','회사원')}
+        </div>
+        <div class="auth-note">자금세탁방지(AML) 제도에 따라 거래 목적 확인이 필요해요.<br>등록하시면 장기미사용·다수계좌 거래제한이 바로 풀려요.</div>
+        <div class="primary-btn" data-flash="금융거래목적확인서를 등록했어요. 거래제한이 바로 풀려요. (시연용)">등록하기</div>
+      </div>`;
+}
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
@@ -3180,9 +3196,14 @@ function renderS1(){
         ).join('') + `</div>`;
   }
   else if(s1state.page==='result'){
-    const render = RESULT[s1state.resultKey];
-    html = pageTop(s1state.title||'조회 결과')
-      + (render ? render() : `<div class="notice">준비 중인 화면입니다.</div>`);
+    // Ver 4.0 · 금융거래목적확인서(purpose)는 [입출금] 플로우와 동일 디자인 적용
+    if(s1Ver==='v40' && s1state.resultKey==='purpose'){
+      html = renderIodPurpose();
+    } else {
+      const render = RESULT[s1state.resultKey];
+      html = pageTop(s1state.title||'조회 결과')
+        + (render ? render() : `<div class="notice">준비 중인 화면입니다.</div>`);
+    }
   }
   else if(s1state.page==='index'){
     html = pageTop(s1state.title||'국내지수') + indexResult();
