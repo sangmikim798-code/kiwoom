@@ -2769,7 +2769,7 @@ function startIodCheck(){
   }, 5000);   // 계좌 조회 상태 5초 유지
 }
 function renderIodChecking(){
-  return pageTop(s1state.title||'계좌 조회')
+  return pageTop(s1state.title||'계좌 조회', true)
     + untactSteps(IOD_STEPS, 1)
     + `<div class="iod-loading">
         <div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div>
@@ -2788,7 +2788,7 @@ function renderIodResult(){
     return '';
   }).join('');
   // 결과 카드를 탭할 때마다 3가지 사유(계좌 상태)가 순환 — 토글 탭은 노출하지 않음
-  return pageTop(s1state.title||'계좌 상태')
+  return pageTop(s1state.title||'계좌 상태', true)
     + untactSteps(IOD_STEPS, 2)
     + `<div class="iod-card" data-iodcycle>
         <div class="iod-acct">${acct}</div>
@@ -2808,7 +2808,7 @@ function renderIodAcctSel(){
       <div class="iodsel-tx"><div class="iodsel-nm">${a.type}</div><div class="iodsel-no">${a.no}</div></div>
       <div class="iodsel-arw">${I.chev}</div>
     </div>`).join('');
-  return pageTop(s1state.title||'계좌 선택')
+  return pageTop(s1state.title||'계좌 선택', true)
     + untactSteps(IOD_STEPS, 0)
     + `<div class="auth-wrap">
         <div class="auth-head">인증된 명의로<br>계좌를 찾았어요</div>
@@ -2915,13 +2915,13 @@ function gotoAuthNext(deep){
   // 홈에서 진입한 경우 뒤로가기가 인증화면이 아닌 홈으로 향하도록 히스토리 정리
   if(!deep) s1state.history = [];
 }
-function pageTop(title){
+function pageTop(title, hideTitle){
   // 세부페이지는 우상단 버튼 숨김 / 그 외에는 전체메뉴 버튼만 표시
   const right = s1state.noHome ? '' : `<div class="back" data-menu title="전체메뉴">${I.menu}</div>`;
   const back = s1state.noBack ? '' : `<div class="back" data-s1back>${I.back}</div>`;
   return `<div class="page-top">
     ${back}
-    <div class="page-title">${title}</div>
+    <div class="page-title">${hideTitle ? '' : title}</div>
     <div class="head-spacer"></div>
     ${right}
   </div>`;
@@ -3007,10 +3007,10 @@ function renderS1(){
     }
   }
   else if(s1state.page==='authsel'){
-    html = pageTop(s1state.title||'본인인증') + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authSelect();
+    html = pageTop(s1state.title||'본인인증', isIodFlow()) + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authSelect();
   }
   else if(s1state.page==='authstep'){
-    html = pageTop(s1state.title||'본인인증') + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authStep(s1state.authMethod);
+    html = pageTop(s1state.title||'본인인증', isIodFlow()) + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authStep(s1state.authMethod);
   }
   else if(s1state.page==='iodacctsel'){
     html = renderIodAcctSel();
