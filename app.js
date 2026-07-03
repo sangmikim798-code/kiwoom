@@ -2970,16 +2970,16 @@ function renderVoiceConnect(){
   const label = s1state.voiceLabel || '';
   const menuLine = label ? `선택하신 <b>${label}</b> 메뉴로<br>바로 연결해 드릴게요.` : `선택하신 메뉴로<br>바로 연결해 드릴게요.`;
   const authLine = sessionAuthed ? `<br>인증하신 계좌 정보를 연동해서 연결해 드려요.` : '';
-  return pageTop(s1state.title||'음성 ARS 연결', true)
-    + `<div class="iod-done">
+  // 터미널(연결) 화면 — 상단바 없이 화면 세로 중앙 정렬
+  return `<div class="iod-done-center">
+      <div class="iod-done">
         <div class="iod-done-ic">${I.phone}</div>
         <div class="iod-done-t">음성 ARS로 연결할게요</div>
         <div class="iod-done-d">${menuLine}${authLine}</div>
-      </div>`
-    + `<div class="auth-wrap">
-        <div class="auth-note">음성 ARS로 연결되면 지금 보고 계신 디지털 ARS는 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
-        <div class="primary-btn" data-voicego>음성 ARS 연결</div>
-      </div>`;
+      </div>
+      <div class="iod-done-note">음성 ARS로 연결되면 지금 보고 계신 디지털 ARS는 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+      <div class="iod-done-btnwrap"><div class="primary-btn" data-voicego>음성 ARS 연결</div></div>
+    </div>`;
 }
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
