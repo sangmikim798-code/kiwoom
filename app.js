@@ -3827,7 +3827,7 @@ const SCHEME_META = {
 
 let refFirm = 'kiwoom';   // 참고 탭에서 현재 선택된 증권사 (기본: 키움증권 현행)
 let sianScheme = 's1';    // 시안 탭에서 현재 선택된 시안 (s1=시안1 / dars1=시안2 / dars2=시안3)
-let s1Ver = 'v21';        // 시안1 기본 버전. 좌측 패널에서 v1/v11/v2/dars2 숨김 처리 → 첫 노출 버전 Ver 2.1(v21)을 기본 진입으로
+let s1Ver = 'v40';        // 시안1 기본 버전 = Ver 4.0(v40). 맨 URL(파라미터 없음) 진입 시 메인을 Ver 4.0으로 표시. (타 버전은 QR ?v= 파라미터로 진입)
 /* Ver 2.1 — 메인 3탭(셀프서비스/ARS메뉴/상담원연결)·드로어·favSrc 등 v21 전용 동작 게이트 */
 function isV21Ver(){ return s1Ver==='v21'; }
 function switchScheme(s){
