@@ -1714,7 +1714,7 @@ function renderV21Menu(forceOpen){
   const cat = s1state.amCat || 'self';
   const cats = [['self','셀프서비스'],['ars','ARS'],['staff','상담원연결']];
   const left = cats.map(([k,nm])=>`<div class="am-dae ${k===cat?'on':''}" data-amcat="${k}">${nm}</div>`).join('');
-  const tree = cat==='ars' ? (s1Ver==='v9900' ? ARS_CAT6 : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
+  const tree = cat==='ars' ? ((s1Ver==='v9900'||s1Ver==='v40') ? ARS_CAT6 : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
   const right = `<div class="amv-list">${renderAccTree(tree, '', cat, forceOpen)}</div>`;
   return `<div class="am2col v21col"><div class="am-left">${left}</div><div class="am-right">${right}</div></div>`;
 }
@@ -1921,7 +1921,8 @@ const ARS_CAT6 = [
 ];
 
 /* 음성 ARS 메뉴트리 (V2.0/V2.1 ARS메뉴) — v9900은 수요 6 카테고리(ARS_CAT6, 직원연결 매핑 활성), 그 외는 원본 IVR */
-function renderSimpleArs(){ return renderArsTree(s1Ver==='v9900' ? ARS_CAT6 : IVR, {guide:'원하시는 서비스를 선택하세요.', crumb:'음성 ARS · ', mapStaff:(s1Ver==='v9900')}); }
+function usesCat(){ return s1Ver==='v9900' || s1Ver==='v40'; }   // ARS_CAT6(9 카테고리) + 직원연결 매핑 사용 버전
+function renderSimpleArs(){ return renderArsTree(usesCat() ? ARS_CAT6 : IVR, {guide:'원하시는 서비스를 선택하세요.', crumb:'음성 ARS · ', mapStaff:usesCat()}); }
 /* 상담원 연결 메뉴트리 (V2.1 메인 · ARS메뉴와 동일 번호 드릴다운 구성) */
 function renderStaffTree(){ return renderArsTree(FAV_MENU, {guide:'상담 분야의 번호를 선택하세요.', crumb:'상담원 연결 · ', leaf:'staff'}); }
 
@@ -2037,6 +2038,49 @@ function ars6Grid(){
     `<div class="ars6-cell" data-sarsdown="${i}"><div class="ic">${I[m.ic]||I.order}</div><div class="lb">${stripNum(m.t)}</div></div>`
   ).join('') + `</div>`;
 }
+/* Ver 4.0 · 토스 스타일 카테고리 리스트 (단색 마젠타 아이콘칩 + 볼드 라벨 + 설명글 + chevron) */
+const V40_DESC = [
+  '주식을 사고팔고, 체결·주문 내역을 확인해요',
+  '예수금과 잔고, 거래내역을 조회해요',
+  '은행↔증권 입출금과 계좌 간 이체를 해요',
+  '비밀번호를 바꾸고 인증서를 관리해요',
+  '계좌를 새로 만들거나 사고를 신고·해지해요',
+  '공모주와 유상증자 청약을 신청해요',
+  '증명서를 발급받고 필요한 서류를 제출해요',
+  'OTP 발급, 출금계좌 등록 등을 신청해요',
+  '서비스 공지와 ARS 이용방법을 안내해요',
+];
+function tossCatList(){
+  return `<div class="toss-list">` + ARS_CAT6.map((cat,i)=>
+    `<div class="toss-cat" data-sarsdown="${i}">
+      <div class="tc-ic">${I[cat.ic]||I.order}</div>
+      <div class="tc-body"><div class="tc-nm">${stripNum(cat.t)}</div><div class="tc-desc">${V40_DESC[i]||''}</div></div>
+      <div class="tc-arw">${I.chev}</div>
+    </div>`
+  ).join('') + `</div>`;
+}
+/* Ver 4.0 · '상담 없이 해결할 수 있어요' 자가해결 카드 (토스 IMG_5635 참고) — 기본 1개만, 화살표로만 펼침/접기 */
+/* FAQ 카드 아이콘: 사이버보안 스타일의 자체 제작 원본 라인 SVG (외부 에셋·라이선스 불필요) */
+const V40_FAQ = [
+  {t:'입출금이 안돼요',   svg:'<img src="assets/error.png" alt="입출금 오류">'},
+  {t:'각종 증명서 발급', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="10.5" height="14" rx="2"/><path d="M7.5 7h4.5M7.5 10h4.5"/><circle cx="16" cy="15.5" r="3.3"/><path d="M14.2 18.1l-.5 2.6 2.3-1.2 2.3 1.2-.5-2.6"/></svg>'},
+  {t:'각종 서류 제출',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/><path d="M12 18.5v-5.5"/><path d="M9.6 15.4L12 13l2.4 2.4"/></svg>'},
+  {t:'자주 묻는 질문',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a8 8 0 0 1-11.4 7.2L4 20l1.3-4.9A8 8 0 1 1 20.5 11.5z"/><path d="M9.8 9.6a2.3 2.3 0 0 1 4.4 1c0 1.6-2.1 1.7-2.1 3.1"/><circle cx="12" cy="16.6" r=".7" fill="currentColor" stroke="none"/></svg>'},
+];
+function tossFaqCard(){
+  const open = !!s1state.faqOpen;
+  const shown = open ? V40_FAQ : V40_FAQ.slice(0, 1);
+  const rows = shown.map(it=>
+    `<div class="tf-row" data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`
+  ).join('');
+  return `<div class="toss-faq">
+    <div class="tf-head" data-faqtoggle title="${open?'접기':'더보기'}">
+      <div class="tf-title">혹시 이런 내용이 궁금하신가요?</div>
+      <div class="tf-toggle ${open?'open':''}">${I.down}</div>
+    </div>
+    <div class="tf-list">${rows}</div>
+  </div>`;
+}
 /* [큰글씨] ON 전용: 6 카테고리를 큰 카드 + 인라인 아코디언으로 (카드 탭→서비스 인라인 펼침 / 서비스 탭→드릴다운·직원연결) */
 function ars6BigCards(){
   const open = (s1state.big6Open==null ? -1 : s1state.big6Open);
@@ -2088,7 +2132,7 @@ function appFooter(){
 /* ============================================================
    시안 1 화면 렌더
    ============================================================ */
-const s1state = {page:'home', cat:'금융상품', open:-1, open2:-1, title:'', listKey:'', resultKey:'', ivI:-1, ivJ:-1, midOpen:-1, amOpen:-1, amOpen2:-1, amTab:'ars', sarsPath:[], v21Tab:'self', amCat:'self', amTreeOpen:{}, menuExpandAll:false, big6Open:-1, priceTab:'hoga', fromFav:false, authNext:'', authMethod:'', acctPw:'', otpSent:false, noBack:false, noHome:false, history:[]};
+const s1state = {page:'home', cat:'금융상품', open:-1, open2:-1, title:'', listKey:'', resultKey:'', ivI:-1, ivJ:-1, midOpen:-1, amOpen:-1, amOpen2:-1, amTab:'ars', sarsPath:[], v21Tab:'self', amCat:'self', amTreeOpen:{}, menuExpandAll:false, big6Open:-1, faqOpen:false, priceTab:'hoga', fromFav:false, authNext:'', authMethod:'', acctPw:'', otpSent:false, noBack:false, noHome:false, history:[]};
 // 본인인증 세션 유지 플래그 (메모리 변수 → 새로고침 시 자동 초기화)
 let sessionAuthed = false;
 
@@ -2756,6 +2800,7 @@ function pageTop(title){
 
 function renderS1(){
   const v = document.getElementById('s1view');
+  const flowEl = v && v.closest('.flow'); if(flowEl) flowEl.classList.toggle('toss', s1Ver==='v40');   // Ver 4.0 토스 스킨 (전 화면 var() 토큰 오버라이드)
   let html = '';
   if(s1state.page==='home'){
     /* 자주 찾는 서비스 9개로 한눈에 구성 */
@@ -2806,6 +2851,29 @@ function renderS1(){
         html += `<div class="v21-pane"><div class="v21-arspanel">` + renderSimpleArs() + `</div></div>`;   // 하위 레벨: 수요 카테고리 드릴다운(ARS_CAT6)
       }
       html += chargeNote + `</div>`;
+    } else if(s1Ver==='v40'){
+      /* Ver 4.0 · 토스 스타일 디지털 ARS (포인트=키움 마젠타·네이비) — 9 카테고리(ARS_CAT6) 토스 리스트 + 드릴다운. 전체메뉴 없음. */
+      const path = s1state.sarsPath || [];
+      // 우상단 큰글씨 on/off 스위치 (기존 전역 bigFont+applyScale 재사용)
+      const bf = `<div class="bigfont-toggle ${bigFont?'on':''}" data-bigfont title="큰글씨 ${bigFont?'끄기':'켜기'}"><span class="bf-t">큰글씨</span><span class="bf-sw"><span class="bf-knob"></span></span></div>`;
+      html = `<div class="home-wrap toss-home${bigFont?' bigfont':''}">`;
+      if(path.length===0){
+        html += `<div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div>${bf}</div>`
+          + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div></div>`
+          + tossFaqCard()
+          + tossCatList();
+      } else {
+        // 드릴다운 헤더: 현재 단계 이름을 타이틀로(대메뉴 진입 시 = 대메뉴명), 대메뉴 단계면 설명글도 표기
+        const dtrail = sarsWalk(ARS_CAT6, path).trail;
+        const dcur = dtrail[dtrail.length-1] || {t:''};
+        const dtitle = stripNum(dcur.t);
+        const ddesc = (path.length===1) ? (V40_DESC[path[0]] || '') : '';
+        html += `<div class="toss-top"><div class="toss-back" data-sarsup title="이전">${I.chev}</div><div class="head-spacer"></div></div>`
+          + `<div class="toss-drill">`
+          + `<div class="toss-dhead"><div class="td-title">${dtitle}</div>${ddesc?`<div class="td-desc">${ddesc}</div>`:''}</div>`
+          + renderSimpleArs() + `</div>`;
+      }
+      html += `</div>`;
     } else {
       /* V2.1은 인사글+탭 위에 콘텐츠가 쌓여 스크롤 발생 → v21home(인사글 축소, 전 탭) + v21self(셀프 9그리드 축소)로 한 화면에 */
       let wrapCls = 'home-wrap';
@@ -3438,6 +3506,8 @@ document.addEventListener('click', (e)=>{
   if(big6){ const i=+big6.dataset.big6; s1state.big6Open = (s1state.big6Open===i ? -1 : i); renderS1(); return; }
   const big6go = t.closest('[data-big6go]');
   if(big6go){ const pr=big6go.dataset.big6go.split('_').map(Number); s1state.sarsPath=pr; renderS1(); return; }
+  // Ver 4.0 · '상담 없이 해결할 수 있어요' 자가해결 카드 펼침/접기 (화살표)
+  if(t.closest('[data-faqtoggle]')){ s1state.faqOpen = !s1state.faqOpen; renderS1(); return; }
   // 전체메뉴(햄버거) → 오른쪽에서 슬라이딩하는 드로어로 열기
   if(t.closest('[data-menu]')){ setExpandAll(false); s1state.amTab='ars'; s1state.amOpen=0; s1state.amOpen2=-1; s1state.sarsPath=[]; s1state.amCat='self'; s1state.amTreeOpen={}; openMenuDrawer(); return; }
   // 시연·기능 '전체메뉴 펼치기' → 전체메뉴를 모든 중·소메뉴 펼친 상태로 열기 / 재클릭 시 닫기
@@ -3815,6 +3885,7 @@ const DEFAULT_SCENARIO = {
   v2:  '[Ver 2.0 · 단순 ARS 메뉴연결]\n안녕하세요, 키움증권입니다.\n음성 ARS 순서 그대로 번호를 선택해 원하시는 메뉴로 이동하세요.',
   v21: '[Ver 2.1 · 보이는 ARS 화면구현 제외, 메인화면 및 전체메뉴 변경]\n안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
   v9900: '[1544-9900 · 음성ARS (Ver 2.1 복사본)]\n안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
+  v40: '[Ver 4.0 · 토스 스타일 디지털 ARS]\n안녕하세요, 키움증권입니다.\n무엇을 도와드릴까요? 원하시는 음성 ARS 메뉴를 선택해 주세요.',
   dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n이용하실 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
 };
@@ -3918,14 +3989,18 @@ function selectSian(v, ver){
       el.removeAttribute('contenteditable'); el.classList.remove('editing');
       applyScenePanelEdit();
     });
-    el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key==='Escape'){ e.preventDefault(); el.blur(); } });
+    el.addEventListener('keydown', e=>{
+      if(e.key==='Escape'){ e.preventDefault(); el.blur(); return; }
+      // 탭명(spName)=Enter로 편집 완료 / 탭설명(spDesc)=Enter 줄바꿈 허용(시나리오 입력창처럼)
+      if(e.key==='Enter' && el.id!=='spDesc'){ e.preventDefault(); el.blur(); }
+    });
   });
 })();
 /* 우측 패널에서 편집한 탭명/탭설명을 활성 탭(.ref-item rf-nm/rf-tel)에 반영 + localStorage 저장 */
 function applyScenePanelEdit(){
   const ai = activeTabItem(); if(!ai) return;
   const nm = (document.getElementById('spName')?.textContent || '').trim();
-  const tel = (document.getElementById('spDesc')?.textContent || '').trim();
+  const tel = (document.getElementById('spDesc')?.innerText || '').trim();
   const nmEl = ai.querySelector('.rf-nm'), telEl = ai.querySelector('.rf-tel');
   if(nmEl) nmEl.textContent = nm;
   if(telEl) telEl.textContent = tel;
@@ -4063,6 +4138,7 @@ switchScheme('sian');
       'v2':['s1','v2'],'2.0':['s1','v2'],
       'v21':['s1','v21'],'2.1':['s1','v21'],
       'v9900':['s1','v9900'],'9900':['s1','v9900'],'1544-9900':['s1','v9900'],
+      'v40':['s1','v40'],'4.0':['s1','v40'],'v4':['s1','v40'],
       'dars1':['dars1'],'3.0':['dars1'],'v3':['dars1'],'v30':['dars1'],
       'dars2':['dars2'],'1.2.1':['dars2'],'s3':['dars2']
     };
