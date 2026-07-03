@@ -2956,7 +2956,6 @@ function renderIodPurpose(){
 /* 금융거래목적확인서 등록 완료 화면 — [입출금] 디자인(iod-top·24px·Ver4.0 톤), 스텝바 완료 */
 function renderIodPurposeDone(){
   return pageTop(s1state.title||'등록 완료', true)
-    + untactSteps(['정보 입력','서류 제출','제출 완료'], 3)
     + `<div class="iod-done">
         <div class="iod-done-ic">${I.check}</div>
         <div class="iod-done-t">등록이 완료됐어요</div>
