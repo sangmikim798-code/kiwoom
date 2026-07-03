@@ -2088,6 +2088,7 @@ let sessionAuthed = false;
 function s1nav(patch){
   closeMenuDrawer();               // 화면 이동 시 전체메뉴 드로어 닫기
   closeConsult();                  // 상담연결 팝업 열려있으면 닫기
+  closeMethodSheet();              // 방법 선택 플로팅 열려있으면 닫기
   s1state.history.push({page:s1state.page, title:s1state.title, listKey:s1state.listKey, resultKey:s1state.resultKey, fromFav:s1state.fromFav, authNext:s1state.authNext, authMethod:s1state.authMethod, otpSent:s1state.otpSent, noBack:s1state.noBack, noHome:s1state.noHome});
   s1state.noBack = false;          // 기본은 뒤로가기 표시, 진입 화면만 patch로 숨김
   s1state.noHome = false;          // 기본은 홈/메뉴 표시, 세부페이지만 patch로 숨김
@@ -2733,27 +2734,38 @@ function closeConsult(){
    인증 완료 라우팅은 authNext.go==='iodcheck' 로 식별(gotoAuthNext에서 startIodCheck 호출). */
 function isIodFlow(){ return (s1state.authNext||{}).go==='iodcheck'; }   // 계좌인증 화면의 '계좌번호 모름' 링크·스텝바 노출 게이트
 const IOD_STEPS = ['계좌 인증','계좌 조회','결과 안내'];
+const IOD_HERO_IC = '<img src="assets/ys-icon.png" alt="영웅문S#">';
+/* 결과 화면 하단 버튼 → 클릭 시 방법 선택 플로팅(openMethodSheet) 노출.
+   등록형(multi/dormant)=금융거래목적확인서 등록, 한도제한(limit)=한도 제한 해제. */
+const IOD_REG_SHEET = { title:'어떻게 등록할까요?', sub:'편하신 방법으로 등록해 드려요', methods:[
+  {kind:'app',     ic:IOD_HERO_IC,  nm:'영웅문S#으로 등록하기', desc:'앱을 열어 서류를 등록해요'},
+  {kind:'purpose', ic:CS_ICON.web,  nm:'디지털 ARS로 등록하기', desc:'지금 이 화면에서 바로 등록해요'},
+]};
 const IOD_RESULTS = {
   multi: {
     tab:'단기 다수계좌', badge:'출금 제한', badgeCls:'stop',
     title:'지금은 출금이 제한된 계좌예요',
     body:'최근 짧은 기간에 여러 계좌를 만드셔서, 안전을 위해 출금이 잠시 막혀 있어요.',
     release:'<b>금융거래목적확인서</b>를 등록하시면 바로 풀려요.',
-    actions:[{t:'영웅문S#에서 등록하기', kind:'app'},{t:'디지털 ARS로 등록하기', kind:'purpose'}],
+    btn:'금융거래목적확인서 등록하기', sheet: IOD_REG_SHEET,
   },
   dormant: {
     tab:'장기 미사용', badge:'거래중지 · 출금 제한', badgeCls:'stop',
     title:'오래 쉬어서 거래가 중지된 계좌예요',
     body:'안전을 위해 출금이 제한돼 있어요.',
     release:'<b>금융거래목적확인서</b>를 등록하시면 즉시 해제돼요.',
-    actions:[{t:'영웅문S#에서 등록하기', kind:'app'},{t:'디지털 ARS로 등록하기', kind:'purpose'}],
+    btn:'금융거래목적확인서 등록하기', sheet: IOD_REG_SHEET,
   },
   limit: {
     tab:'한도 제한', badge:'한도 제한', badgeCls:'warn',
     title:'한도제한계좌예요',
     body:'지금은 하루 <b>100만 원까지</b> 출금할 수 있어요.',
     release:'한도를 풀려면 추가 서류 확인이 필요해요.',
-    actions:[{t:'영웅문S#에서 해제하기', kind:'app'},{t:'상담원 연결', kind:'consult'}],
+    btn:'한도 제한 해제하기',
+    sheet:{ title:'어떻게 해제할까요?', sub:'편하신 방법으로 해제해 드려요', methods:[
+      {kind:'app',     ic:IOD_HERO_IC,  nm:'영웅문S#에서 해제하기', desc:'앱에서 한도 제한을 해제해요'},
+      {kind:'consult', ic:CS_ICON.call, nm:'상담원 연결',        desc:'담당 상담원과 연결해 드려요'},
+    ]},
   },
 };
 function startIodCheck(){
@@ -2781,12 +2793,7 @@ function renderIodResult(){
   const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
   const r = IOD_RESULTS[key];
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'종합위탁'} ${authAcct.no}` : '종합위탁 123-45-678901';
-  const actBtns = r.actions.map(a=>{
-    if(a.kind==='app')     return `<div class="primary-btn" data-applink="iodpurpose">${a.t}</div>`;
-    if(a.kind==='purpose') return `<div class="primary-btn ghost" data-s1go="result" data-rk="purpose" data-fk="금융거래목적확인서">${a.t}</div>`;
-    if(a.kind==='consult') return `<div class="primary-btn ghost" data-arspop="한도제한계좌 해제">${a.t}</div>`;
-    return '';
-  }).join('');
+  const actBtns = `<div class="primary-btn" data-iodmethods>${r.btn}</div>`;   // 클릭 시 방법 선택 플로팅
   // 결과 카드를 탭할 때마다 3가지 사유(계좌 상태)가 순환 — 토글 탭은 노출하지 않음
   return pageTop(s1state.title||'계좌 상태', true)
     + untactSteps(IOD_STEPS, 2)
@@ -2799,6 +2806,31 @@ function renderIodResult(){
       </div>`
     + `<div class="iod-actions">${actBtns}</div>`
     + `<div class="iod-note">※ 데모 화면이에요. 위 카드를 탭하면 다른 사유(계좌 상태)를 볼 수 있어요.</div>`;
+}
+/* 결과 화면 버튼 → 방법 선택 플로팅(상담팝업 스타일 재사용: consult-ov/cs-*) */
+function openMethodSheet(cfg){
+  const prev = document.getElementById('methodPop'); if(prev) prev.remove();   // 기존 시트 즉시 제거(중복 id 방지)
+  const screen = document.getElementById('screen'); if(!screen || !cfg) return;
+  const el = document.createElement('div');
+  el.className = 'consult-ov method-ov'; el.id = 'methodPop';
+  const rows = (cfg.methods||[]).map(m=>
+    `<div class="cs-row" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
+      <div class="cs-ic">${m.ic}</div>
+      <div class="cs-body"><div class="cs-nm">${m.nm}</div><div class="cs-desc">${m.desc}</div></div>
+      <div class="cs-arw">${I.chev}</div>
+    </div>`).join('');
+  el.innerHTML = `<div class="consult-sheet">
+    <div class="cs-grip"></div>
+    <div class="cs-head"><div class="cs-title">${cfg.title}</div><div class="cs-sub">${cfg.sub}</div></div>
+    <div class="cs-list">${rows}</div>
+    <div class="cs-cancel" data-msclose>닫기</div>
+  </div>`;
+  screen.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function closeMethodSheet(){
+  const el = document.getElementById('methodPop');
+  if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); }
 }
 /* 휴대폰·간편 인증 완료 → 본인 명의 계좌 선택(선택 시 계좌 인증 화면에 계좌번호 자동 입력) */
 function renderIodAcctSel(){
@@ -3487,6 +3519,18 @@ document.addEventListener('click', (e)=>{
     flash(CS_MSG[k] || '상담을 연결합니다. (시연용)');
     return;
   }
+  // 방법 선택 플로팅: 방법 클릭 / 닫기(배경·닫기버튼) — consult 닫기보다 먼저(method-ov도 consult-ov라)
+  const mrow = t.closest('[data-iodmethod]');
+  if(mrow){
+    const kind = mrow.dataset.iodmethod;
+    closeMethodSheet();
+    if(kind==='app'){ openAppLink('iodpurpose'); return; }
+    if(kind==='purpose'){ s1nav({page:'result', resultKey:'purpose', title:'금융거래목적확인서', noHome:true}); return; }
+    if(kind==='consult'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'한도제한계좌 해제', noHome:true}); return; }
+    return;
+  }
+  if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
+
   if(t.closest('[data-csclose]') || (t.classList && t.classList.contains('consult-ov'))){ closeConsult(); return; }
 
   // 입출금 안내 플로우: 진입(계좌 인증) / 계좌번호 모름(본인인증 선택) / 결과 사유 토글
@@ -3503,6 +3547,11 @@ document.addEventListener('click', (e)=>{
     const cur = keys.indexOf(IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : keys[0]);
     s1state.iodResult = keys[(cur+1) % keys.length];   // 클릭마다 다음 사유로 순환
     renderS1(); return;
+  }
+  // 결과 버튼 → 방법 선택 플로팅 열기
+  if(t.closest('[data-iodmethods]')){
+    const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
+    openMethodSheet(IOD_RESULTS[key].sheet); return;
   }
 
   // 시연용 토스트 버튼
