@@ -1142,6 +1142,12 @@ body{
 .kp-akey.back{background:#F1F2F6;color:var(--ink);font-size:calc(20px*var(--scale))}
 .kp-akey.cancel{background:#F1F2F6;color:var(--ink-2)}
 .kp-akey.done{background:var(--primary);color:#fff}
+/* Ver 4.0 · 키패드 토스 스킨 (#screen이 .flow.toss 밖이라 토큰을 직접 재정의) */
+.kp-ov.v40{--primary:#E6007F;--primary-soft:#FDE7F2;--primary-grad:linear-gradient(135deg,#F0188E,#E6007F);
+  --ink:#14183C;--ink-2:#3A4360;--sub:#8B95A1;--line:#F2F4F6}
+.kp-ov.v40 .kp-akey.done{background:var(--primary-grad);box-shadow:0 8px 18px rgba(230,0,127,.28)}
+.kp-ov.v40 .key{background:#F7F8FA}
+.kp-ov.v40 .key:active{background:var(--primary-soft);color:var(--primary)}
 
 /* ===== 간편비밀번호(PIN) 변경 화면 ===== */
 .pin-wrap{padding:8px 16px 4px;text-align:center}

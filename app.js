@@ -2599,7 +2599,8 @@ function openPwKeypad(showAcct, ctx){
   if(!screen) return;
   const digits = ['1','2','3','4','5','6','7','8','9'];
   const el = document.createElement('div');
-  el.className = 'kp-ov'; el.id = 'pwKeypad';
+  el.className = 'kp-ov' + (s1Ver==='v40' ? ' v40' : '');   // Ver 4.0: 토스(마젠타·네이비) 토큰으로 재도색
+  el.id = 'pwKeypad';
   el.innerHTML = `<div class="kp-sheet">
     <div class="kp-grab"></div>
     <div class="kp-top">
