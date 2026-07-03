@@ -2102,13 +2102,16 @@ function s1back(){
 }
 /* 본인인증 방법 선택 (레퍼런스: 정부24 인증방법선택 / 디자인: 영웅문 인증센터) */
 function authSelect(){
-  const methods = [
+  const iod = isIodFlow();
+  let methods = [
     {key:'phone',   ic:'phone',  t:'휴대폰 인증',           d:'본인 명의 휴대폰으로 인증'},
     {key:'simple',  ic:'shield', t:'간편(민간인증서) 인증',  d:'카카오·네이버·KB 등 민간인증서로 인증'},
     {key:'account', ic:'wallet', t:'계좌번호 인증',          d:'본인 계좌번호·비밀번호로 인증'},
   ];
+  if(iod) methods = methods.filter(m=>m.key!=='account');   // 계좌번호 찾기 단계에서는 계좌번호 인증 제외
+  const head = iod ? '계좌번호를 찾아드릴게요<br>본인 인증 방법을 선택해 주세요' : '본인 인증 방법을<br>선택해주세요';
   return `<div class="auth-wrap">
-    <div class="auth-head">본인 인증 방법을<br>선택해주세요</div>
+    <div class="auth-head">${head}</div>
     <div class="auth-list">` + methods.map(m=>
       `<div class="auth-card" data-auth="${m.key}">
         <div class="auth-ic">${I[m.ic]}</div>
@@ -2171,17 +2174,20 @@ function authStep(method){
     </div>`;
   }
   // account: 계좌번호 직접 입력 + 비밀번호(터치 시 플로팅 키패드) — 휴대폰 인증 정보카드 디자인
+  const iod = isIodFlow();
+  const head = iod ? '계좌를 인증하면<br>계좌 상태를 확인해 드릴게요' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요';
+  const note = iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.';
   return `<div class="auth-wrap">
-    <div class="auth-head">본인 명의 계좌번호와<br>비밀번호를 입력해주세요</div>
+    <div class="auth-head">${head}</div>
     <div class="auth-info">
       <div class="ir"><span class="k">계좌번호</span>
         <input class="ir-input" id="acctNo" type="text" inputmode="numeric" autocomplete="off" placeholder="계좌번호 입력"></div>
       <div class="ir"><span class="k">비밀번호</span>
         <div class="ir-input ir-pw" data-pwopen><span id="acctPwDisp" class="acct-dots" data-ph="비밀번호 입력 (4~8자리)">${'●'.repeat((s1state.acctPw||'').length)}</span></div></div>
     </div>
-    <div class="auth-note">계좌번호와 비밀번호로 본인인증을 진행합니다.</div>
+    <div class="auth-note">${note}</div>
     <div class="primary-btn" data-authdone>확인</div>
-    ${isIodFlow() ? `<div class="iod-findlink" data-iodfind>계좌번호를 모르겠어요 ›</div>` : ''}
+    ${iod ? `<div class="iod-findlink" data-iodfind>계좌번호를 모르겠어요 ›</div>` : ''}
   </div>`;
 }
 
