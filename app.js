@@ -2959,7 +2959,7 @@ function pageTop(title, hideTitle){
   // 세부페이지는 우상단 버튼 숨김 / 그 외에는 전체메뉴 버튼만 표시
   const right = s1state.noHome ? '' : `<div class="back" data-menu title="전체메뉴">${I.menu}</div>`;
   const back = s1state.noBack ? '' : `<div class="back" data-s1back>${I.back}</div>`;
-  return `<div class="page-top">
+  return `<div class="page-top${hideTitle ? ' iod-top' : ''}">
     ${back}
     <div class="page-title">${hideTitle ? '' : title}</div>
     <div class="head-spacer"></div>
