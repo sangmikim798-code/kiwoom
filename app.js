@@ -2104,8 +2104,8 @@ function s1back(){
 function authSelect(){
   const iod = isIodFlow();
   let methods = [
-    {key:'phone',   ic:'phone',  t:'휴대폰 인증',           d:'본인 명의 휴대폰으로 인증'},
-    {key:'simple',  ic:'shield', t:'간편(민간인증서) 인증',  d:'카카오·네이버·KB 등 민간인증서로 인증'},
+    {key:'phone',   ic:'phone',  t:'휴대폰 인증',           d: iod ? '본인 명의 휴대폰으로 인증해요' : '본인 명의 휴대폰으로 인증'},
+    {key:'simple',  ic:'shield', t:'간편(민간인증서) 인증',  d: iod ? '카카오·네이버·KB 등 간편인증서로 인증해요' : '카카오·네이버·KB 등 민간인증서로 인증'},
     {key:'account', ic:'wallet', t:'계좌번호 인증',          d:'본인 계좌번호·비밀번호로 인증'},
   ];
   if(iod) methods = methods.filter(m=>m.key!=='account');   // 계좌번호 찾기 단계에서는 계좌번호 인증 제외
@@ -2133,6 +2133,8 @@ function authStep(method){
     const info = `<div class="auth-info">` + rows.map(r=>
         `<div class="ir"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`
       ).join('') + `</div>`;
+    const iod = isIodFlow();
+    const reqNote = iod ? '위 정보로 휴대폰 인증을 진행할게요.' : '위 정보로 휴대폰 본인인증을 진행합니다.';
     const tail = s1state.otpSent
       ? `<div class="auth-field" style="margin-top:20px">
           <label>인증번호</label>
@@ -2143,10 +2145,12 @@ function authStep(method){
           <div class="auth-note" style="text-align:center;margin:12px 2px 0;white-space:nowrap;font-size:calc(13px*var(--scale))">인증번호를 발송했습니다. 문자를 확인해주세요.</div>
         </div>
         <div class="primary-btn" data-otpdone>인증 완료</div>`
-      : `<div class="auth-note">위 정보로 휴대폰 본인인증을 진행합니다.</div>
+      : `<div class="auth-note">${reqNote}</div>
         <div class="primary-btn" data-otpreq>인증 요청하기</div>`;
+    // 인증 요청 후에는 '인증번호 입력' 화면처럼 헤딩을 전환(IOD 플로우)
+    const head = (iod && s1state.otpSent) ? '인증번호 6자리를<br>입력해주세요' : '본인 명의 휴대폰으로<br>인증을 진행해주세요';
     return `<div class="auth-wrap">
-      <div class="auth-head">본인 명의 휴대폰으로<br>인증을 진행해주세요</div>
+      <div class="auth-head">${head}</div>
       ${info}
       ${tail}
     </div>`;
@@ -2175,13 +2179,14 @@ function authStep(method){
   }
   // account: 계좌번호 직접 입력 + 비밀번호(터치 시 플로팅 키패드) — 휴대폰 인증 정보카드 디자인
   const iod = isIodFlow();
-  const head = iod ? '계좌를 인증하면<br>계좌 상태를 확인해 드릴게요' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요';
+  const head = iod ? '어떤 계좌에서<br>입출금이 안되나요?' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요';
   const note = iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.';
+  const acctVal = iod ? (s1state.iodAcctNo||'') : '';   // 계좌 선택 시 자동 입력된 계좌번호
   return `<div class="auth-wrap">
     <div class="auth-head">${head}</div>
     <div class="auth-info">
       <div class="ir"><span class="k">계좌번호</span>
-        <input class="ir-input" id="acctNo" type="text" inputmode="numeric" autocomplete="off" placeholder="계좌번호 입력"></div>
+        <input class="ir-input" id="acctNo" type="text" inputmode="numeric" autocomplete="off" placeholder="계좌번호 입력" value="${acctVal}"></div>
       <div class="ir"><span class="k">비밀번호</span>
         <div class="ir-input ir-pw" data-pwopen><span id="acctPwDisp" class="acct-dots" data-ph="비밀번호 입력 (4~8자리)">${'●'.repeat((s1state.acctPw||'').length)}</span></div></div>
     </div>
@@ -2794,6 +2799,22 @@ function renderIodResult(){
     + `<div class="iod-actions">${actBtns}</div>`
     + `<div class="iod-note">※ 데모 화면이에요. 위 버튼으로 계좌 상태(사유)를 바꿔볼 수 있어요.</div>`;
 }
+/* 휴대폰·간편 인증 완료 → 본인 명의 계좌 선택(선택 시 계좌 인증 화면에 계좌번호 자동 입력) */
+function renderIodAcctSel(){
+  const rows = ACCOUNTS.map((a,i)=>
+    `<div class="iodsel-row" data-iodacct="${i}">
+      <div class="iodsel-ic">${I.wallet}</div>
+      <div class="iodsel-tx"><div class="iodsel-nm">${a.type}</div><div class="iodsel-no">${a.no}</div></div>
+      <div class="iodsel-arw">${I.chev}</div>
+    </div>`).join('');
+  return pageTop(s1state.title||'계좌 선택')
+    + untactSteps(IOD_STEPS, 0)
+    + `<div class="auth-wrap">
+        <div class="auth-head">인증된 명의로<br>계좌를 찾았어요</div>
+        <div class="iodsel-guide">입출금을 확인할 계좌를 선택해 주세요</div>
+        <div class="iodsel-list">${rows}</div>
+      </div>`;
+}
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
@@ -2989,6 +3010,9 @@ function renderS1(){
   }
   else if(s1state.page==='authstep'){
     html = pageTop(s1state.title||'본인인증') + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authStep(s1state.authMethod);
+  }
+  else if(s1state.page==='iodacctsel'){
+    html = renderIodAcctSel();
   }
   else if(s1state.page==='iodcheck'){
     html = renderIodChecking();
@@ -3467,6 +3491,7 @@ document.addEventListener('click', (e)=>{
   // 입출금 안내 플로우: 진입(계좌 인증) / 계좌번호 모름(본인인증 선택) / 결과 사유 토글
   if(t.closest('[data-iodstart]')){
     s1state.authNext = {go:'iodcheck'};
+    s1state.iodAcctNo = '';   // 새 플로우 시작 → 자동입력 계좌번호 초기화
     s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
@@ -3507,13 +3532,24 @@ document.addEventListener('click', (e)=>{
     const otp = (document.getElementById('otpNo')||{}).value || '';
     if(!otp.trim()){ flash('인증번호를 입력해주세요.'); return; }
     flash('휴대폰 인증이 완료되었습니다. (시연용)');
+    if(isIodFlow()){ s1nav({page:'iodacctsel', title:'계좌 선택', otpSent:false, noHome:true}); return; }   // 입출금 플로우: 계좌 선택 리스트로
     openPwKeypad(true); return;
   }
   // 간편인증서 제공자 선택 → 제공자 인증 완료 후 계좌 비밀번호 키패드
   const sp = t.closest('[data-simplepick]');
   if(sp){
     flash(`${sp.dataset.simplepick} 인증이 완료되었습니다. (시연용)`);
+    if(isIodFlow()){ s1nav({page:'iodacctsel', title:'계좌 선택', noHome:true}); return; }   // 입출금 플로우: 계좌 선택 리스트로
     openPwKeypad(true); return;
+  }
+  // 입출금 플로우: 계좌 선택 → 계좌 인증 화면으로 돌아가 선택 계좌번호 자동 입력
+  const iacc = t.closest('[data-iodacct]');
+  if(iacc){
+    const i = +iacc.dataset.iodacct;
+    selAcct = i; authAcct = {type:ACCOUNTS[i].type, no:ACCOUNTS[i].no};
+    s1state.iodAcctNo = ACCOUNTS[i].no;
+    s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, noHome:true});
+    return;
   }
   // 간편비밀번호(PIN) 변경: 키패드 입력 → 점 채우기 / 6자리 시 단계 진행
   const pk = t.closest('[data-pinkey]');
