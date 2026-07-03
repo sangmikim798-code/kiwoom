@@ -3587,7 +3587,8 @@ document.addEventListener('click', (e)=>{
   // 본인인증 방법 선택 → 해당 인증단계 화면으로 이동
   const authm = t.closest('[data-auth]');
   if(authm){
-    s1nav({page:'authstep', authMethod: authm.dataset.auth, title:'본인인증', acctPw:'', otpSent:false});
+    // IOD 플로우(입출금)에서는 우상단 전체메뉴(햄버거) 숨김 — 다른 IOD 화면과 동일
+    s1nav({page:'authstep', authMethod: authm.dataset.auth, title:'본인인증', acctPw:'', otpSent:false, noHome: isIodFlow()});
     return;
   }
   // 휴대폰 인증: 인증번호 요청 → 인증번호 입력칸 노출
