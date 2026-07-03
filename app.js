@@ -2640,24 +2640,35 @@ function closeAppLink(){
    헤더=후보1 / 채널 라벨·배지=B 추천 / 설명=세부문구 변형.
    업무에 따라 제공 채널 개수가 달라질 수 있음 — 우선 5종 모두 노출.
    desc가 함수면 상황(계좌 연동 여부 등)에 따라 문구 분기. */
-const CS_WEB_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>';
+/* 상담팝업 채널 아이콘 — FAQ 배너와 동일한 '컬러 채움형' 스타일(2톤). 투명 배경 위 풀컬러.
+   영웅문S#은 실제 앱 아이콘(assets/ys-icon.png) 사용. */
+const CS_ICON = {
+  // 챗봇: 파란 말풍선 + 흰 점 3개
+  chat:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 6A2.5 2.5 0 0 1 6.5 3.5h11A2.5 2.5 0 0 1 20 6v6.5a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.3A1 1 0 0 1 4 17.5V6z" fill="#3b82f6"/><circle cx="9" cy="9.3" r="1.35" fill="#fff"/><circle cx="12.5" cy="9.3" r="1.35" fill="#dbeafe"/><circle cx="16" cy="9.3" r="1.35" fill="#fff"/></svg>',
+  // 음성ARS: 초록 수화기 + 연초록 음파
+  voice:'<svg viewBox="0 0 24 24" fill="none"><path d="M6.7 11.9c1.4 2.8 3.7 5.1 6.5 6.5l2-2c.3-.3.7-.4 1.1-.3 1.1.4 2.3.6 3.5.6.6 0 1 .5 1 1v3.2c0 .6-.4 1-1 1C10.4 22.9 3.1 15.6 3.1 6.7c0-.6.5-1 1-1h3.2c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.3 1.1l-1.9 1.6z" fill="#22b573"/><path d="M14.6 3.1a6.6 6.6 0 0 1 5.7 5.7" stroke="#8fe0b8" stroke-width="1.8" stroke-linecap="round"/><path d="M14.1 6.4a3.4 3.4 0 0 1 2.8 2.8" stroke="#8fe0b8" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  // 전화상담: 주황 헤드셋(헤드밴드+이어컵) + 마이크
+  call:'<svg viewBox="0 0 24 24" fill="none"><path d="M4.5 13v-1.5a7.5 7.5 0 0 1 15 0V13" stroke="#f2994a" stroke-width="2.2" stroke-linecap="round"/><rect x="3" y="12.3" width="4.4" height="7" rx="2.2" fill="#f2994a"/><rect x="16.6" y="12.3" width="4.4" height="7" rx="2.2" fill="#f2994a"/><path d="M19 19.3v.4a3.3 3.3 0 0 1-3.3 3.3H13.5" stroke="#f2994a" stroke-width="2.1" stroke-linecap="round"/><circle cx="12.6" cy="23" r="1.5" fill="#fbc99b"/></svg>',
+  // 디지털ARS(웹): 보라 모니터 + 밝은 화면
+  web:'<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="12" rx="2.5" fill="#7c5cff"/><rect x="5" y="7" width="14" height="7.2" rx="1" fill="#d6ccff"/><path d="M9 20h6M12 16.5V20" stroke="#7c5cff" stroke-width="2" stroke-linecap="round"/></svg>',
+};
 const CONSULT_CHANNELS = [
-  { k:'hero', nm:'영웅문S#으로 이어보기', ic:'<span class="cs-slog">S#</span>',
+  { k:'hero', nm:'영웅문S#으로 이어보기', ic:'<img src="assets/ys-icon.png" alt="영웅문S#">',
     badges:[{t:'앱 연동',cls:'navy'},{t:'바로 이동',cls:'mag'}],
     // 입력한 계좌정보(세션 인증) 있으면 연동 문구, 없으면 앱 이동 문구
     desc(){ return sessionAuthed
       ? '입력하신 계좌로 연결해 바로 이 화면을 띄워드려요'
       : '앱을 열어 원하시는 업무 화면으로 이동해요'; } },
-  { k:'chat', nm:'AI 챗봇에게 물어보기', ic:I.chat,
+  { k:'chat', nm:'AI 챗봇에게 물어보기', ic:CS_ICON.chat,
     badges:[{t:'24시간',cls:'navy'},{t:'대기 없음',cls:'mag'}],
     desc:'기다림 없이 지금 바로 물어보세요' },
-  { k:'voice', nm:'음성 ARS로 안내받기', ic:I.phone,
+  { k:'voice', nm:'음성 ARS로 안내받기', ic:CS_ICON.voice,
     badges:[{t:'음성 안내',cls:'gray'}],
     desc:'선택하신 업무에 맞춰 순서대로 알려드려요' },
-  { k:'call', nm:'상담원과 통화하기', ic:I.headset,
+  { k:'call', nm:'상담원과 통화하기', ic:CS_ICON.call,
     badges:[{t:'담당부서 연결',cls:'gray'},{t:'대기 있음',cls:'warn'}],
     desc:'담당 상담원과 직접 통화해요 · 연결까지 잠시 걸릴 수 있어요' },
-  { k:'digital', nm:'디지털 ARS로 처리하기', ic:CS_WEB_ICON, soon:true,
+  { k:'digital', nm:'디지털 ARS로 처리하기', ic:CS_ICON.web, soon:true,
     badges:[{t:'준비중 · 27년 2월',cls:'gray'}],
     desc:'곧 만나요! 2027년 2월부터 이 화면에서 바로 처리할 수 있어요' },
 ];
