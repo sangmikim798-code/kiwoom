@@ -2863,14 +2863,25 @@ function stkSheetCfg(step){
     {v:'modify', nm:'정정', desc:'미체결 주문을 정정해요'},
     {v:'cancel', nm:'취소', desc:'미체결 주문을 취소해요'},
   ]};
-  if(step==='sub'){   // 음성ARS + 신용 소메뉴 (매도/매수)
-    const opts = (stkOrder.type==='sell')
-      ? [{v:'자기융자 매도상환', nm:'자기융자 매도상환', desc:'자기융자 상환을 위해 매도해요'},
-         {v:'대출 매도상환',     nm:'대출 매도상환',     desc:'대출금 상환을 위해 매도해요'},
-         {v:'대주 매도',         nm:'대주 매도',         desc:'대주(차입주식)를 매도해요'}]
-      : [{v:'자기융자 매수',     nm:'자기융자 매수',     desc:'자기융자로 주식을 매수해요'},
-         {v:'대주 매수상환',     nm:'대주 매수상환',     desc:'대주 상환을 위해 매수해요'}];
-    return { title:'어떤 신용주문인가요?', sub:'세부 유형을 선택해 주세요', opts };
+  if(step==='sub'){   // 음성ARS 소메뉴 — 신용 매도/매수는 신용상품 유형, 그 외(현금·K-OTC·신용정정취소)는 주문유형별 세부
+    const {kind, type} = stkOrder;
+    if(kind==='credit' && type==='sell') return { title:'어떤 신용주문인가요?', sub:'세부 유형을 선택해 주세요', opts:[
+      {v:'자기융자 매도상환', nm:'자기융자 매도상환', desc:'자기융자 상환을 위해 매도해요'},
+      {v:'대출 매도상환',     nm:'대출 매도상환',     desc:'대출금 상환을 위해 매도해요'},
+      {v:'대주 매도',         nm:'대주 매도',         desc:'대주(차입주식)를 매도해요'}]};
+    if(kind==='credit' && type==='buy') return { title:'어떤 신용주문인가요?', sub:'세부 유형을 선택해 주세요', opts:[
+      {v:'자기융자 매수', nm:'자기융자 매수', desc:'자기융자로 주식을 매수해요'},
+      {v:'대주 매수상환', nm:'대주 매수상환', desc:'대주 상환을 위해 매수해요'}]};
+    if(type==='sell' || type==='buy') return { title:'어떤 방식으로 주문할까요?', sub:'주문 방식을 선택해 주세요', opts:[
+      {v:'지정가 주문', nm:'지정가 주문', desc:'원하는 가격을 지정해 주문해요'},
+      {v:'시장가 주문', nm:'시장가 주문', desc:'지금 시장가격으로 바로 주문해요'}]};
+    if(type==='modify') return { title:'무엇을 정정할까요?', sub:'정정 항목을 선택해 주세요', opts:[
+      {v:'가격 정정', nm:'가격 정정', desc:'미체결 주문의 가격을 정정해요'},
+      {v:'수량 정정', nm:'수량 정정', desc:'미체결 주문의 수량을 정정해요'}]};
+    if(type==='cancel') return { title:'어떻게 취소할까요?', sub:'취소 방식을 선택해 주세요', opts:[
+      {v:'전체 취소', nm:'전체 취소', desc:'미체결 주문을 전체 취소해요'},
+      {v:'부분 취소', nm:'부분 취소', desc:'미체결 주문 일부만 취소해요'}]};
+    return null;
   }
   return null;
 }
@@ -3606,8 +3617,8 @@ document.addEventListener('click', (e)=>{
     if(step==='kind'){   stkOrder.kind=v;   openStkSheet('type'); return; }
     if(step==='type'){
       stkOrder.type=v;
-      // 음성ARS + 신용주식 + (매도/매수) → 소메뉴까지 선택, 그 외 → 바로 연결
-      if(stkOrder.method==='voice' && stkOrder.kind==='credit' && (v==='sell'||v==='buy')){ openStkSheet('sub'); return; }
+      // 음성ARS는 항상 소메뉴 한 단계 더(현금·신용·K-OTC), 영웅문S#은 바로 연결
+      if(stkOrder.method==='voice'){ openStkSheet('sub'); return; }
       stkConnect(); return;
     }
     if(step==='sub'){ stkOrder.sub=v; stkConnect(); return; }
