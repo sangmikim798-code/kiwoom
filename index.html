@@ -1011,6 +1011,12 @@ body{
 .ap-btn:active{transform:scale(.97)}
 .ap-btn.cancel{background:#F1F2F6;color:var(--ink-2)}
 .ap-btn.go{background:var(--primary-grad);color:#fff;box-shadow:0 8px 20px rgba(124,47,224,.3)}
+.ap-logo img{width:60px;height:60px;border-radius:16px;object-fit:cover;display:block}
+/* Ver 4.0 · 앱 연결 팝업 토스 스킨 (#screen이 .flow.toss 밖이라 토큰 직접 재정의) */
+.app-pop-ov.v40{--primary:#E6007F;--primary-soft:#FDE7F2;--primary-grad:linear-gradient(135deg,#F0188E,#E6007F);
+  --ink:#14183C;--ink-2:#3A4360;--sub:#8B95A1;background:rgba(20,24,60,.5)}
+.app-pop-ov.v40 .ap-logo{background:transparent;box-shadow:none;border-radius:16px}
+.app-pop-ov.v40 .ap-btn.go{box-shadow:0 8px 20px rgba(230,0,127,.3)}
 
 /* ===== Ver 4.0 · 상담연결 안내 팝업 (최종메뉴 클릭 · 토스 스타일 바텀시트 · 포인트=마젠타 #E6007F·네이비 #14183C) ===== */
 .consult-ov{position:absolute;inset:0;z-index:180;background:rgba(20,24,60,.5);

@@ -2635,12 +2635,18 @@ function openAppLink(key){
   closeAppLink();
   const screen = document.getElementById('screen'); if(!screen) return;
   const c = APP_LINK[key] || {title:'요청하신 업무'};
+  const v40 = (s1Ver==='v40');   // Ver 4.0: 토스(마젠타·네이비) 스킨 + 앱 아이콘 + 톤 맞춤 문구
   const el = document.createElement('div');
-  el.className = 'app-pop-ov'; el.id = 'appPop'; el.dataset.linkTitle = c.title;
+  el.className = 'app-pop-ov' + (v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title;
+  const logo  = v40 ? `<div class="ap-logo"><img src="assets/ys-icon.png" alt="영웅문S#"></div>` : `<div class="ap-logo">S#</div>`;
+  const title = v40 ? '영웅문S#으로 이어드릴게요' : '영웅문S#으로 연결';
+  const desc  = v40
+    ? `계좌를 안전하게 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.`
+    : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`;
   el.innerHTML = `<div class="app-pop">
-    <div class="ap-logo">S#</div>
-    <div class="ap-title">영웅문S#으로 연결</div>
-    <div class="ap-desc">계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.</div>
+    ${logo}
+    <div class="ap-title">${title}</div>
+    <div class="ap-desc">${desc}</div>
     <div class="ap-flow"><span class="ap-step">앱 실행</span><span class="ap-arr">›</span><span class="ap-step">계좌 연동</span><span class="ap-arr">›</span><span class="ap-step">화면 이동</span></div>
     <div class="ap-btns">
       <div class="ap-btn cancel" data-appcancel>취소</div>
@@ -3497,7 +3503,9 @@ document.addEventListener('click', (e)=>{
   if(al){ openAppLink(al.dataset.applink); return; }
   if(t.closest('[data-appgo]')){
     const pop = document.getElementById('appPop'); const ttl = pop ? pop.dataset.linkTitle : '';
-    flash(`영웅문S#으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
+    flash(s1Ver==='v40'
+      ? `영웅문S#으로 이어드릴게요. 계좌 연동 후 ${ttl} 화면으로 이동해요. (시연용)`
+      : `영웅문S#으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
     closeAppLink(); return;
   }
   if(t.closest('[data-appcancel]') || (t.classList && t.classList.contains('app-pop-ov'))){ closeAppLink(); return; }
