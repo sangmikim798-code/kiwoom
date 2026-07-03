@@ -2942,7 +2942,6 @@ function renderIodAcctSel(){
 function renderIodPurpose(){
   const F = (k,v)=>`<div class="ir"><span class="k">${k}</span><span class="v">${v} ${I.down}</span></div>`;
   return pageTop(s1state.title||'금융거래목적확인서', true)
-    + untactSteps(['정보 입력','서류 제출','제출 완료'], 0)
     + `<div class="auth-wrap">
         <div class="auth-head">거래 목적을 확인하고<br>등록해 드릴게요</div>
         <div class="auth-info">
