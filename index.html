@@ -1012,6 +1012,50 @@ body{
 .ap-btn.cancel{background:#F1F2F6;color:var(--ink-2)}
 .ap-btn.go{background:var(--primary-grad);color:#fff;box-shadow:0 8px 20px rgba(124,47,224,.3)}
 
+/* ===== Ver 4.0 · 상담연결 안내 팝업 (최종메뉴 클릭 · 토스 스타일 바텀시트 · 포인트=마젠타 #E6007F·네이비 #14183C) ===== */
+.consult-ov{position:absolute;inset:0;z-index:180;background:rgba(20,24,60,.5);
+  display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .22s}
+.consult-ov.on{opacity:1}
+.consult-ov:not(.on){pointer-events:none}
+.consult-sheet{background:#fff;border-radius:24px 24px 0 0;padding:8px 18px calc(18px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.7,.3,1);box-shadow:0 -14px 44px rgba(20,24,60,.28)}
+.consult-ov.on .consult-sheet{transform:translateY(0)}
+.cs-grip{width:40px;height:4px;border-radius:2px;background:#E2E2EA;margin:6px auto 12px}
+.cs-head{padding:0 4px 12px}
+.cs-title{font-size:calc(19px*var(--scale));font-weight:800;color:#14183C;letter-spacing:-.3px}
+.cs-sub{font-size:calc(13.5px*var(--scale));color:#7A7A8C;margin-top:5px;line-height:1.5}
+.cs-ctx{display:inline-block;margin-top:11px;background:#FDF1F8;border-radius:9px;padding:6px 11px;
+  font-size:calc(12.5px*var(--scale));color:#B12B7E}
+.cs-ctx b{color:#E6007F;font-weight:800}
+.cs-list{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.cs-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;
+  background:#F8F8FB;border:1px solid #EFEFF4;cursor:pointer;transition:.13s}
+.cs-row:active{transform:scale(.985);background:#F1F1F6}
+.cs-ic{flex:none;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+  background:#14183C;color:#fff}
+.cs-ic svg{width:23px;height:23px}
+.cs-slog{font-size:calc(16px*var(--scale));font-weight:900;letter-spacing:-1px}
+.cs-body{flex:1;min-width:0}
+.cs-nm{font-size:calc(15px*var(--scale));font-weight:800;color:#14183C}
+.cs-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.cs-badges{display:none}   /* 배지 숨김 처리 — 소스는 유지, 재노출 시 이 한 줄만 삭제 */
+.cs-badge{font-size:calc(10.5px*var(--scale));font-weight:700;border-radius:6px;padding:3px 7px;line-height:1}
+.cs-badge.navy{background:#14183C;color:#fff}
+.cs-badge.mag{background:#FDE7F3;color:#E6007F}
+.cs-badge.gray{background:#ECECF2;color:#5A5A70}
+.cs-badge.warn{background:#FFF1E0;color:#C07800}
+.cs-desc{font-size:calc(12.5px*var(--scale));color:#7A7A8C;line-height:1.55;margin-top:7px}
+.cs-arw{flex:none;color:#C4C4D2}
+.cs-arw svg{width:18px;height:18px}
+.cs-row.soon{background:#FAFAFC;border-style:dashed;border-color:#DEDEE6;cursor:default}
+.cs-row.soon{display:none}   /* 디지털ARS(준비중·27년2월) 숨김 — 소스 유지, 오픈 시 이 한 줄만 삭제 */
+.cs-row.soon:active{transform:none;background:#FAFAFC}
+.cs-row.soon .cs-ic{background:#C7C7D4}
+.cs-row.soon .cs-nm{color:#9A9AB0}
+.cs-cancel{margin-top:12px;text-align:center;padding:15px;border-radius:15px;
+  background:#F1F2F6;color:#5A5A70;font-size:calc(15px*var(--scale));font-weight:800;cursor:pointer}
+.cs-cancel:active{transform:scale(.98)}
+
 .kp-ov{position:absolute;inset:0;z-index:150;background:rgba(20,12,40,.35);
   display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .2s}
 .kp-ov.on{opacity:1}
@@ -1872,7 +1916,7 @@ body{
     <div class="ref-item" data-sian="s1" data-ver="v2" style="display:none"><span class="rf-nm">Ver 2.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결)</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v21"><span class="rf-nm">Ver 2.1</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결, 현행과 동일) 메인화면에 모든 탭 추가, 전체메뉴 수정</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v40"><span class="rf-nm">Ver 4.0</span><span class="rf-tel">디지털 ARS · 토스 스타일 디자인 (9카테고리 / 포인트 마젠타·네이비)</span></div>
-    <div class="ref-item" data-sian="dars1"><span class="rf-nm">Ver 3.0</span><span class="rf-tel">Ver 2 에서 UI/UX만 변경</span></div>
+    <div class="ref-item" data-sian="dars1" style="display:none"><span class="rf-nm">Ver 3.0</span><span class="rf-tel">Ver 2 에서 UI/UX만 변경</span></div>
     <div class="ref-item" data-sian="dars2" style="display:none"><span class="rf-nm">Ver 1.2.1</span><span class="rf-tel">큰 카드 + 인라인</span></div>
     <div class="ref-title func-title">시연 · 기능</div>
     <div class="func-item" data-skipauth><span class="rf-nm">본인인증 생략</span><span class="rf-tel">클릭 시 이후 인증 생략 (시연용)</span></div>

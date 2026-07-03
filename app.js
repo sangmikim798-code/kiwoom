@@ -2085,6 +2085,7 @@ let sessionAuthed = false;
 /* 화면 이동: 현재 상태를 history에 쌓고 새 화면으로 */
 function s1nav(patch){
   closeMenuDrawer();               // 화면 이동 시 전체메뉴 드로어 닫기
+  closeConsult();                  // 상담연결 팝업 열려있으면 닫기
   s1state.history.push({page:s1state.page, title:s1state.title, listKey:s1state.listKey, resultKey:s1state.resultKey, fromFav:s1state.fromFav, authNext:s1state.authNext, authMethod:s1state.authMethod, otpSent:s1state.otpSent, noBack:s1state.noBack, noHome:s1state.noHome});
   s1state.noBack = false;          // 기본은 뒤로가기 표시, 진입 화면만 patch로 숨김
   s1state.noHome = false;          // 기본은 홈/메뉴 표시, 세부페이지만 patch로 숨김
@@ -2633,6 +2634,69 @@ function openAppLink(key){
 function closeAppLink(){
   const el = document.getElementById('appPop');
   if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 220); }
+}
+
+/* ===== Ver 4.0 · 상담연결 안내 팝업 (최종메뉴 클릭 시) =====
+   헤더=후보1 / 채널 라벨·배지=B 추천 / 설명=세부문구 변형.
+   업무에 따라 제공 채널 개수가 달라질 수 있음 — 우선 5종 모두 노출.
+   desc가 함수면 상황(계좌 연동 여부 등)에 따라 문구 분기. */
+const CS_WEB_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>';
+const CONSULT_CHANNELS = [
+  { k:'hero', nm:'영웅문S#으로 이어보기', ic:'<span class="cs-slog">S#</span>',
+    badges:[{t:'앱 연동',cls:'navy'},{t:'바로 이동',cls:'mag'}],
+    // 입력한 계좌정보(세션 인증) 있으면 연동 문구, 없으면 앱 이동 문구
+    desc(){ return sessionAuthed
+      ? '입력하신 계좌로 연결해 바로 이 화면을 띄워드려요'
+      : '앱을 열어 원하시는 업무 화면으로 이동해요'; } },
+  { k:'chat', nm:'AI 챗봇에게 물어보기', ic:I.chat,
+    badges:[{t:'24시간',cls:'navy'},{t:'대기 없음',cls:'mag'}],
+    desc:'기다림 없이 지금 바로 물어보세요' },
+  { k:'voice', nm:'음성 ARS로 안내받기', ic:I.phone,
+    badges:[{t:'음성 안내',cls:'gray'}],
+    desc:'선택하신 업무에 맞춰 순서대로 알려드려요' },
+  { k:'call', nm:'상담원과 통화하기', ic:I.headset,
+    badges:[{t:'담당부서 연결',cls:'gray'},{t:'대기 있음',cls:'warn'}],
+    desc:'담당 상담원과 직접 통화해요 · 연결까지 잠시 걸릴 수 있어요' },
+  { k:'digital', nm:'디지털 ARS로 처리하기', ic:CS_WEB_ICON, soon:true,
+    badges:[{t:'준비중 · 27년 2월',cls:'gray'}],
+    desc:'곧 만나요! 2027년 2월부터 이 화면에서 바로 처리할 수 있어요' },
+];
+function openConsult(label, opts){
+  opts = opts || {};
+  const exclude = opts.exclude || [];   // 제외할 채널 키 (예: 직원연결 최종메뉴는 'voice' 제외)
+  const prev = document.getElementById('consultPop'); if(prev) prev.remove();   // 기존 팝업 즉시 제거(중복 id 방지)
+  const screen = document.getElementById('screen'); if(!screen) return;
+  const el = document.createElement('div');
+  el.className = 'consult-ov'; el.id = 'consultPop'; el.dataset.csLabel = label || '';
+  const rows = CONSULT_CHANNELS.filter(c=>!exclude.includes(c.k)).map(c=>{
+    const badges = (c.badges||[]).map(b=>`<span class="cs-badge ${b.cls}">${b.t}</span>`).join('');
+    const desc = (typeof c.desc==='function') ? c.desc() : (c.desc||'');
+    return `<div class="cs-row${c.soon?' soon':''}" data-cschannel="${c.k}">
+      <div class="cs-ic">${c.ic}</div>
+      <div class="cs-body">
+        <div class="cs-nm">${c.nm}</div>
+        <div class="cs-badges">${badges}</div>
+        <div class="cs-desc">${desc}</div>
+      </div>
+      <div class="cs-arw">${I.chev}</div>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="consult-sheet">
+    <div class="cs-grip"></div>
+    <div class="cs-head">
+      <div class="cs-title">어떻게 도와드릴까요?</div>
+      <div class="cs-sub">편하신 방법으로 상담을 연결해 드려요</div>
+      ${label?`<div class="cs-ctx">선택하신 업무 · <b>${label}</b></div>`:''}
+    </div>
+    <div class="cs-list">${rows}</div>
+    <div class="cs-cancel" data-csclose>닫기</div>
+  </div>`;
+  screen.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function closeConsult(){
+  const el = document.getElementById('consultPop');
+  if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); }
 }
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
@@ -3277,6 +3341,25 @@ document.addEventListener('click', (e)=>{
   }
   if(t.closest('[data-appcancel]') || (t.classList && t.classList.contains('app-pop-ov'))){ closeAppLink(); return; }
 
+  // Ver 4.0 · 상담연결 안내 팝업: 채널 선택 / 닫기(닫기버튼·배경탭)
+  const csch = t.closest('[data-cschannel]');
+  if(csch){
+    if(csch.classList.contains('soon')){ flash('디지털 ARS는 2027년 2월 오픈 예정이에요. 조금만 기다려 주세요!'); return; }
+    const csEl = document.getElementById('consultPop');
+    const lbl = csEl ? (csEl.dataset.csLabel||'') : '';
+    const k = csch.dataset.cschannel;
+    const CS_MSG = {
+      hero:  sessionAuthed ? `영웅문S#으로 연결합니다. ‘${lbl}’ 화면으로 바로 이동해요. (시연용)` : '영웅문S#을 실행합니다. 원하시는 업무 화면으로 이동해요. (시연용)',
+      chat:  '24시간 AI 챗봇 상담으로 연결합니다. (시연용)',
+      voice: `음성 ARS 안내로 연결합니다. ‘${lbl}’ 시나리오를 안내해 드려요. (시연용)`,
+      call:  '담당 부서 상담원에게 연결합니다. 연결까지 잠시만 기다려 주세요. (시연용)',
+    };
+    closeConsult();
+    flash(CS_MSG[k] || '상담을 연결합니다. (시연용)');
+    return;
+  }
+  if(t.closest('[data-csclose]') || (t.classList && t.classList.contains('consult-ov'))){ closeConsult(); return; }
+
   // 시연용 토스트 버튼
   const fl = t.closest('[data-flash]');
   if(fl){ flash(fl.dataset.flash); return; }
@@ -3447,7 +3530,9 @@ document.addEventListener('click', (e)=>{
   if(sdn){ const i=+sdn.dataset.sarsdown; s1state.sarsPath=[...(s1state.sarsPath||[]), i]; refreshMenu(); return; }
   if(t.closest('[data-sarsup]')){ (s1state.sarsPath = s1state.sarsPath||[]).pop(); refreshMenu(); return; }
   const slf = t.closest('[data-sarsleaf]');
-  if(slf){ flash(`‘${slf.dataset.sarsleaf}’ 음성 ARS 최종 메뉴입니다. (메뉴 연결 안내 · 화면 미연결)`); return; }
+  if(slf){
+    if(s1Ver==='v40'){ openConsult(slf.dataset.sarsleaf, {exclude:['call']}); return; }   // Ver 4.0: 음성ARS 최종메뉴 → 상담연결 팝업(전화상담 제외)
+    flash(`‘${slf.dataset.sarsleaf}’ 음성 ARS 최종 메뉴입니다. (메뉴 연결 안내 · 화면 미연결)`); return; }
   // 전체메뉴: 좌측 대메뉴 선택(고정), 우측 중메뉴 표시
   const am1 = t.closest('[data-am1]');
   if(am1){ const i=+am1.dataset.am1; s1state.amOpen=i; s1state.amOpen2=-1; refreshMenu(); return; }
@@ -3652,6 +3737,7 @@ document.addEventListener('click', (e)=>{
   // 음성 ARS 연결 안내 팝업
   const pop = t.closest('[data-arspop]');
   if(pop){
+    if(s1Ver==='v40'){ openConsult(stripNum(pop.dataset.arspop), {exclude:['voice']}); return; }   // Ver 4.0: 직원연결 최종메뉴 → 상담연결 팝업(음성ARS 제외)
     // 상담 분야 결정
     const lbl = pop.dataset.arspop;
     let field;
