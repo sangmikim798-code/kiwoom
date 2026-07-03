@@ -2137,11 +2137,14 @@ function authStep(method){
     const iod = isIodFlow();
     const reqNote = iod ? '위 정보로 휴대폰 인증을 진행할게요.' : '위 정보로 휴대폰 본인인증을 진행합니다.';
     const otpNote = iod ? '인증번호를 보내드렸어요. 문자를 확인해 주세요.' : '인증번호를 발송했습니다. 문자를 확인해주세요.';
+    // IOD: 헤딩이 '인증번호 6자리를 입력해주세요'라 라벨/placeholder 중복 → 제거
+    const otpLabel = iod ? '' : `<label>인증번호</label>`;
+    const otpPh    = iod ? '' : '인증번호 6자리 입력';
     const tail = s1state.otpSent
       ? `<div class="auth-field" style="margin-top:20px">
-          <label>인증번호</label>
+          ${otpLabel}
           <div class="otp-row">
-            <input class="auth-input" id="otpNo" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="인증번호 6자리 입력">
+            <input class="auth-input" id="otpNo" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="${otpPh}">
             <span class="otp-timer" id="otpTimer">03:00</span>
           </div>
           <div class="auth-note" style="text-align:center;margin:12px 2px 0;white-space:nowrap;font-size:calc(13px*var(--scale))">${otpNote}</div>
@@ -2639,9 +2642,9 @@ function openAppLink(key){
   const el = document.createElement('div');
   el.className = 'app-pop-ov' + (v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title;
   const logo  = v40 ? `<div class="ap-logo"><img src="assets/ys-icon.png" alt="영웅문S#"></div>` : `<div class="ap-logo">S#</div>`;
-  const title = v40 ? '영웅문S#으로 연결해드릴게요' : '영웅문S#으로 연결';
+  const title = v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결';
   const desc  = v40
-    ? `계좌를 안전하게 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.`
+    ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">지금 보고 계신 디지털 ARS 웹은 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</span>`
     : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`;
   // Ver 4.0은 중간 단계 플로우(앱 실행›계좌 연동›화면 이동) 미노출
   const flow = v40 ? '' : `<div class="ap-flow"><span class="ap-step">앱 실행</span><span class="ap-arr">›</span><span class="ap-step">계좌 연동</span><span class="ap-arr">›</span><span class="ap-step">화면 이동</span></div>`;
