@@ -2781,18 +2781,16 @@ function renderIodResult(){
   const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
   const r = IOD_RESULTS[key];
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'종합위탁'} ${authAcct.no}` : '종합위탁 123-45-678901';
-  const toggles = Object.keys(IOD_RESULTS).map(k=>
-    `<div class="iod-tg ${k===key?'on':''}" data-iodres="${k}">${IOD_RESULTS[k].tab}</div>`).join('');
   const actBtns = r.actions.map(a=>{
     if(a.kind==='app')     return `<div class="primary-btn" data-applink="iodpurpose">${a.t}</div>`;
     if(a.kind==='purpose') return `<div class="primary-btn ghost" data-s1go="result" data-rk="purpose" data-fk="금융거래목적확인서">${a.t}</div>`;
     if(a.kind==='consult') return `<div class="primary-btn ghost" data-arspop="한도제한계좌 해제">${a.t}</div>`;
     return '';
   }).join('');
+  // 결과 카드를 탭할 때마다 3가지 사유(계좌 상태)가 순환 — 토글 탭은 노출하지 않음
   return pageTop(s1state.title||'계좌 상태')
     + untactSteps(IOD_STEPS, 2)
-    + `<div class="iod-toggles">${toggles}</div>`
-    + `<div class="iod-card">
+    + `<div class="iod-card" data-iodcycle>
         <div class="iod-acct">${acct}</div>
         <span class="iod-badge ${r.badgeCls}">${r.badge}</span>
         <div class="iod-title">${r.title}</div>
@@ -2800,7 +2798,7 @@ function renderIodResult(){
         <div class="iod-release">${r.release}</div>
       </div>`
     + `<div class="iod-actions">${actBtns}</div>`
-    + `<div class="iod-note">※ 데모 화면이에요. 위 버튼으로 계좌 상태(사유)를 바꿔볼 수 있어요.</div>`;
+    + `<div class="iod-note">※ 데모 화면이에요. 위 카드를 탭하면 다른 사유(계좌 상태)를 볼 수 있어요.</div>`;
 }
 /* 휴대폰·간편 인증 완료 → 본인 명의 계좌 선택(선택 시 계좌 인증 화면에 계좌번호 자동 입력) */
 function renderIodAcctSel(){
@@ -3499,8 +3497,13 @@ document.addEventListener('click', (e)=>{
     return;
   }
   if(t.closest('[data-iodfind]')){ s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return; }
-  const iodr = t.closest('[data-iodres]');
-  if(iodr){ s1state.iodResult = iodr.dataset.iodres; renderS1(); return; }
+  const iodc = t.closest('[data-iodcycle]');
+  if(iodc){
+    const keys = Object.keys(IOD_RESULTS);
+    const cur = keys.indexOf(IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : keys[0]);
+    s1state.iodResult = keys[(cur+1) % keys.length];   // 클릭마다 다음 사유로 순환
+    renderS1(); return;
+  }
 
   // 시연용 토스트 버튼
   const fl = t.closest('[data-flash]');
