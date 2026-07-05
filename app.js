@@ -2965,21 +2965,20 @@ function renderIodPurposeDone(){
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
-/* 음성 ARS 연결 안내 화면 — 해당 IVR 메뉴로 연결 + (계좌인증 시)계좌정보 연동 + 디지털ARS 종료·인증 무효 안내 */
+/* 음성 ARS 연결 안내 화면 — Ver4.0 플로우 화면 형식(iod-top·헤딩·정보카드·안내·버튼, [입출금]과 동일) */
 function renderVoiceConnect(){
-  const label = s1state.voiceLabel || '';
-  const menuLine = label ? `선택하신 <b>${label}</b> 메뉴로<br>바로 연결해 드릴게요.` : `선택하신 메뉴로<br>바로 연결해 드릴게요.`;
-  const authLine = sessionAuthed ? `<br>인증하신 계좌 정보를 연동해서 연결해 드려요.` : '';
-  // 터미널(연결) 화면 — 상단바 없이 화면 세로 중앙 정렬
-  return `<div class="iod-done-center">
-      <div class="iod-done">
-        <div class="iod-done-ic">${I.phone}</div>
-        <div class="iod-done-t">음성 ARS로 연결할게요</div>
-        <div class="iod-done-d">${menuLine}${authLine}</div>
-      </div>
-      <div class="iod-done-note">음성 ARS로 연결되면 지금 보고 계신 디지털 ARS는 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
-      <div class="iod-done-btnwrap"><div class="primary-btn" data-voicego>음성 ARS 연결</div></div>
-    </div>`;
+  const label = s1state.voiceLabel || '음성 ARS';
+  const acctVal = sessionAuthed ? `${(authAcct&&authAcct.no)||'인증 계좌'} 연동` : '통화 중 확인';
+  return pageTop(s1state.title||'음성 ARS 연결', true)
+    + `<div class="auth-wrap">
+        <div class="auth-head">음성 ARS로<br>바로 연결해 드릴게요</div>
+        <div class="auth-info">
+          <div class="ir"><span class="k">연결 메뉴</span><span class="v">${label}</span></div>
+          <div class="ir"><span class="k">계좌 연동</span><span class="v">${acctVal}</span></div>
+        </div>
+        <div class="auth-note">음성 ARS로 연결되면 지금 보고 계신 디지털 ARS는 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+        <div class="primary-btn" data-voicego>음성 ARS 연결</div>
+      </div>`;
 }
 /* 음성 ARS 연결 완료 화면 — 연결 버튼 클릭 후, 세로 중앙 정렬 */
 function renderVoiceDone(){
