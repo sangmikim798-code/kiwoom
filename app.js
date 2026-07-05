@@ -2994,6 +2994,20 @@ function renderVoiceDone(){
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
+/* 영웅문S# 연결 완료 화면 — 앱 연결 팝업 '열기' 후, 세로 중앙 정렬 */
+function renderHeroDone(){
+  const title = s1state.heroTitle || '요청하신 업무';
+  const acctLine = sessionAuthed ? '인증하신 계좌를 연동해서<br>' : '';
+  return `<div class="iod-done-center">
+      <div class="iod-done">
+        <div class="iod-done-ic">${I.check}</div>
+        <div class="iod-done-t">영웅문S#으로 연결됐어요</div>
+        <div class="iod-done-d">${acctLine}<b>${title}</b> 화면으로 이동했어요.</div>
+      </div>
+      <div class="iod-done-note">이 디지털 ARS 화면은 곧 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+      <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
+    </div>`;
+}
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
@@ -3201,6 +3215,9 @@ function renderS1(){
   }
   else if(s1state.page==='voicedone'){
     html = renderVoiceDone();
+  }
+  else if(s1state.page==='herodone'){
+    html = renderHeroDone();
   }
   else if(s1state.page==='iodcheck'){
     html = renderIodChecking();
@@ -3657,10 +3674,10 @@ document.addEventListener('click', (e)=>{
   if(al){ openAppLink(al.dataset.applink); return; }
   if(t.closest('[data-appgo]')){
     const pop = document.getElementById('appPop'); const ttl = pop ? pop.dataset.linkTitle : '';
-    flash(s1Ver==='v40'
-      ? `영웅문S#으로 연결해드릴게요. 계좌 연동 후 ${ttl} 화면으로 이동해요. (시연용)`
-      : `영웅문S#으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
-    closeAppLink(); return;
+    closeAppLink();
+    if(s1Ver==='v40'){ s1nav({page:'herodone', title:'영웅문S# 연결', heroTitle: ttl, noBack:true, noHome:true}); return; }   // v40: 연결 완료 화면
+    flash(`영웅문S#으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
+    return;
   }
   if(t.closest('[data-appcancel]') || (t.classList && t.classList.contains('app-pop-ov'))){ closeAppLink(); return; }
 
