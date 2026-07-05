@@ -2987,7 +2987,7 @@ function renderVoiceDone(){
   const menuLine = label ? `선택하신 <b>${label}</b> 안내를<br>지금 시작할게요.` : `음성 안내를 지금 시작할게요.`;
   return `<div class="iod-done-center">
       <div class="iod-done">
-        <div class="iod-done-ic">${I.phone}</div>
+        <div class="iod-done-ic">${I.check}</div>
         <div class="iod-done-t">음성 ARS로 연결됐어요</div>
         <div class="iod-done-d">${menuLine}<br>잠시만 기다려 주세요.</div>
       </div>
