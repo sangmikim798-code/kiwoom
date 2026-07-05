@@ -2981,6 +2981,20 @@ function renderVoiceConnect(){
       <div class="iod-done-btnwrap"><div class="primary-btn" data-voicego>음성 ARS 연결</div></div>
     </div>`;
 }
+/* 음성 ARS 연결 완료 화면 — 연결 버튼 클릭 후, 세로 중앙 정렬 */
+function renderVoiceDone(){
+  const label = s1state.voiceLabel || '';
+  const menuLine = label ? `선택하신 <b>${label}</b> 안내를<br>지금 시작할게요.` : `음성 안내를 지금 시작할게요.`;
+  return `<div class="iod-done-center">
+      <div class="iod-done">
+        <div class="iod-done-ic">${I.phone}</div>
+        <div class="iod-done-t">음성 ARS로 연결됐어요</div>
+        <div class="iod-done-d">${menuLine}<br>잠시만 기다려 주세요.</div>
+      </div>
+      <div class="iod-done-note">이 디지털 ARS 화면은 곧 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+      <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
+    </div>`;
+}
 
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
@@ -3185,6 +3199,9 @@ function renderS1(){
   }
   else if(s1state.page==='voiceconnect'){
     html = renderVoiceConnect();
+  }
+  else if(s1state.page==='voicedone'){
+    html = renderVoiceDone();
   }
   else if(s1state.page==='iodcheck'){
     html = renderIodChecking();
@@ -3720,8 +3737,8 @@ document.addEventListener('click', (e)=>{
   // 금융거래목적확인서 등록 → 완료 화면 / 완료 화면 '확인' → 메인
   if(t.closest('[data-iodpurposedone]')){ s1nav({page:'iodpurposedone', title:'등록 완료', noBack:true, noHome:true}); return; }
   if(t.closest('[data-iodhome]')){ s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
-  // 음성 ARS 연결 버튼 → 연결(시연) 후 메인 복귀
-  if(t.closest('[data-voicego]')){ flash('음성 ARS로 연결합니다. (시연용)'); s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
+  // 음성 ARS 연결 버튼 → 연결 완료 화면
+  if(t.closest('[data-voicego]')){ s1nav({page:'voicedone', title:'음성 ARS 연결', noBack:true, noHome:true}); return; }
 
   // 시연용 토스트 버튼
   const fl = t.closest('[data-flash]');
