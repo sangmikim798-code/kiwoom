@@ -4289,20 +4289,35 @@ function activeTabItem(){
 /* 버전별 음성 시나리오 기본 텍스트 */
 const DEFAULT_SCENARIO = {
   v1:  '[Ver 1.0 · 디지털 ARS + 보이는 ARS]\n안녕하세요, 키움증권입니다.\n화면에서 자주 찾는 서비스와 보이는 ARS 메뉴를 직접 선택해 이용하실 수 있습니다.',
-  v11: '[Ver 1.1 · 보이는 ARS 화면구현]\n안녕하세요, 키움증권입니다.\n새로워진 메인 화면에서 원하시는 서비스를 한눈에 선택해 주세요.',
+  v11: '안녕하세요, 키움증권입니다.\n새로워진 메인 화면에서 원하시는 서비스를 한눈에 선택해 주세요.',
   v2:  '[Ver 2.0 · 단순 ARS 메뉴연결]\n안녕하세요, 키움증권입니다.\n음성 ARS 순서 그대로 번호를 선택해 원하시는 메뉴로 이동하세요.',
-  v21: '[Ver 2.1 · 보이는 ARS 화면구현 제외, 메인화면 및 전체메뉴 변경]\n안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
-  v40: '[Ver 4.0 · 토스 스타일 디지털 ARS]\n안녕하세요, 키움증권입니다.\n무엇을 도와드릴까요? 원하시는 음성 ARS 메뉴를 선택해 주세요.',
+  v21: '안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
+  v40: '안녕하세요, 키움증권입니다.\n무엇을 도와드릴까요? 원하시는 메뉴를 선택해 주세요.\n\n[메인 헤더 문구 후보]\n- 혼자서도 쉽게 할 수 있어요\n- 상담 없이 직접 해결할 수 있어요\n- 몇 초면 직접 처리할 수 있어요\n- 혼자서도 간편하게 해결해요',
   dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n이용하실 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
 };
+/* 버전 탭 설명(rf-tel) 소스 기본값 — 사이드바에서 편집한 멀티라인 설명을 소스에 고정(모든 접속자 동일 표시) */
+const DEFAULT_TAB_LABELS = {
+  v11: {nm:'Ver 1.1', tel:'디지털 ARS + \n보이는 ARS (화면구현) +  \n상담원연결 (해당스킬연결)\n\n\n- 메인화면에 보이는 ARS 삭제\n- 이벤트 배너 삭제'},
+  v21: {nm:'Ver 2.1', tel:'디지털 ARS + \n보이는 ARS (단순메뉴연결) +\n상담원연결 (해당스킬연결)\n\n\n- 보이는 ARS 현행과 동일\n- 메인화면에 모든 탭 추가\n- 전체메뉴 수정'},
+  v40: {nm:'Ver 4.0', tel:'- 상담순위 기반 카테고리 재분석\n: 유선상담 + 채팅/챗봇상담\n\n- 간단, 쉬움, 직관적, 큰글씨 기능\n: 40~50대 타겟\n\n- 번호 구분 없이 통합 \n: 셀프서비스(디지털 ARS) +  보이는 ARS(1544-9900) + 상담원연결(1544-9000) 탭으로 나눴던 부분 통합\n\n★ 상담원 연결로 이어지지 않게 하는 것이 목표!!!'},
+};
+function applyDefaultTabLabels(list){
+  if(!list) return;
+  list.querySelectorAll('.ref-item').forEach(it=>{
+    const d = DEFAULT_TAB_LABELS[tabItemKey(it)]; if(!d) return;
+    const nm = it.querySelector('.rf-nm'), tel = it.querySelector('.rf-tel');
+    if(nm && d.nm) nm.textContent = d.nm;
+    if(tel && d.tel != null) tel.textContent = d.tel;
+  });
+}
 function loadScenario(key){
-  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v4') || '{}'); if(m[key]!=null) return m[key]; }catch(_){}
+  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v5') || '{}'); if(m[key]!=null) return m[key]; }catch(_){}
   return DEFAULT_SCENARIO[key] || '안녕하세요, 키움증권입니다.\n원하시는 서비스를 선택해 주세요.\n\n(더블클릭하여 음성 시나리오를 입력하세요)';
 }
 function saveScenario(key, text){
   if(!key) return;
-  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v4') || '{}'); m[key]=text; localStorage.setItem('darsScenarios_v4', JSON.stringify(m)); }catch(_){}
+  try{ const m = JSON.parse(localStorage.getItem('darsScenarios_v5') || '{}'); m[key]=text; localStorage.setItem('darsScenarios_v5', JSON.stringify(m)); }catch(_){}
 }
 function updateSceneLabel(){
   const panel = document.getElementById('scenePanel'); if(!panel) return;
@@ -4365,7 +4380,8 @@ function selectSian(v, ver){
   enableDragSort(snl, 'darsSianTabOrder_v2');
   enableDragSort(rl, 'darsRefTabOrder');
   // 더블클릭 시 탭명/설명 인라인 편집 + 저장
-  enableTabEdit(snl, 'darsSianTabLabels_v4');   // 키 버전업: Ver명 개편(1.2→3.0) 후 옛 저장 라벨 무효화
+  applyDefaultTabLabels(snl);   // 소스 기본 라벨(편집 확정본) 적용 후 저장값 복원
+  enableTabEdit(snl, 'darsSianTabLabels_v5');   // 키 버전업: 편집 확정본을 소스에 고정(옛 저장 라벨 무효화)
   enableTabEdit(rl, 'darsRefTabLabels');
   // 우측 패널 시나리오 더블클릭 편집 (버전별 저장)
   const sc = document.getElementById('spScenario');
