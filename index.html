@@ -325,7 +325,9 @@ body{
 .toss-back{width:38px;height:38px;display:grid;place-items:center;color:var(--navy);cursor:pointer}
 .toss-back svg{width:24px;height:24px;transform:rotate(180deg)}
 /* 히어로 타이틀 (토스 큰 볼드 2줄) */
-.toss-hero{padding:10px 22px 12px}
+.toss-hero{padding:10px 22px 10px}
+.flow.toss .toss-home:has(.toss-grid) .toss-hero{padding:8px 22px 6px}
+.flow.toss .toss-home:has(.toss-grid) .toss-faq{margin-bottom:8px}
 .th-hi{font-size:calc(23px*var(--scale));font-weight:800;color:var(--navy);line-height:1.32;letter-spacing:-.7px}
 .th-sub{margin-top:8px;font-size:calc(14px*var(--scale));color:var(--sub);font-weight:600;letter-spacing:-.3px}
 /* '상담 없이 해결할 수 있어요' 자가해결 카드 (토스 IMG_5635 참고) */
@@ -355,6 +357,14 @@ body{
 .tc-desc{margin-top:3px;font-size:calc(12.5px*var(--scale));color:var(--sub);font-weight:500;letter-spacing:-.2px;line-height:1.35}
 .tc-arw{color:#C4CAD4;display:flex;flex:none}
 .tc-arw svg{width:20px;height:20px}
+/* Ver 4.1 · 9 대메뉴 3×3 그리드 (아이콘칩 + 라벨) */
+.toss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:2px 16px 10px}
+.toss-gcell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:12px 6px 11px;border-radius:18px;background:#F7F8FA;cursor:pointer;transition:.12s}
+.toss-gcell:active{background:var(--line)}
+.tg-ic{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)}
+.tg-ic svg{width:27px;height:27px}
+.tg-nm{font-size:calc(12.5px*var(--scale));font-weight:700;color:var(--ink);text-align:center;letter-spacing:-.4px;line-height:1.3;word-break:keep-all}
+/* v41 큰글씨 ON은 Ver 4.0과 동일한 리스트(tossCatList)로 렌더 → 그리드 전용 큰글씨 CSS 불필요 */
 /* 드릴다운(sars) 토스화 */
 .toss-drill{padding:2px 12px 24px}
 /* 드릴다운 헤더: 대메뉴명 타이틀 + 설명글 (내부 브레드크럼 대체) */
@@ -2008,6 +2018,7 @@ body{
     <div class="ref-item" data-sian="s1" data-ver="v2" style="display:none"><span class="rf-nm">Ver 2.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결)</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v21"><span class="rf-nm">Ver 2.1</span><span class="rf-tel">디지털 ARS + 보이는 ARS (단순메뉴연결, 현행과 동일) 메인화면에 모든 탭 추가, 전체메뉴 수정</span></div>
     <div class="ref-item" data-sian="s1" data-ver="v40"><span class="rf-nm">Ver 4.0</span><span class="rf-tel">디지털 ARS · 토스 스타일 디자인 (9카테고리 / 포인트 마젠타·네이비)</span></div>
+    <div class="ref-item" data-sian="s1" data-ver="v41"><span class="rf-nm">Ver 4.1</span><span class="rf-tel">Ver 4.0 · 메인 9 대메뉴를 3×3 그리드로 변경</span></div>
     <div class="ref-item" data-sian="dars1" style="display:none"><span class="rf-nm">Ver 3.0</span><span class="rf-tel">Ver 2 에서 UI/UX만 변경</span></div>
     <div class="ref-item" data-sian="dars2" style="display:none"><span class="rf-nm">Ver 1.2.1</span><span class="rf-tel">큰 카드 + 인라인</span></div>
     <div class="ref-title func-title">시연 · 기능</div>

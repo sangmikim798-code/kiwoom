@@ -1708,7 +1708,7 @@ function renderV21Menu(forceOpen){
   const cat = s1state.amCat || 'self';
   const cats = [['self','셀프서비스'],['ars','ARS'],['staff','상담원연결']];
   const left = cats.map(([k,nm])=>`<div class="am-dae ${k===cat?'on':''}" data-amcat="${k}">${nm}</div>`).join('');
-  const tree = cat==='ars' ? (s1Ver==='v40' ? ARS_CAT6 : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
+  const tree = cat==='ars' ? (isV40() ? ARS_CAT6 : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
   const right = `<div class="amv-list">${renderAccTree(tree, '', cat, forceOpen)}</div>`;
   return `<div class="am2col v21col"><div class="am-left">${left}</div><div class="am-right">${right}</div></div>`;
 }
@@ -1912,7 +1912,7 @@ const ARS_CAT6 = [
 ];
 
 /* 음성 ARS 메뉴트리 (V2.0/V2.1 ARS메뉴) — Ver 4.0은 수요 9 카테고리(ARS_CAT6, 직원연결 매핑 활성), 그 외는 원본 IVR */
-function usesCat(){ return s1Ver==='v40'; }   // ARS_CAT6(9 카테고리) + 직원연결 매핑 사용 버전
+function usesCat(){ return isV40(); }   // ARS_CAT6(9 카테고리) + 직원연결 매핑 사용 버전 (v40·v41 공통)
 function renderSimpleArs(){ return renderArsTree(usesCat() ? ARS_CAT6 : IVR, {guide:'원하시는 서비스를 선택하세요.', crumb:'음성 ARS · ', mapStaff:usesCat()}); }
 /* 상담원 연결 메뉴트리 (V2.1 메인 · ARS메뉴와 동일 번호 드릴다운 구성) */
 function renderStaffTree(){ return renderArsTree(FAV_MENU, {guide:'상담 분야의 번호를 선택하세요.', crumb:'상담원 연결 · ', leaf:'staff'}); }
@@ -2023,6 +2023,22 @@ function tossCatList(){
       <div class="tc-ic">${I[cat.ic]||I.order}</div>
       <div class="tc-body"><div class="tc-nm">${stripNum(cat.t)}</div><div class="tc-desc">${V40_DESC[i]||''}</div></div>
       <div class="tc-arw">${I.chev}</div>
+    </div>`
+  ).join('') + `</div>`;
+}
+/* Ver 4.1 · 9 대메뉴 3×3 그리드 (아이콘칩 + 라벨) — 로직·드릴다운은 v40과 동일, 메인 표현만 그리드 */
+/* 그리드 전용 2줄 라벨(카테고리 인덱스 기준, <br>로 줄바꿈). 미지정 셀은 원본 카테고리명(stripNum). ※v40 리스트·드릴다운 헤더는 원본명 유지 */
+const V41_GRID_LB = {
+  0: '주식주문 ·<br>체결확인',      // cat1 주문·체결확인
+  1: '계좌예수금 ·<br>잔고조회',    // cat2 계좌·잔고조회
+  2: '입출금 ·<br>계좌간이체',      // cat3 입출금·이체
+  4: '계좌개설 ·<br>사고등록',      // cat5 계좌개설·사고
+};
+function tossCatGrid(){
+  return `<div class="toss-grid">` + ARS_CAT6.map((cat,i)=>
+    `<div class="toss-gcell" data-sarsdown="${i}">
+      <div class="tg-ic">${I[cat.ic]||I.order}</div>
+      <div class="tg-nm">${V41_GRID_LB[i] || stripNum(cat.t)}</div>
     </div>`
   ).join('') + `</div>`;
 }
@@ -2603,7 +2619,7 @@ function openPwKeypad(showAcct, ctx){
   if(!screen) return;
   const digits = ['1','2','3','4','5','6','7','8','9'];
   const el = document.createElement('div');
-  el.className = 'kp-ov' + (s1Ver==='v40' ? ' v40' : '');   // Ver 4.0: 토스(마젠타·네이비) 토큰으로 재도색
+  el.className = 'kp-ov' + (isV40() ? ' v40' : '');   // Ver 4.0 계열: 토스(마젠타·네이비) 토큰으로 재도색
   el.id = 'pwKeypad';
   el.innerHTML = `<div class="kp-sheet">
     <div class="kp-grab"></div>
@@ -2638,7 +2654,7 @@ function openAppLink(key){
   closeAppLink();
   const screen = document.getElementById('screen'); if(!screen) return;
   const c = APP_LINK[key] || {title:'요청하신 업무'};
-  const v40 = (s1Ver==='v40');   // Ver 4.0: 토스(마젠타·네이비) 스킨 + 앱 아이콘 + 톤 맞춤 문구
+  const v40 = isV40();   // Ver 4.0 계열: 토스(마젠타·네이비) 스킨 + 앱 아이콘 + 톤 맞춤 문구
   const el = document.createElement('div');
   el.className = 'app-pop-ov' + (v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title;
   const logo  = v40 ? `<div class="ap-logo"><img src="assets/ys-icon.png" alt="영웅문S#"></div>` : `<div class="ap-logo">S#</div>`;
@@ -3121,7 +3137,7 @@ function pageTop(title, hideTitle){
 
 function renderS1(){
   const v = document.getElementById('s1view');
-  const flowEl = v && v.closest('.flow'); if(flowEl) flowEl.classList.toggle('toss', s1Ver==='v40');   // Ver 4.0 토스 스킨 (전 화면 var() 토큰 오버라이드)
+  const flowEl = v && v.closest('.flow'); if(flowEl) flowEl.classList.toggle('toss', isV40());   // Ver 4.0 계열 토스 스킨 (전 화면 var() 토큰 오버라이드)
   let html = '';
   if(s1state.page==='home'){
     /* 자주 찾는 서비스 9개로 한눈에 구성 */
@@ -3153,8 +3169,8 @@ function renderS1(){
         + banner()
         + appFooter()
         + `</div>`;
-    } else if(s1Ver==='v40'){
-      /* Ver 4.0 · 토스 스타일 디지털 ARS (포인트=키움 마젠타·네이비) — 9 카테고리(ARS_CAT6) 토스 리스트 + 드릴다운. 전체메뉴 없음. */
+    } else if(isV40()){
+      /* Ver 4.0 계열 · 토스 스타일 디지털 ARS (포인트=키움 마젠타·네이비) — 9 카테고리(ARS_CAT6). v40=토스 리스트 / v41=3×3 그리드. 드릴다운·전체메뉴없음 공통. */
       const path = s1state.sarsPath || [];
       // 우상단 큰글씨 on/off 스위치 (기존 전역 bigFont+applyScale 재사용)
       const bf = `<div class="bigfont-toggle ${bigFont?'on':''}" data-bigfont title="큰글씨 ${bigFont?'끄기':'켜기'}"><span class="bf-t">큰글씨</span><span class="bf-sw"><span class="bf-knob"></span></span></div>`;
@@ -3163,7 +3179,7 @@ function renderS1(){
         html += `<div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div>${bf}</div>`
           + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div></div>`
           + tossFaqCard()
-          + tossCatList();
+          + ((s1Ver==='v41' && !bigFont) ? tossCatGrid() : tossCatList());   // v41: 3×3 그리드 (단 큰글씨 ON이면 v40과 동일한 리스트) / v40: 항상 리스트
       } else {
         // 드릴다운 헤더: 현재 단계 이름을 타이틀로(대메뉴 진입 시 = 대메뉴명), 대메뉴 단계면 설명글도 표기
         const dtrail = sarsWalk(ARS_CAT6, path).trail;
@@ -3262,8 +3278,8 @@ function renderS1(){
         ).join('') + `</div>`;
   }
   else if(s1state.page==='result'){
-    // Ver 4.0 · 금융거래목적확인서(purpose)는 [입출금] 플로우와 동일 디자인 적용
-    if(s1Ver==='v40' && s1state.resultKey==='purpose'){
+    // Ver 4.0 계열 · 금융거래목적확인서(purpose)는 [입출금] 플로우와 동일 디자인 적용
+    if(isV40() && s1state.resultKey==='purpose'){
       html = renderIodPurpose();
     } else {
       const render = RESULT[s1state.resultKey];
@@ -3675,7 +3691,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-appgo]')){
     const pop = document.getElementById('appPop'); const ttl = pop ? pop.dataset.linkTitle : '';
     closeAppLink();
-    if(s1Ver==='v40'){ s1nav({page:'herodone', title:'영웅문S# 연결', heroTitle: ttl, noBack:true, noHome:true}); return; }   // v40: 연결 완료 화면
+    if(isV40()){ s1nav({page:'herodone', title:'영웅문S# 연결', heroTitle: ttl, noBack:true, noHome:true}); return; }   // v40 계열: 연결 완료 화면
     flash(`영웅문S#으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
     return;
   }
@@ -3939,7 +3955,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-sarsup]')){ (s1state.sarsPath = s1state.sarsPath||[]).pop(); refreshMenu(); return; }
   const slf = t.closest('[data-sarsleaf]');
   if(slf){
-    if(s1Ver==='v40'){ openConsult(slf.dataset.sarsleaf, {exclude:['call']}); return; }   // Ver 4.0: 음성ARS 최종메뉴 → 상담연결 팝업(전화상담 제외)
+    if(isV40()){ openConsult(slf.dataset.sarsleaf, {exclude:['call']}); return; }   // Ver 4.0 계열: 음성ARS 최종메뉴 → 상담연결 팝업(전화상담 제외)
     flash(`‘${slf.dataset.sarsleaf}’ 음성 ARS 최종 메뉴입니다. (메뉴 연결 안내 · 화면 미연결)`); return; }
   // 전체메뉴: 좌측 대메뉴 선택(고정), 우측 중메뉴 표시
   const am1 = t.closest('[data-am1]');
@@ -4145,7 +4161,7 @@ document.addEventListener('click', (e)=>{
   // 음성 ARS 연결 안내 팝업
   const pop = t.closest('[data-arspop]');
   if(pop){
-    if(s1Ver==='v40'){ openConsult(stripNum(pop.dataset.arspop), {exclude:['voice']}); return; }   // Ver 4.0: 직원연결 최종메뉴 → 상담연결 팝업(음성ARS 제외)
+    if(isV40()){ openConsult(stripNum(pop.dataset.arspop), {exclude:['voice']}); return; }   // Ver 4.0 계열: 직원연결 최종메뉴 → 상담연결 팝업(음성ARS 제외)
     // 상담 분야 결정
     const lbl = pop.dataset.arspop;
     let field;
@@ -4238,6 +4254,8 @@ let sianScheme = 's1';    // 시안 탭에서 현재 선택된 시안 (s1=시안
 let s1Ver = 'v40';        // 시안1 기본 버전 = Ver 4.0(v40). 맨 URL(파라미터 없음) 진입 시 메인을 Ver 4.0으로 표시. (타 버전은 QR ?v= 파라미터로 진입)
 /* Ver 2.1 — 메인 3탭(셀프서비스/ARS메뉴/상담원연결)·드로어·favSrc 등 v21 전용 동작 게이트 */
 function isV21Ver(){ return s1Ver==='v21'; }
+/* Ver 4.0 계열 — 토스 스킨·9 카테고리(ARS_CAT6)·상담연결 팝업 등 공통 동작 게이트 (v40=리스트 메인 / v41=3×3 그리드 메인, 로직 동일) */
+function isV40(){ return s1Ver==='v40' || s1Ver==='v41'; }
 function switchScheme(s){
   closeMenuDrawer();   // 탭/버전 전환 시 열려있던 전체메뉴 드로어 닫기
   scheme = s;
@@ -4293,6 +4311,7 @@ const DEFAULT_SCENARIO = {
   v2:  '[Ver 2.0 · 단순 ARS 메뉴연결]\n안녕하세요, 키움증권입니다.\n음성 ARS 순서 그대로 번호를 선택해 원하시는 메뉴로 이동하세요.',
   v21: '안녕하세요, 키움증권입니다.\n셀프서비스 · ARS메뉴 · 상담원연결 탭에서 원하시는 업무를 선택해 주세요.',
   v40: '안녕하세요, 키움증권입니다.\n무엇을 도와드릴까요? 원하시는 메뉴를 선택해 주세요.\n\n[메인 헤더 문구 후보]\n- 혼자서도 쉽게 할 수 있어요\n- 상담 없이 직접 해결할 수 있어요\n- 몇 초면 직접 처리할 수 있어요\n- 혼자서도 간편하게 해결해요',
+  v41: '[Ver 4.1 · 토스 스타일 · 3×3 그리드 메인]\n안녕하세요, 키움증권입니다.\n무엇을 도와드릴까요? 9개 대메뉴를 그리드에서 한눈에 선택해 주세요.',
   dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n이용하실 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
 };
@@ -4561,6 +4580,7 @@ switchScheme('sian');
       'v2':['s1','v2'],'2.0':['s1','v2'],
       'v21':['s1','v21'],'2.1':['s1','v21'],
       'v40':['s1','v40'],'4.0':['s1','v40'],'v4':['s1','v40'],
+      'v41':['s1','v41'],'4.1':['s1','v41'],'v4.1':['s1','v41'],
       'dars1':['dars1'],'3.0':['dars1'],'v3':['dars1'],'v30':['dars1'],
       'dars2':['dars2'],'1.2.1':['dars2'],'s3':['dars2']
     };
