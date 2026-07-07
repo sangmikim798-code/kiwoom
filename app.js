@@ -2528,9 +2528,9 @@ function closeOrdConfirm(){ const m=document.getElementById('ordConfirm'); if(m)
 
 /* 계좌 선택 (영웅문 계좌선택 플로팅 참고) */
 const ACCOUNTS = [
-  {nm:'홍길동', no:'5257-5602', type:'위탁종합'},
-  {nm:'홍길동', no:'6320-3614', type:'위탁종합'},
-  {nm:'홍길동', no:'6320-7376', type:'중개형ISA'},
+  {nm:'홍길동', no:'5257-5602', type:'위탁종합', nick:'국내주식', bal:12480000, dep:2150000},
+  {nm:'홍길동', no:'6320-3614', type:'위탁종합', nick:'해외주식', bal:3605500,  dep:820000},
+  {nm:'홍길동', no:'6320-7376', type:'중개형ISA', nick:'절세',    bal:8920000,  dep:1340000},
 ];
 let selAcct = 0;
 let authAcct = {type:ACCOUNTS[0].type, no:ACCOUNTS[0].no};  // 본인인증 시 사용한 계좌(거래내역 표시용)
@@ -3072,7 +3072,11 @@ function renderIodAcctSel(){
   const rows = ACCOUNTS.map((a,i)=>
     `<div class="iodsel-row" data-iodacct="${i}">
       <div class="iodsel-ic">${I.wallet}</div>
-      <div class="iodsel-tx"><div class="iodsel-nm">${a.type}</div><div class="iodsel-no">${a.no}</div></div>
+      <div class="iodsel-tx">
+        <div class="iodsel-nm">${a.type}${a.nick?` · ${a.nick}`:''}</div>
+        <div class="iodsel-no">${a.no}</div>
+        <div class="iodsel-meta"><span>평가금액 <b>${won(a.bal)}원</b></span><span>예수금 ${won(a.dep)}원</span></div>
+      </div>
       <div class="iodsel-arw">${I.chev}</div>
     </div>`).join('');
   // che(체결·주문내역): Ver 4.0 토스백 헤더 + 타이틀/설명(경로 컨텍스트), 스텝바 없음
