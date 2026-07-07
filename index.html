@@ -579,6 +579,16 @@ body{
 .ps-sheet{background:#fff;border-radius:22px 22px 0 0;padding:18px 18px 20px;
   transform:translateY(100%);transition:transform .26s cubic-bezier(.22,.7,.3,1);box-shadow:0 -12px 34px rgba(0,0,0,.2)}
 .tx-ov.on .ps-sheet{transform:translateY(0)}
+/* Ver 4.0 · 계좌 선택 바텀시트(consult-sheet 재사용, tx-ov 오버레이 안) */
+.tx-ov.on .consult-sheet{transform:translateY(0)}
+.acct-v40 .cs-ic{background:#FDE7F2;color:#E6007F;width:42px;height:42px;border-radius:12px}
+.acct-v40 .cs-ic svg{width:23px;height:23px}
+.acct-v40 .cs-desc{font-size:calc(13.5px*var(--scale));color:#7A7A8C;font-weight:700;margin-top:3px;letter-spacing:.2px}
+.acct-v40 .cs-row.on{border-color:#E6007F;background:#FDF1F8}
+.acct-v40 .acctck{display:flex;flex:none;color:#E6007F}
+.acct-v40 .acctck svg{width:22px;height:22px}
+.acct-v40 .cs-arw{display:flex;flex:none;color:#C4CAD4}
+.acct-v40 .cs-arw svg{width:20px;height:20px}
 .ps-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .ps-title{font-size:calc(19px*var(--scale));font-weight:800;color:var(--ink)}
 .ps-x{font-size:18px;color:var(--sub);cursor:pointer;padding:2px 6px}

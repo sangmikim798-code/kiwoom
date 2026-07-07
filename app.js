@@ -2541,14 +2541,29 @@ function openAcctSheet(){
   closeAcctSheet();
   const screen=document.getElementById('screen'); if(!screen) return;
   const el=document.createElement('div'); el.className='tx-ov acct'; el.id='acctSheet';
-  el.innerHTML=`<div class="ps-sheet">
-    <div class="ps-top"><div class="ps-title">계좌를 선택하세요</div><div class="ps-x" data-acctclose>✕</div></div>
-    <div class="acct-list">` + ACCOUNTS.map((a,i)=>`
-      <div class="acct-row ${i===selAcct?'on':''}" data-acctpick="${i}">
-        <div class="acct-tx"><div class="acct-nm">${a.nm}</div><div class="acct-no">${a.no} [${a.type}]</div></div>
-        ${i===selAcct?`<div class="acct-ck">${I.check}</div>`:''}
-      </div>`).join('') + `</div>
-  </div>`;
+  if(isV40()){
+    // Ver 4.0 · 토스 스타일 바텀시트(consult-sheet 재사용) — 그립+타이틀/설명+계좌 리스트+닫기
+    el.innerHTML=`<div class="consult-sheet acct-v40">
+      <div class="cs-grip"></div>
+      <div class="cs-head"><div class="cs-title">계좌를 선택하세요</div><div class="cs-sub">조회하실 계좌를 선택해 주세요</div></div>
+      <div class="cs-list">` + ACCOUNTS.map((a,i)=>`
+        <div class="cs-row ${i===selAcct?'on':''}" data-acctpick="${i}">
+          <div class="cs-ic">${I.wallet}</div>
+          <div class="cs-body"><div class="cs-nm">${a.type}</div><div class="cs-desc">${a.no}</div></div>
+          ${i===selAcct?`<div class="acctck">${I.check}</div>`:`<div class="cs-arw">${I.chev}</div>`}
+        </div>`).join('') + `</div>
+      <div class="cs-cancel" data-acctclose>닫기</div>
+    </div>`;
+  } else {
+    el.innerHTML=`<div class="ps-sheet">
+      <div class="ps-top"><div class="ps-title">계좌를 선택하세요</div><div class="ps-x" data-acctclose>✕</div></div>
+      <div class="acct-list">` + ACCOUNTS.map((a,i)=>`
+        <div class="acct-row ${i===selAcct?'on':''}" data-acctpick="${i}">
+          <div class="acct-tx"><div class="acct-nm">${a.nm}</div><div class="acct-no">${a.no} [${a.type}]</div></div>
+          ${i===selAcct?`<div class="acct-ck">${I.check}</div>`:''}
+        </div>`).join('') + `</div>
+    </div>`;
+  }
   screen.appendChild(el);
   requestAnimationFrame(()=>el.classList.add('on'));
 }
