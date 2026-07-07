@@ -1938,6 +1938,27 @@ function agentConnectScreen(label){
   </div>`;
 }
 
+/* Ver 4.0 · 상담원 연결 화면 — 토스 헤더(뒤로가기만, 타이틀·햄버거 없음) + 중앙정렬 본문(헤드셋 아이콘 포함, 기존 .agent-connect 재사용) */
+function renderAgentV40(label){
+  const nm = (label && label!=='직원연결') ? stripNum(label) : '';
+  const desc = nm ? `‘${nm}’ 관련 상담부서로<br>상담원에게 연결해 드려요.` : `상담원에게 바로 연결해 드려요.<br>아래 버튼을 눌러 상담을 시작하세요.`;
+  return `<div class="acv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="agent-connect">
+      <div class="ac-ic">${I.headset}</div>
+      <div class="ac-t">상담원 연결</div>
+      <div class="ac-d">${desc}</div>
+      <div class="ac-info">
+        ${nm ? `<div class="ac-row"><span class="k">상담 분야</span><span class="v">${nm}</span></div>` : ''}
+        <div class="ac-row"><span class="k">상담 가능 시간</span><span class="v">평일 08:00 ~ 18:00</span></div>
+        <div class="ac-row"><span class="k">예상 대기</span><span class="v">약 1분</span></div>
+      </div>
+      <div class="primary-btn" data-flash="상담원에게 연결합니다. (시연용)">상담원 연결하기</div>
+      <div class="notice">연결 시 음성 통화 또는 채팅 상담으로 진행돼요.</div>
+    </div>
+  </div>`;
+}
+
 /* 음성 ARS 연결 화면 */
 function voiceConnectScreen(){
   return `<div class="agent-connect">
@@ -3413,7 +3434,8 @@ function renderS1(){
     html = pageTop(s1state.title||'신용주문') + searchBar + creditOrderCard(sel ? sel.nm : null) + doneMsg;
   }
   else if(s1state.page==='agent'){
-    html = pageTop(s1state.title||'상담원 연결') + agentConnectScreen(s1state.agentLabel);
+    html = isV40() ? renderAgentV40(s1state.agentLabel)   // Ver 4.0: 토스 헤더(타이틀·햄버거 없음)+좌 24px 정렬
+                   : pageTop(s1state.title||'상담원 연결') + agentConnectScreen(s1state.agentLabel);
   }
   else if(s1state.page==='voice'){
     html = pageTop(s1state.title||'음성 ARS 연결') + voiceConnectScreen();
