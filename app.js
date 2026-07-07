@@ -1804,8 +1804,13 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
-    if(m.che){   // 체결내역 조회: 연결매체(영S#/디지털ARS/상담원) 선택 플로팅 진입(nav 스타일)
+    if(m.che){   // 체결내역 조회: 연결매체(영S#/디지털ARS/음성ARS) 선택 플로팅 진입(nav 스타일)
       return `<div class="sars-item nav" data-chesheet>
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
+    if(m.sise){   // 시세 조회: 연결매체(영S#/챗봇/음성ARS) 선택 플로팅 진입(nav 스타일)
+      return `<div class="sars-item nav" data-sisesheet>
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
@@ -1842,8 +1847,8 @@ function catNode(title, ic, items){
 const ARS_CAT6 = [
   catNode('1. 주문·체결확인', 'order', [
     {t:'주식주문', stk:true},            // 현금/신용/K-OTC 매도·매수·정정·취소 통합 → 계단식 주문 플로팅(방법→종류→유형→[음성ARS 신용]소메뉴)
-    // 시세및시황(IVR[1]) 중메뉴 9개(현재가·호가/관심·보유종목/지수/해외지수/환율/선물/시간외/K-OTC/시황)를 주문·체결확인 중메뉴로 승격('시세 및 시황' 그룹 삭제, 각 하위 소메뉴는 드릴다운으로 보존). 끝의 A(직원연결)는 제외.
-    ...(IVR[1].subs || []).filter(s => s !== A).map(s => Object.assign({}, s, {t: stripNum(s.t)})),
+    {t:'시세 조회', sise:true},          // 현재가·호가/관심·보유종목/선물/시간외/K-OTC 통합 → 3매체(영S#/챗봇/음성ARS) 플로팅. 음성ARS 선택 시 6유형 리스트(그에 맞는 IVR 연결).
+    ...[2,3,4,8].map(i => Object.assign({}, IVR[1].subs[i], {t: stripNum(IVR[1].subs[i].t)})),   // 지수정보/해외지수/환율/주식시황은 개별 중메뉴로 유지(각 하위 소메뉴 드릴다운 보존)
     {t:'체결내역 조회', che:true},       // 금일 체결·금일 미체결·전일 체결·금일 주문내역·예약주문 통합 → 3매체(영S#/디지털ARS/음성ARS) 플로팅. 음성ARS 선택 시 5개 중메뉴 리스트.
   ]),
   catNode('2. 계좌·잔고조회', 'wallet', [
@@ -2679,6 +2684,7 @@ const APP_LINK = {
   iodpurpose: {title:'금융거래목적확인서 등록'},
   iodpw: {title:'계좌 비밀번호 재설정'},
   chefilled: {title:'체결내역 조회'},
+  sisequote: {title:'시세 조회'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2809,6 +2815,21 @@ const CHE_SHEET = { title:'체결내역을 어떻게 확인할까요?', sub:'편
   {kind:'cheapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 조회하기', desc:'앱을 열어 체결내역을 바로 확인해요'},
   {kind:'chedigital', ic:CS_ICON.web,   nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 체결내역을 확인해요'},
   {kind:'chevoice',   ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 체결내역을 확인해요'},
+]};
+/* 주문·체결확인 > 시세 조회 → 연결매체 선택 플로팅(영웅문S#/챗봇/음성ARS) */
+const SISE_SHEET = { title:'시세를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
+  {kind:'siseapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 조회하기', desc:'앱을 열어 실시간 시세를 바로 확인해요'},
+  {kind:'sisechat',  ic:CS_ICON.chat,  nm:'AI 챗봇에게 물어보기',  desc:'기다림 없이 지금 바로 시세를 물어보세요'},
+  {kind:'sisevoice', ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 시세를 확인해요'},
+]};
+/* 음성 ARS 선택 시 → 시세 유형 6가지 선택 플로팅. 클릭 시 그에 맞는 IVR(시세및시황 하위) 메뉴로 연결 */
+const SISE_VOICE_SHEET = { title:'어떤 시세를 안내해 드릴까요?', sub:'음성 ARS로 선택하신 시세를 안내해 드려요', noIcon:true, methods:[
+  {kind:'siv0', nm:'국내주식',      desc:'현재가·호가 등 국내주식 시세를 안내해요'},
+  {kind:'siv1', nm:'관심종목',      desc:'등록하신 관심종목 현재가를 안내해요'},
+  {kind:'siv2', nm:'보유종목',      desc:'보유하신 종목 현재가를 안내해요'},
+  {kind:'siv3', nm:'시간외 단일가', desc:'시간외 단일가 시세를 안내해요'},
+  {kind:'siv4', nm:'K-OTC',        desc:'비상장주식 K-OTC 현재가를 안내해요'},
+  {kind:'siv5', nm:'선물',         desc:'지수·상품 선물 현재가를 안내해요'},
 ]};
 /* 음성 ARS 선택 시 → 통합했던 체결내역 중메뉴(금일 체결·금일 미체결·전일 체결·금일 주문내역·예약주문) 선택 플로팅 */
 const CHE_VOICE_SHEET = { title:'어떤 내역을 안내해 드릴까요?', sub:'음성 ARS로 선택하신 메뉴를 안내해 드려요', noIcon:true, methods:[
@@ -3838,6 +3859,7 @@ document.addEventListener('click', (e)=>{
   // 주식주문 계단식 플로팅: 진입 / 선택(단계 진행) / 닫기 — consult 닫기보다 먼저(stk-ov도 consult-ov라)
   if(t.closest('[data-stkorder]')){ stkOrder={method:'',kind:'',type:'',sub:''}; openStkSheet('method'); return; }
   if(t.closest('[data-chesheet]')){ openMethodSheet(CHE_SHEET); return; }   // 체결내역 조회 → 연결매체 선택 플로팅
+  if(t.closest('[data-sisesheet]')){ openMethodSheet(SISE_SHEET); return; }  // 시세 조회 → 연결매체 선택 플로팅
   const stkSel = t.closest('[data-stkpick]');
   if(stkSel){
     const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
@@ -3872,6 +3894,15 @@ document.addEventListener('click', (e)=>{
     if(kind==='chev2'){ flash('음성 ARS로 「전일 체결내역 조회」를 안내해 드릴게요. (시연용)'); return; }
     if(kind==='chev3'){ flash('음성 ARS로 「금일 주문내역 조회」를 안내해 드릴게요. (시연용)'); return; }
     if(kind==='chev4'){ flash('음성 ARS로 「예약주문 내역조회」를 안내해 드릴게요. (시연용)'); return; }
+    if(kind==='siseapp'){ openAppLink('sisequote'); return; }                                              // 시세 조회 — 영웅문S# 앱 연결
+    if(kind==='sisechat'){ flash('AI 챗봇에게 물어보면 시세를 바로 알려드려요. (시연용)'); return; }       // 시세 조회 — AI 챗봇
+    if(kind==='sisevoice'){ openMethodSheet(SISE_VOICE_SHEET); return; }                                   // 시세 조회 — 음성 ARS → 시세 유형 선택 플로팅
+    if(kind==='siv0'){ flash('음성 ARS 「국내주식 현재가·호가」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='siv1'){ flash('음성 ARS 「관심종목 현재가」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='siv2'){ flash('음성 ARS 「보유종목 현재가」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='siv3'){ flash('음성 ARS 「시간외 단일가 시세」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='siv4'){ flash('음성 ARS 「K-OTC 현재가」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='siv5'){ flash('음성 ARS 「선물 현재가」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
