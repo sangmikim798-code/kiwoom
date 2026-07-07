@@ -2168,7 +2168,7 @@ function authSelect(){
   const head = iod ? '계좌번호를 찾아드릴게요<br>본인 인증 방법을 선택해 주세요' : '본인 인증 방법을<br>선택해주세요';
   // che: Ver 4.0 토스 헤딩(타이틀+설명)
   const heading = che
-    ? `<div class="toss-dhead"><div class="td-title">계좌 조회</div><div class="td-desc">계좌를 조회할 본인 인증 방법을 선택해 주세요</div></div>`
+    ? `<div class="toss-dhead"><div class="td-title">계좌 조회</div><div class="td-desc">${cheAuthCtx()?cheAuthCtx()+'을 확인할 ':''}본인 인증 방법을 선택해 주세요</div></div>`
     : `<div class="auth-head">${head}</div>`;
   return `<div class="auth-wrap${che?' cheauth':''}">
     ${heading}
@@ -2246,11 +2246,12 @@ function authStep(method){
   const iod = isIodFlow();
   const che = isCheAuth();
   const head = iod ? '어떤 계좌에서<br>입출금이 안되나요?' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요';
-  const note = iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '계좌번호와 비밀번호로 본인 인증을 진행해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.');
+  const note = iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '본인 명의 계좌만 조회 가능해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.');
   const acctVal = iod ? (s1state.iodAcctNo||'') : '';   // 계좌 선택 시 자동 입력된 계좌번호
-  // che: Ver 4.0 토스 헤딩(타이틀+설명), 그 외: 기존 auth-head
+  // che: Ver 4.0 토스 헤딩(타이틀+설명, 설명은 진입 경로 컨텍스트 반영), 그 외: 기존 auth-head
+  const ctx = cheAuthCtx();
   const heading = che
-    ? `<div class="toss-dhead"><div class="td-title">계좌 인증</div><div class="td-desc">계좌번호와 비밀번호를 입력해 주세요</div></div>`
+    ? `<div class="toss-dhead"><div class="td-title">계좌 인증</div><div class="td-desc">${ctx?ctx+'을 확인할 ':''}계좌번호와 비밀번호를 입력해 주세요</div></div>`
     : `<div class="auth-head">${head}</div>`;
   const findlink = iod
     ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>`
@@ -2822,6 +2823,7 @@ function closeConsult(){
    인증 완료 라우팅은 authNext.go==='iodcheck' 로 식별(gotoAuthNext에서 startIodCheck 호출). */
 function isIodFlow(){ return (s1state.authNext||{}).go==='iodcheck'; }   // 계좌인증 화면의 '계좌번호 모름' 링크·스텝바 노출 게이트
 function isCheAuth(){ return (s1state.authNext||{}).go==='chefilled'; }  // 체결·주문내역 디지털ARS 계좌인증(Ver 4.0 디자인)
+function cheAuthCtx(){ const go=(s1state.authNext||{}).go; if(go==='chefilled') return '체결·주문내역'; return ''; }   // 계좌인증 진입 경로별 안내 컨텍스트(향후 경로 추가 가능)
 const IOD_STEPS = ['계좌 인증','계좌 조회','결과 안내'];
 const IOD_HERO_IC = '<img src="assets/ys-icon.png" alt="영웅문S#">';
 /* 결과 화면 하단 버튼 → 클릭 시 방법 선택 플로팅(openMethodSheet) 노출.
@@ -3833,8 +3835,8 @@ function closeAiChat(){ const e=document.getElementById('aiChatOv'); if(e) e.rem
 document.addEventListener('input', (e)=>{
   const el = e.target;
   if(!el) return;
-  if(el.id === 'acctNo'){   // 입출금 계좌인증: 계좌번호 입력 여부에 따라 하단 링크 문구 전환
-    const link = document.querySelector('.iod-findlink[data-iodfind]');
+  if(el.id === 'acctNo'){   // 계좌인증(입출금·체결내역): 계좌번호 입력 여부에 따라 하단 링크 문구 전환
+    const link = document.querySelector('.iod-findlink[data-iodfind], .iod-findlink[data-cheacctfind]');
     if(link) link.textContent = (el.value.trim() ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요') + ' ›';
     return;
   }
@@ -3972,8 +3974,12 @@ document.addEventListener('click', (e)=>{
     if(acctNo.trim()){ openMethodSheet(IOD_PW_SHEET); return; }   // 계좌번호 입력됨 → 비밀번호 재설정 방법 선택 플로팅
     s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return;   // 계좌번호 미입력 → 계좌번호 찾기
   }
-  // 체결·주문내역 계좌인증: '계좌번호를 모르겠어요' → 휴대폰/간편 인증 방법 선택(authNext={go:chefilled} 유지)
-  if(t.closest('[data-cheacctfind]')){ s1nav({page:'authsel', title:'계좌 조회', acctPw:'', otpSent:false, noHome:true}); return; }
+  // 체결·주문내역 계좌인증: 계좌번호 입력됨 → 비밀번호 재설정 방법 시트 / 미입력 → 휴대폰·간편 인증 방법 선택(authNext={go:chefilled} 유지)
+  if(t.closest('[data-cheacctfind]')){
+    const acctNo = (document.getElementById('acctNo')||{}).value || '';
+    if(acctNo.trim()){ openMethodSheet(IOD_PW_SHEET); return; }   // 계좌번호 입력됨 → '계좌비밀번호를 모르겠어요' → 재설정 방법 선택
+    s1nav({page:'authsel', title:'계좌 조회', acctPw:'', otpSent:false, noHome:true}); return;
+  }
   const iodc = t.closest('[data-iodcycle]');
   if(iodc){
     const keys = Object.keys(IOD_RESULTS);
