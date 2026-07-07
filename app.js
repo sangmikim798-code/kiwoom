@@ -2772,7 +2772,7 @@ function openConsult(label, opts){
   const prev = document.getElementById('consultPop'); if(prev) prev.remove();   // 기존 팝업 즉시 제거(중복 id 방지)
   const screen = document.getElementById('screen'); if(!screen) return;
   const el = document.createElement('div');
-  el.className = 'consult-ov'; el.id = 'consultPop'; el.dataset.csLabel = label || '';
+  el.className = 'consult-ov' + (bigFont?' bigfont':''); el.id = 'consultPop'; el.dataset.csLabel = label || '';
   const rows = CONSULT_CHANNELS.filter(c=>!exclude.includes(c.k)).map(c=>{
     const badges = (c.badges||[]).map(b=>`<span class="cs-badge ${b.cls}">${b.t}</span>`).join('');
     const desc = (typeof c.desc==='function') ? c.desc() : (c.desc||'');
@@ -2939,7 +2939,7 @@ function openMethodSheet(cfg){
   const prev = document.getElementById('methodPop'); if(prev) prev.remove();   // 기존 시트 즉시 제거(중복 id 방지)
   const screen = document.getElementById('screen'); if(!screen || !cfg) return;
   const el = document.createElement('div');
-  el.className = 'consult-ov method-ov'; el.id = 'methodPop';
+  el.className = 'consult-ov method-ov' + (bigFont?' bigfont':''); el.id = 'methodPop';
   const noIcon = cfg.noIcon;   // 아이콘 열 없이(텍스트만) 렌더
   const rows = (cfg.methods||[]).map(m=>
     `<div class="cs-row${noIcon?' no-ic':''}" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
@@ -3009,7 +3009,7 @@ function openStkSheet(step){
   const prev = document.getElementById('stkPop'); if(prev) prev.remove();   // 중복 id 방지
   const screen = document.getElementById('screen'); const cfg = stkSheetCfg(step);
   if(!screen || !cfg) return;
-  const el = document.createElement('div'); el.className = 'consult-ov stk-ov'; el.id = 'stkPop';
+  const el = document.createElement('div'); el.className = 'consult-ov stk-ov' + (bigFont?' bigfont':''); el.id = 'stkPop';
   const rows = cfg.opts.map(o=>
     `<div class="cs-row" data-stkpick="${o.v}" data-stkstep="${step}">
       ${o.ic ? `<div class="cs-ic">${o.ic}</div>` : ''}
