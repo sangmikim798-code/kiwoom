@@ -3259,6 +3259,8 @@ function gotoAuthNext(deep){
   s1state.acctPw = '';
   // 입출금 안내 플로우: 인증 완료 → 계좌 상태 확인(로딩) → 결과
   if(d.go==='iodcheck'){ startIodCheck(); return; }
+  // 체결·주문내역 조회(디지털ARS): 계좌 인증 완료 → 체결내역 화면
+  if(d.go==='chefilled'){ s1nav({page:'result', resultKey:'filled', title:'체결 내역', noBack:false, noHome:true}); s1state.history=[]; return; }
   // 보이는 ARS 일반주문 → 주문화면 / 그 외 대메뉴 → 중메뉴 리스트
   if(d.go==='order'){ resetOrder();
     if(d.stock){ const info = stockInfo(d.stock); orderState.stock = {nm:d.stock, cur:info.cur, chg:info.chg, pct:info.pct, tick:info.tick}; }
@@ -3914,7 +3916,7 @@ document.addEventListener('click', (e)=>{
     if(kind==='pwapp'){ openAppLink('iodpw'); return; }          // 계좌 비밀번호 재설정 — 영웅문S# 앱 연결
     if(kind==='pwopenapp'){ openAppLink('iodpwopen'); return; }  // 계좌 비밀번호 재설정 — 키움계좌개설 앱 연결
     if(kind==='cheapp'){ openAppLink('chefilled'); return; }                                                          // 체결내역 조회 — 영웅문S# 앱 연결
-    if(kind==='chedigital'){ s1nav({page:'result', resultKey:'filled', title:'체결 내역', noHome:true}); return; }   // 체결내역 조회 — 디지털 ARS 화면
+    if(kind==='chedigital'){ s1state.authNext = {go:'chefilled'}; s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true}); return; }   // 체결내역 조회 — 디지털 ARS: 계좌인증 → 체결내역 화면
     if(kind==='chevoice'){ openMethodSheet(CHE_VOICE_SHEET); return; }                                               // 체결내역 조회 — 음성 ARS → 중메뉴 선택 플로팅
     if(kind==='chev0'){ flash('음성 ARS로 「금일 체결내역 조회」를 안내해 드릴게요. (시연용)'); return; }
     if(kind==='chev1'){ flash('음성 ARS로 「금일 미체결 내역 조회」를 안내해 드릴게요. (시연용)'); return; }
