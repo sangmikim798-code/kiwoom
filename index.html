@@ -1045,7 +1045,9 @@ body{
 .consult-ov.on{opacity:1}
 .consult-ov:not(.on){pointer-events:none}
 .consult-sheet{background:#fff;border-radius:24px 24px 0 0;padding:8px 18px calc(18px + env(safe-area-inset-bottom));
-  transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.7,.3,1);box-shadow:0 -14px 44px rgba(20,24,60,.28)}
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.7,.3,1);box-shadow:0 -14px 44px rgba(20,24,60,.28);
+  max-height:92%;display:flex;flex-direction:column}   /* 항목 많으면 시트 최대높이 제한 + 리스트 내부 스크롤 */
+.consult-sheet .cs-grip,.consult-sheet .cs-head,.consult-sheet .cs-cancel{flex:none}
 .consult-ov.on .consult-sheet{transform:translateY(0)}
 .cs-grip{width:40px;height:4px;border-radius:2px;background:#E2E2EA;margin:6px auto 12px}
 .cs-head{padding:0 4px 12px}
@@ -1054,7 +1056,8 @@ body{
 .cs-ctx{display:inline-block;margin-top:11px;background:#FDF1F8;border-radius:9px;padding:6px 11px;
   font-size:calc(12.5px*var(--scale));color:#B12B7E}
 .cs-ctx b{color:#E6007F;font-weight:800}
-.cs-list{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.cs-list{display:flex;flex-direction:column;gap:9px;margin-top:4px;flex:1 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none}
+.cs-list::-webkit-scrollbar{display:none}
 .cs-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;
   background:#F8F8FB;border:1px solid #EFEFF4;cursor:pointer;transition:.13s}
 .cs-row:active{transform:scale(.985);background:#F1F1F6}
