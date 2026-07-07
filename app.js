@@ -2219,7 +2219,7 @@ function authStep(method){
     </div>
     <div class="auth-note">${note}</div>
     <div class="primary-btn" data-authdone>확인</div>
-    ${iod ? `<div class="iod-findlink" data-iodfind>계좌번호를 모르겠어요 ›</div>` : ''}
+    ${iod ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>` : ''}
   </div>`;
 }
 
@@ -2654,6 +2654,10 @@ function closePwKeypad(){
 const APP_LINK = {
   cdd: {title:'고객확인(CDD/EDD) 정보 등록·갱신'},
   iodpurpose: {title:'금융거래목적확인서 등록'},
+  iodpw: {title:'계좌 비밀번호 재설정'},
+  iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
+    popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
+    popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
 };
 function openAppLink(key){
   closeAppLink();
@@ -2661,12 +2665,15 @@ function openAppLink(key){
   const c = APP_LINK[key] || {title:'요청하신 업무'};
   const v40 = isV40();   // Ver 4.0 계열: 토스(마젠타·네이비) 스킨 + 앱 아이콘 + 톤 맞춤 문구
   const el = document.createElement('div');
-  el.className = 'app-pop-ov' + (v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title;
-  const logo  = v40 ? `<div class="ap-logo"><img src="assets/ys-icon.png" alt="영웅문S#"></div>` : `<div class="ap-logo">S#</div>`;
-  const title = v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결';
-  const desc  = v40
+  el.className = 'app-pop-ov' + (v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title; el.dataset.linkApp = c.app || '영웅문S#';
+  // 앱 이름·로고·문구는 APP_LINK 항목에서 오버라이드 가능(기본=영웅문S#)
+  const logoSrc = c.logo || 'assets/ys-icon.png';
+  const logo  = v40 ? `<div class="ap-logo"><img src="${logoSrc}" alt="${c.app||'영웅문S#'}"></div>` : `<div class="ap-logo">S#</div>`;
+  const title = c.popTitle || (v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결');
+  const desc  = c.popDesc || (v40
     ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">지금 보고 계신 디지털 ARS 웹은 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</span>`
-    : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`;
+    : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`);
+  const goTxt = c.popBtn || '영웅문S# 열기';
   // Ver 4.0은 중간 단계 플로우(앱 실행›계좌 연동›화면 이동) 미노출
   const flow = v40 ? '' : `<div class="ap-flow"><span class="ap-step">앱 실행</span><span class="ap-arr">›</span><span class="ap-step">계좌 연동</span><span class="ap-arr">›</span><span class="ap-step">화면 이동</span></div>`;
   el.innerHTML = `<div class="app-pop">
@@ -2676,7 +2683,7 @@ function openAppLink(key){
     ${flow}
     <div class="ap-btns">
       <div class="ap-btn cancel" data-appcancel>취소</div>
-      <div class="ap-btn go" data-appgo>영웅문S# 열기</div>
+      <div class="ap-btn go" data-appgo>${goTxt}</div>
     </div>
   </div>`;
   screen.appendChild(el);
@@ -2772,6 +2779,11 @@ const IOD_HERO_IC = '<img src="assets/ys-icon.png" alt="영웅문S#">';
 const IOD_REG_SHEET = { title:'어떻게 등록할까요?', sub:'편하신 방법으로 등록해 드려요', methods:[
   {kind:'app',     ic:IOD_HERO_IC,  nm:'영웅문S#으로 등록하기', desc:'앱을 열어 서류를 등록해요'},
   {kind:'purpose', ic:CS_ICON.web,  nm:'디지털 ARS로 등록하기', desc:'지금 이 화면에서 바로 등록해요'},
+]};
+/* 계좌인증 '계좌비밀번호를 모르겠어요' → 방법 선택 플로팅(상담팝업 스타일) */
+const IOD_PW_SHEET = { title:'계좌 비밀번호를 잊으셨나요?', sub:'편하신 방법으로 재설정을 도와드려요', methods:[
+  {kind:'pwapp',     ic:IOD_HERO_IC,                                                             nm:'영웅문S#에서 재설정하기',    desc:'앱을 열어 계좌 비밀번호를 다시 설정해요'},
+  {kind:'pwopenapp', ic:'<img src="assets/kiwoom-favicon.ico" alt="키움계좌개설">', nm:'키움계좌개설 앱에서 재설정하기', desc:'휴대폰 인증과 신분증 촬영으로 다시 설정할 수 있어요'},
 ]};
 const IOD_RESULTS = {
   multi: {
@@ -3018,11 +3030,12 @@ function renderVoiceDone(){
 /* 영웅문S# 연결 완료 화면 — 앱 연결 팝업 '열기' 후, 세로 중앙 정렬 */
 function renderHeroDone(){
   const title = s1state.heroTitle || '요청하신 업무';
+  const app = s1state.heroApp || '영웅문S#';
   const acctLine = sessionAuthed ? '인증하신 계좌를 연동해서<br>' : '';
   return `<div class="iod-done-center">
       <div class="iod-done">
         <div class="iod-done-ic">${I.check}</div>
-        <div class="iod-done-t">영웅문S#으로 연결됐어요</div>
+        <div class="iod-done-t">${app} 앱으로 연결됐어요</div>
         <div class="iod-done-d">${acctLine}<b>${title}</b> 화면으로 이동했어요.</div>
       </div>
       <div class="iod-done-note">이 디지털 ARS 화면은 곧 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
@@ -3655,7 +3668,13 @@ function closeAiChat(){ const e=document.getElementById('aiChatOv'); if(e) e.rem
    (모바일 소프트키보드가 [인증 완료] 버튼을 가리고 인증 화면이 스크롤되지 않아 버튼을 못 누르는 문제 대응) */
 document.addEventListener('input', (e)=>{
   const el = e.target;
-  if(!el || el.id !== 'otpNo') return;
+  if(!el) return;
+  if(el.id === 'acctNo'){   // 입출금 계좌인증: 계좌번호 입력 여부에 따라 하단 링크 문구 전환
+    const link = document.querySelector('.iod-findlink[data-iodfind]');
+    if(link) link.textContent = (el.value.trim() ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요') + ' ›';
+    return;
+  }
+  if(el.id !== 'otpNo') return;
   el.value = el.value.replace(/\D/g, '').slice(0, 6);   // 숫자만, 최대 6자리
   if(el.value.length === 6){
     const btn = document.querySelector('[data-otpdone]');
@@ -3694,10 +3713,10 @@ document.addEventListener('click', (e)=>{
   const al = t.closest('[data-applink]');
   if(al){ openAppLink(al.dataset.applink); return; }
   if(t.closest('[data-appgo]')){
-    const pop = document.getElementById('appPop'); const ttl = pop ? pop.dataset.linkTitle : '';
+    const pop = document.getElementById('appPop'); const ttl = pop ? pop.dataset.linkTitle : ''; const app = (pop && pop.dataset.linkApp) ? pop.dataset.linkApp : '영웅문S#';
     closeAppLink();
-    if(isV40()){ s1nav({page:'herodone', title:'영웅문S# 연결', heroTitle: ttl, noBack:true, noHome:true}); return; }   // v40 계열: 연결 완료 화면
-    flash(`영웅문S#으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
+    if(isV40()){ s1nav({page:'herodone', title: app+' 연결', heroTitle: ttl, heroApp: app, noBack:true, noHome:true}); return; }   // v40 계열: 연결 완료 화면
+    flash(`${app} 앱으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
     return;
   }
   if(t.closest('[data-appcancel]') || (t.classList && t.classList.contains('app-pop-ov'))){ closeAppLink(); return; }
@@ -3745,6 +3764,8 @@ document.addEventListener('click', (e)=>{
     if(kind==='app'){ openAppLink('iodpurpose'); return; }
     if(kind==='purpose'){ s1nav({page:'result', resultKey:'purpose', title:'금융거래목적확인서', noHome:true}); return; }
     if(kind==='consult'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'한도제한계좌 해제', noHome:true}); return; }
+    if(kind==='pwapp'){ openAppLink('iodpw'); return; }          // 계좌 비밀번호 재설정 — 영웅문S# 앱 연결
+    if(kind==='pwopenapp'){ openAppLink('iodpwopen'); return; }  // 계좌 비밀번호 재설정 — 키움계좌개설 앱 연결
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
@@ -3758,7 +3779,11 @@ document.addEventListener('click', (e)=>{
     s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
-  if(t.closest('[data-iodfind]')){ s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return; }
+  if(t.closest('[data-iodfind]')){
+    const acctNo = (document.getElementById('acctNo')||{}).value || '';
+    if(acctNo.trim()){ openMethodSheet(IOD_PW_SHEET); return; }   // 계좌번호 입력됨 → 비밀번호 재설정 방법 선택 플로팅
+    s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return;   // 계좌번호 미입력 → 계좌번호 찾기
+  }
   const iodc = t.closest('[data-iodcycle]');
   if(iodc){
     const keys = Object.keys(IOD_RESULTS);
