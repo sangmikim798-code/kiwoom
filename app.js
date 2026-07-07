@@ -2158,15 +2158,20 @@ function s1back(){
 /* 본인인증 방법 선택 (레퍼런스: 정부24 인증방법선택 / 디자인: 영웅문 인증센터) */
 function authSelect(){
   const iod = isIodFlow();
+  const che = isCheAuth();
   let methods = [
-    {key:'phone',   ic:'phone',  t:'휴대폰 인증',           d: iod ? '본인 명의 휴대폰으로 인증해요' : '본인 명의 휴대폰으로 인증'},
-    {key:'simple',  ic:'shield', t:'간편(민간인증서) 인증',  d: iod ? '카카오·네이버·KB 등 간편인증서로 인증해요' : '카카오·네이버·KB 등 민간인증서로 인증'},
+    {key:'phone',   ic:'phone',  t:'휴대폰 인증',           d: (iod||che) ? '본인 명의 휴대폰으로 인증해요' : '본인 명의 휴대폰으로 인증'},
+    {key:'simple',  ic:'shield', t:'간편(민간인증서) 인증',  d: (iod||che) ? '카카오·네이버·KB 등 간편인증서로 인증해요' : '카카오·네이버·KB 등 민간인증서로 인증'},
     {key:'account', ic:'wallet', t:'계좌번호 인증',          d:'본인 계좌번호·비밀번호로 인증'},
   ];
-  if(iod) methods = methods.filter(m=>m.key!=='account');   // 계좌번호 찾기 단계에서는 계좌번호 인증 제외
+  if(iod || che) methods = methods.filter(m=>m.key!=='account');   // 계좌번호 찾기(iod)·계좌 조회(che) 단계에서는 계좌번호 인증 제외
   const head = iod ? '계좌번호를 찾아드릴게요<br>본인 인증 방법을 선택해 주세요' : '본인 인증 방법을<br>선택해주세요';
-  return `<div class="auth-wrap">
-    <div class="auth-head">${head}</div>
+  // che: Ver 4.0 토스 헤딩(타이틀+설명)
+  const heading = che
+    ? `<div class="toss-dhead"><div class="td-title">계좌 조회</div><div class="td-desc">계좌를 조회할 본인 인증 방법을 선택해 주세요</div></div>`
+    : `<div class="auth-head">${head}</div>`;
+  return `<div class="auth-wrap${che?' cheauth':''}">
+    ${heading}
     <div class="auth-list">` + methods.map(m=>
       `<div class="auth-card" data-auth="${m.key}">
         <div class="auth-ic">${I[m.ic]}</div>
@@ -2209,7 +2214,7 @@ function authStep(method){
     // 인증 요청 후에는 '인증번호 입력' 화면처럼 헤딩 전환 + 고객정보카드 숨김(IOD 플로우)
     const head = (iod && s1state.otpSent) ? '인증번호 6자리를<br>입력해주세요' : '본인 명의 휴대폰으로<br>인증을 진행해주세요';
     const showInfo = !(iod && s1state.otpSent);
-    return `<div class="auth-wrap">
+    return `<div class="auth-wrap${isCheAuth()?' cheauth':''}">
       <div class="auth-head">${head}</div>
       ${showInfo ? info : ''}
       ${tail}
@@ -2227,7 +2232,7 @@ function authStep(method){
       {nm:'NH인증서', s:'NH',   bg:'#19A85B', fg:'#fff'},
       {nm:'페이코',   s:'PAYCO',bg:'#FF1F40', fg:'#fff'},
     ];
-    return `<div class="auth-wrap">
+    return `<div class="auth-wrap${isCheAuth()?' cheauth':''}">
       <div class="auth-head">간편인증서를<br>선택해주세요</div>
       <div class="prov-card"><div class="prov-grid">` + provs.map(p=>
         `<div class="prov" data-simplepick="${p.nm}">
@@ -2239,11 +2244,19 @@ function authStep(method){
   }
   // account: 계좌번호 직접 입력 + 비밀번호(터치 시 플로팅 키패드) — 휴대폰 인증 정보카드 디자인
   const iod = isIodFlow();
+  const che = isCheAuth();
   const head = iod ? '어떤 계좌에서<br>입출금이 안되나요?' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요';
-  const note = iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.';
+  const note = iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '계좌번호와 비밀번호로 본인 인증을 진행해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.');
   const acctVal = iod ? (s1state.iodAcctNo||'') : '';   // 계좌 선택 시 자동 입력된 계좌번호
-  return `<div class="auth-wrap">
-    <div class="auth-head">${head}</div>
+  // che: Ver 4.0 토스 헤딩(타이틀+설명), 그 외: 기존 auth-head
+  const heading = che
+    ? `<div class="toss-dhead"><div class="td-title">계좌 인증</div><div class="td-desc">계좌번호와 비밀번호를 입력해 주세요</div></div>`
+    : `<div class="auth-head">${head}</div>`;
+  const findlink = iod
+    ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>`
+    : (che ? `<div class="iod-findlink" data-cheacctfind>계좌번호를 모르겠어요 ›</div>` : '');
+  return `<div class="auth-wrap${che?' cheauth':''}">
+    ${heading}
     <div class="auth-info">
       <div class="ir"><span class="k">계좌번호</span>
         <input class="ir-input" id="acctNo" type="text" inputmode="numeric" autocomplete="off" placeholder="계좌번호 입력" value="${acctVal}"></div>
@@ -2252,7 +2265,7 @@ function authStep(method){
     </div>
     <div class="auth-note">${note}</div>
     <div class="primary-btn" data-authdone>확인</div>
-    ${iod ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>` : ''}
+    ${findlink}
   </div>`;
 }
 
@@ -2808,6 +2821,7 @@ function closeConsult(){
    계좌 인증(계좌번호/휴대폰/간편 — 기존 auth 재사용) → 상태 확인(로딩) → 결과(3가지 사유 토글).
    인증 완료 라우팅은 authNext.go==='iodcheck' 로 식별(gotoAuthNext에서 startIodCheck 호출). */
 function isIodFlow(){ return (s1state.authNext||{}).go==='iodcheck'; }   // 계좌인증 화면의 '계좌번호 모름' 링크·스텝바 노출 게이트
+function isCheAuth(){ return (s1state.authNext||{}).go==='chefilled'; }  // 체결·주문내역 디지털ARS 계좌인증(Ver 4.0 디자인)
 const IOD_STEPS = ['계좌 인증','계좌 조회','결과 안내'];
 const IOD_HERO_IC = '<img src="assets/ys-icon.png" alt="영웅문S#">';
 /* 결과 화면 하단 버튼 → 클릭 시 방법 선택 플로팅(openMethodSheet) 노출.
@@ -3376,10 +3390,14 @@ function renderS1(){
     }
   }
   else if(s1state.page==='authsel'){
-    html = pageTop(s1state.title||'본인인증', isIodFlow()) + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authSelect();
+    html = isCheAuth()
+      ? `<div class="acv-wrap"><div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>` + authSelect() + `</div>`
+      : pageTop(s1state.title||'본인인증', isIodFlow()) + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authSelect();
   }
   else if(s1state.page==='authstep'){
-    html = pageTop(s1state.title||'본인인증', isIodFlow()) + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authStep(s1state.authMethod);
+    html = isCheAuth()
+      ? `<div class="acv-wrap"><div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>` + authStep(s1state.authMethod) + `</div>`
+      : pageTop(s1state.title||'본인인증', isIodFlow()) + (isIodFlow()?untactSteps(IOD_STEPS,0):'') + authStep(s1state.authMethod);
   }
   else if(s1state.page==='iodacctsel'){
     html = renderIodAcctSel();
@@ -3954,6 +3972,8 @@ document.addEventListener('click', (e)=>{
     if(acctNo.trim()){ openMethodSheet(IOD_PW_SHEET); return; }   // 계좌번호 입력됨 → 비밀번호 재설정 방법 선택 플로팅
     s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return;   // 계좌번호 미입력 → 계좌번호 찾기
   }
+  // 체결·주문내역 계좌인증: '계좌번호를 모르겠어요' → 휴대폰/간편 인증 방법 선택(authNext={go:chefilled} 유지)
+  if(t.closest('[data-cheacctfind]')){ s1nav({page:'authsel', title:'계좌 조회', acctPw:'', otpSent:false, noHome:true}); return; }
   const iodc = t.closest('[data-iodcycle]');
   if(iodc){
     const keys = Object.keys(IOD_RESULTS);
@@ -3996,7 +4016,7 @@ document.addEventListener('click', (e)=>{
   const authm = t.closest('[data-auth]');
   if(authm){
     // IOD 플로우(입출금)에서는 우상단 전체메뉴(햄버거) 숨김 — 다른 IOD 화면과 동일
-    s1nav({page:'authstep', authMethod: authm.dataset.auth, title:'본인인증', acctPw:'', otpSent:false, noHome: isIodFlow()});
+    s1nav({page:'authstep', authMethod: authm.dataset.auth, title:'본인인증', acctPw:'', otpSent:false, noHome: isIodFlow()||isCheAuth()});
     return;
   }
   // 휴대폰 인증: 인증번호 요청 → 인증번호 입력칸 노출
@@ -4007,6 +4027,7 @@ document.addEventListener('click', (e)=>{
     if(!otp.trim()){ flash('인증번호를 입력해주세요.'); return; }
     flash('휴대폰 인증이 완료되었습니다. (시연용)');
     if(isIodFlow()){ s1nav({page:'iodacctsel', title:'계좌 선택', otpSent:false, noHome:true}); return; }   // 입출금 플로우: 계좌 선택 리스트로
+    if(isCheAuth()){ authAcct={type:ACCOUNTS[selAcct].type, no:ACCOUNTS[selAcct].no}; gotoAuthNext(); return; }   // 체결·주문내역: 휴대폰 인증 완료 → 바로 체결내역 화면
     openPwKeypad(true); return;
   }
   // 간편인증서 제공자 선택 → 제공자 인증 완료 후 계좌 비밀번호 키패드
@@ -4014,6 +4035,7 @@ document.addEventListener('click', (e)=>{
   if(sp){
     flash(`${sp.dataset.simplepick} 인증이 완료되었습니다. (시연용)`);
     if(isIodFlow()){ s1nav({page:'iodacctsel', title:'계좌 선택', noHome:true}); return; }   // 입출금 플로우: 계좌 선택 리스트로
+    if(isCheAuth()){ authAcct={type:ACCOUNTS[selAcct].type, no:ACCOUNTS[selAcct].no}; gotoAuthNext(); return; }   // 체결·주문내역: 간편 인증 완료 → 바로 체결내역 화면
     openPwKeypad(true); return;
   }
   // 입출금 플로우: 계좌 선택 → 계좌 인증 화면으로 돌아가 선택 계좌번호 자동 입력
