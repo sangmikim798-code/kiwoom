@@ -4140,7 +4140,8 @@ document.addEventListener('click', (e)=>{
       const acctNo = (document.getElementById('acctNo')||{}).value || '';
       if(!acctNo.trim()){ flash('계좌번호를 입력해주세요.'); return; }
       if((s1state.acctPw||'').length < 4){ flash('계좌 비밀번호를 입력해주세요. (4자리 이상)'); return; }
-      authAcct = {type:'위탁종합', no:acctNo.trim()};   // 입력한 계좌번호를 거래내역에 표시
+      const foundAcct = ACCOUNTS.find(a=>a.no===acctNo.trim());   // 등록 계좌면 종류(위탁종합/ISA) 반영
+      authAcct = {type: foundAcct ? foundAcct.type : '위탁종합', no:acctNo.trim()};   // 입력한 계좌번호를 거래내역에 표시
       closePwKeypad();
     }
     const NAMES = {phone:'휴대폰', simple:'간편(민간인증서)', account:'계좌번호'};
@@ -4343,7 +4344,15 @@ document.addEventListener('click', (e)=>{
     closeAcctSheet();
     const line=document.querySelector('#pwKeypad .kp-acct');
     if(line){ selAcct = idx; line.innerHTML = acctLineHTML(); return; }   // 인증 키패드 내 계좌 선택
-    // 거래내역 계좌변경: 같은 계좌면 변경 없음, 다른 계좌면 비밀번호 키패드
+    // Ver 4.0(체결내역 계좌변경): 선택 계좌를 계좌인증 화면에 자동 입력하고 계좌 인증 다시
+    if(isV40()){
+      selAcct = idx;
+      s1state.authNext = {go:'chefilled'};
+      s1state.cheAcctNo = ACCOUNTS[idx].no;
+      s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
+      return;
+    }
+    // 거래내역 계좌변경(s1): 같은 계좌면 변경 없음, 다른 계좌면 비밀번호 키패드
     const picked = ACCOUNTS[idx];
     if(picked.type===authAcct.type && picked.no===authAcct.no) return;
     pendingAcct = idx;
