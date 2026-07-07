@@ -1152,6 +1152,48 @@ body{
 .iodsel-arw{flex:none;color:#C4C4D2}
 .iodsel-arw svg{width:18px;height:18px}
 
+/* ===== Ver 4.0 · 체결내역(디지털 ARS 조회) 전용 화면 (fv-*) ===== */
+.fv-wrap{height:100%;display:flex;flex-direction:column;background:#fff}
+.fv-wrap .toss-dhead{padding:0 4px 10px 24px}   /* 좌 24px → 뒤로가기 아이콘(≈25px)과 정렬 (Ver 4.0 IOD·인증 화면과 동일) */
+.fv-filter{flex:none;padding:0 24px 12px;display:flex;flex-direction:column;gap:8px}
+.fv-chip{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:13px;
+  background:#fff;border:1.5px solid var(--line);font-size:calc(13.5px*var(--scale));font-weight:700;
+  color:var(--ink);cursor:pointer;transition:.12s;min-width:0}
+.fv-chip:active{background:#FAFAFB;border-color:var(--primary)}
+.fv-chip.full{width:100%}
+.fv-chip.off{opacity:.5;cursor:default}
+.fv-chip svg{width:17px;height:17px;color:var(--primary);flex:none;margin-left:auto}
+.fv-ck{font-size:calc(12px*var(--scale));font-weight:700;color:var(--sub);flex:none}
+.fv-cv{font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fv-ph{color:var(--sub);font-weight:700}
+.fv-stk{font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fv-x{display:flex;margin-left:auto}
+.fv-x svg{width:15px;height:15px;color:var(--sub);margin-left:0}
+.fv-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fv-tabs{display:flex;gap:6px;margin-top:2px}
+.fv-tab{flex:1;text-align:center;padding:9px 0;border-radius:11px;font-size:calc(13px*var(--scale));
+  font-weight:800;color:var(--sub);background:#F5F6F8;cursor:pointer;transition:.12s}
+.fv-tab.on{background:var(--primary);color:#fff}
+.fv-card{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;margin:0 24px;
+  border:1.5px solid var(--line);border-radius:18px;background:#fff}
+.fv-card::-webkit-scrollbar{display:none}
+.fv-list{padding:2px 4px}
+.fv-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.fv-list .fv-item:last-child{border-bottom:none}
+.fv-it{flex:1;min-width:0}
+.fv-nm{font-size:calc(15px*var(--scale));font-weight:800;color:var(--ink);letter-spacing:-.3px;display:flex;align-items:center;gap:6px}
+.fv-sub{margin-top:4px;font-size:calc(11.5px*var(--scale));color:var(--sub);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fv-tag{font-size:calc(11px*var(--scale));font-weight:800;padding:2px 7px;border-radius:6px;flex:none}
+.fv-tag.buy{background:var(--primary-soft);color:var(--primary)}
+.fv-tag.sell{background:#E8F0FE;color:#1565C0}
+.fv-tag.wait{background:#FFF4E5;color:#C77700}
+.fv-amt{font-size:calc(14px*var(--scale));font-weight:800;color:var(--ink);flex:none}
+.fv-cancel{flex:none;font-size:calc(12px*var(--scale));font-weight:800;color:#E11900;
+  background:#fff;border:1.4px solid #ffd9d3;border-radius:9px;padding:7px 12px;cursor:pointer}
+.fv-empty{padding:44px 20px;text-align:center;color:var(--sub);font-size:calc(13px*var(--scale));font-weight:600}
+.fv-foot{flex:none;padding:11px 24px calc(22px + env(safe-area-inset-bottom,0px))}
+.fv-foot .primary-btn{margin:0}
+
 .kp-ov{position:absolute;inset:0;z-index:150;background:rgba(20,12,40,.35);
   display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .2s}
 .kp-ov.on{opacity:1}
