@@ -317,6 +317,9 @@ body{
 .flow.toss .screen{background:#fff}
 .flow.toss .statusbar{background:#fff;color:var(--navy)}
 .flow.toss .toss-home{min-height:100%;display:flex;flex-direction:column;background:#fff}
+/* 상단 헤더(로고~인사말 / 뒤로가기~제목·설명) 고정 — 아래 리스트만 스크롤 */
+.flow.toss .toss-stick{position:sticky;top:0;z-index:6;background:#fff;flex:none}
+.flow.toss .toss-stick .toss-dhead{padding-left:24px}   /* 드릴다운 제목을 뒤로가기 아이콘(≈25px)과 정렬 */
 /* 상단 로고 / 뒤로 / 햄버거 */
 .toss-top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 4px}
 .toss-top .toss-logo img{height:38px;display:block}

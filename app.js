@@ -3333,8 +3333,9 @@ function renderS1(){
       const bf = `<div class="bigfont-toggle ${bigFont?'on':''}" data-bigfont title="큰글씨 ${bigFont?'끄기':'켜기'}"><span class="bf-t">큰글씨</span><span class="bf-sw"><span class="bf-knob"></span></span></div>`;
       html = `<div class="home-wrap toss-home${bigFont?' bigfont':''}">`;
       if(path.length===0){
-        html += `<div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div>${bf}</div>`
-          + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div></div>`
+        // 상단 로고~인사말은 고정(sticky), 아래 FAQ·카테고리 리스트만 스크롤
+        html += `<div class="toss-stick"><div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div>${bf}</div>`
+          + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div></div></div>`
           + tossFaqCard()
           + ((s1Ver==='v41' && !bigFont) ? tossCatGrid() : tossCatList());   // v41: 3×3 그리드 (단 큰글씨 ON이면 v40과 동일한 리스트) / v40: 항상 리스트
       } else {
@@ -3343,9 +3344,10 @@ function renderS1(){
         const dcur = dtrail[dtrail.length-1] || {t:''};
         const dtitle = stripNum(dcur.t);
         const ddesc = (path.length===1) ? (V40_DESC[path[0]] || '') : '';
-        html += `<div class="toss-top"><div class="toss-back" data-sarsup title="이전">${I.chev}</div><div class="head-spacer"></div></div>`
+        // 뒤로가기~제목·설명은 고정(sticky), 아래 중메뉴 리스트만 스크롤
+        html += `<div class="toss-stick"><div class="toss-top"><div class="toss-back" data-sarsup title="이전">${I.chev}</div><div class="head-spacer"></div></div>`
+          + `<div class="toss-dhead"><div class="td-title">${dtitle}</div>${ddesc?`<div class="td-desc">${ddesc}</div>`:''}</div></div>`
           + `<div class="toss-drill">`
-          + `<div class="toss-dhead"><div class="td-title">${dtitle}</div>${ddesc?`<div class="td-desc">${ddesc}</div>`:''}</div>`
           + renderSimpleArs() + `</div>`;
       }
       html += `</div>`;
