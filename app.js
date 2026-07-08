@@ -2845,7 +2845,9 @@ function openAppLink(key){
   const logo  = v40 ? `<div class="ap-logo"><img src="${logoSrc}" alt="${c.app||'영웅문S#'}"></div>` : `<div class="ap-logo">S#</div>`;
   const title = c.popTitle || (v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결');
   const desc  = c.popDesc || (v40
-    ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">${wipeNote('지금 보고 계신 디지털 ARS는 종료돼요.')}</span>`
+    ? (bigFont
+        ? `<b>${c.title}</b> 화면으로 이동해요.<br><span class="ap-warn">${wipeNote('')}</span>`
+        : `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">${wipeNote('지금 보고 계신 디지털 ARS는 종료돼요.')}</span>`)
     : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`);
   const goTxt = c.popBtn || '영웅문S# 열기';
   // Ver 4.0은 중간 단계 플로우(앱 실행›계좌 연동›화면 이동) 미노출
@@ -3495,7 +3497,7 @@ function renderVoiceDone(){
 function renderHeroDone(){
   const title = s1state.heroTitle || '요청하신 업무';
   const app = s1state.heroApp || '영웅문S#';
-  const acctLine = sessionAuthed ? '인증하신 계좌를 연동해서<br>' : '';
+  const acctLine = (sessionAuthed && !bigFont) ? '인증하신 계좌를 연동해서<br>' : '';   // 큰글씨: 본문 축약
   return `<div class="iod-done-center">
       <div class="iod-done">
         <div class="iod-done-ic">${I.check}</div>
