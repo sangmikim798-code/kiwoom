@@ -2012,7 +2012,7 @@ function renderVoiceV40(){
         <div class="ac-row"><span class="k">예상 대기</span><span class="v">약 30초</span></div>
       </div>
       <div class="primary-btn" data-s1back>통화 종료</div>
-      <div class="notice">음성 안내에 따라 키패드를 입력하시면 상담이 진행돼요.</div>
+      <div class="notice">음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
     </div>
   </div>`;
 }
@@ -3470,7 +3470,7 @@ function renderVoiceConnect(){
           <div class="ir"><span class="k">연결 메뉴</span><span class="v">${label}</span></div>
           <div class="ir"><span class="k">계좌 연동</span><span class="v">${acctVal}</span></div>
         </div>
-        <div class="auth-note">음성 ARS로 연결되면 지금 보고 계신 디지털 ARS는 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+        <div class="auth-note">음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
         <div class="primary-btn" data-voicego>음성 ARS 연결</div>
       </div>`;
 }
@@ -3484,7 +3484,7 @@ function renderVoiceDone(){
         <div class="iod-done-t">음성 ARS로 연결됐어요</div>
         <div class="iod-done-d">${menuLine}<br>잠시만 기다려 주세요.</div>
       </div>
-      <div class="iod-done-note">이 디지털 ARS 화면은 곧 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+      <div class="iod-done-note">이 디지털 ARS 화면은 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
