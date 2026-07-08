@@ -1251,6 +1251,13 @@ body{
 /* 계좌번호·MY계좌 정보 화면 (스크롤 영역) */
 .my-body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
 .my-body::-webkit-scrollbar{display:none}
+/* ISA 온라인 발급번호 14자리 세그먼트 입력 */
+.isa-issue-row{flex:none;display:flex;align-items:center;gap:6px;margin:0 24px 12px}
+.isa-seg{flex:1;min-width:0;text-align:center;border:1.5px solid var(--line);border-radius:12px;
+  padding:13px 4px;font-size:calc(16px*var(--scale));font-weight:800;color:var(--ink);outline:none;background:#fff}
+.isa-seg:focus{border-color:var(--primary)}
+.isa-seg::placeholder{color:#c2c8d0;font-weight:600}
+.isa-seg-dash{flex:none;color:var(--sub);font-weight:800}
 .fv-tag.cashtag{background:#EEF0F3;color:#5A6070}
 .fv-tag.live{background:#FFE4ED;color:var(--up)}
 .fv-tag.done{background:#EEF0F3;color:#5A6070}
@@ -2648,7 +2655,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260708i"></script>
+<script src="app.js?v=20260708j"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

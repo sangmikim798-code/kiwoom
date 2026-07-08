@@ -3313,11 +3313,7 @@ function renderIodResult(){
 
 /* ===== 중개형 ISA 서민형 가입서류 제출 플로우 (Ver 4.0) =====
    FAQ 진입 → 신청현황 조회 안내(intro) → 계좌인증(공용 재사용) → 조회 로딩 → 신청현황 → 제출방법 선택 → 서류제출/발급번호 입력 */
-const ISA_STATUS = [
-  {k:'신규가입',   st:'서류 필요', stc:'live', d:'서민형 가입서류 제출이 필요해요 · 2026.07.03 접수'},
-  {k:'계좌이전',   st:'처리중',   stc:'wait', d:'타사 → 키움 이전 심사 중 · 2026.07.01 접수'},
-  {k:'만기연장',   st:'완료',     stc:'done', d:'2026.06.28 처리 완료'},
-];
+const ISA_TABS = [['new','신규가입'],['transfer','계좌이전'],['renew','만기연장']];
 /* 1) 신청현황 조회 안내(진입) — 계좌인증 시작 */
 function renderIsaIntro(){
   return `<div class="fv-wrap">
@@ -3343,17 +3339,61 @@ function renderIsaChecking(){
 }
 /* 3) 신청현황 표기 (신규가입 / 계좌이전 / 만기연장) */
 function renderIsaResult(){
-  const acct = (authAcct && authAcct.no) ? `${authAcct.type||'ISA'} ${authAcct.no}` : 'ISA 123-45-678901';
-  const list = ISA_STATUS.map(x=>`<div class="fv-item">
-      <div class="fv-it"><div class="fv-nm">${x.k} <span class="fv-tag ${x.stc}">${x.st}</span></div><div class="fv-sub">${x.d}</div></div>
-    </div>`).join('');
+  const tab = s1state.isaTab || 'new';
+  const acct = (authAcct && authAcct.no) ? `${authAcct.type||'중개형ISA'} ${authAcct.no}` : '중개형ISA 6320-7376';
+  const tabBar = `<div class="fv-tabs bal-tabs">` + ISA_TABS.map(([k,l])=>`<div class="fv-tab ${tab===k?'on':''}" data-isatab="${k}">${l}</div>`).join('') + `</div>`;
+  const kv = rows => `<div class="hv-summary">` + rows.map(r=>`<div class="hv-row"><span>${r[0]}</span><b class="${r[2]||''}">${r[1]}</b></div>`).join('') + `</div>`;
+  let desc, body, cta;
+  if(tab==='new'){
+    desc = '접수상태가 <b>적격</b>이면 ISA 상품에 가입할 수 있어요.';
+    body = kv([
+      ['상품명','중개형ISA'],
+      ['신청일자','2026.07.03'],
+      ['귀속년도','2026'],
+      ['가입유형','서민형'],
+      ['신청방법','온라인'],
+      ['소득증빙서류','발급번호 확인 필요'],
+      ['추가증빙서류','-'],
+      ['접수일자','2026.07.03'],
+      ['접수상태','적격','up'],
+    ]);
+    cta = '가입서류 제출하기';
+  } else if(tab==='transfer'){
+    desc = '타사 → 키움 중개형ISA 계좌이전 신청내역이에요.';
+    body = `<div class="hv-secttl">이전신청 정보</div>` + kv([
+      ['이전신청일','2026.07.01'],
+      ['이전상태','처리중','up'],
+      ['이전의사 확인방법','전화통화'],
+    ]) + `<div class="hv-secttl">기존 금융회사</div>` + kv([
+      ['회사명','기업은행'],
+      ['지점명','원동동'],
+      ['계좌번호','2581-3216-824011'],
+    ]) + `<div class="hv-secttl">당사(키움증권)</div>` + kv([
+      ['계좌번호','6320-7376 [중개형ISA]'],
+      ['가입상품명','중개형ISA'],
+    ]);
+    cta = '계좌이전 서류 제출하기';
+  } else {
+    desc = '중개형ISA 만기연장 신청내역이에요.';
+    body = kv([
+      ['상품','중개형ISA'],
+      ['가입자 분류','서민형'],
+      ['현재 만기일자','2026.09.21'],
+      ['연장후 만기일자','2029.09.21'],
+      ['가입유형','근로소득자 (5천만원 이하)'],
+    ]) + `<div class="misu-note">만기연장 신청은 <b>평일 08:00~17:00</b>, <b>만기 3개월 이전~만기일 전 영업일</b>까지 가능해요.</div>`;
+    cta = '만기연장 서류 제출하기';
+  }
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    <div class="toss-dhead"><div class="td-title">신청현황</div><div class="td-desc">중개형 ISA 가입·이전·만기연장 신청현황이에요</div></div>
+    <div class="toss-dhead"><div class="td-title">신청현황</div><div class="td-desc">중개형 ISA 신청내역을 확인해요</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${acct}</span></div>
-    <div class="hv-secttl">신청현황 ${ISA_STATUS.length}</div>
-    <div class="fv-card"><div class="fv-list">${list}</div></div>
-    <div class="fv-foot"><div class="primary-btn accent" data-isamethod>가입서류 제출하기</div></div>
+    ${tabBar}
+    <div class="my-body">
+      <div class="fv-note">${desc}</div>
+      ${body}
+    </div>
+    <div class="fv-foot"><div class="primary-btn accent" data-isamethod>${cta}</div></div>
   </div>`;
 }
 /* 4) 가입서류 제출방법 선택 (서류제출 / 온라인 발급번호 입력) */
@@ -3378,19 +3418,23 @@ function renderIsaSubmit(){
 }
 /* 6) 온라인 발급번호 입력 화면 */
 function renderIsaIssue(){
+  const seg = (id,len)=>`<input class="isa-seg" id="${id}" inputmode="numeric" maxlength="${len}" placeholder="${'0'.repeat(len)}">`;
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    <div class="toss-dhead"><div class="td-title">발급번호 입력</div><div class="td-desc">홈택스·정부24에서 발급받은 번호를 입력해요</div></div>
-    <div class="auth-info" style="margin:0 24px 14px">
-      <div class="ir"><span class="k">발급번호</span>
-        <input class="ir-input" id="isaIssueNo" type="text" inputmode="numeric" autocomplete="off" placeholder="발급번호 입력"></div>
+    <div class="toss-dhead"><div class="td-title">온라인 발급번호 입력</div><div class="td-desc">홈택스에서 발급받은 소득확인증명서 번호를 입력해요</div></div>
+    <div class="my-body">
+      <div class="fv-note">소득확인증명서(개인종합자산관리계좌 가입용)의 <b>온라인 발급번호 14자리</b>를 입력해 주세요.<br>확인되면 별도 서류 제출 없이 처리돼요.</div>
+      <div class="hv-secttl">홈택스 발급번호</div>
+      <div class="isa-issue-row">${seg('isaIssue1',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue2',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue3',3)}<span class="isa-seg-dash">-</span>${seg('isaIssue4',3)}</div>
+      <div class="doc-card" style="text-align:left;padding:14px"><div class="doc-btn" data-isaissuedone>발급번호 제출하기</div></div>
+      <div class="hv-secttl">홈택스 증빙서류 발급경로</div>
+      <div class="fv-note"><b>PC</b> · 국세청 홈택스 → 민원증명 → 소득확인증명서<br><b>모바일</b> · 손택스 앱 → 국세증명·사업자등록·세금관련 신청/신고 → 즉시발급증명 → 소득확인증명서(개인종합자산관리계좌 가입용)</div>
     </div>
-    <div class="fv-note">서민형 가입 요건 확인을 위한 <b>소득확인증명서 발급번호</b>를 입력해 주세요.<br>확인되면 별도 서류 제출 없이 처리돼요.</div>
-    <div class="doc-card" style="text-align:left"><div class="doc-btn" data-isaissuedone>발급번호 제출하기</div></div>
     <div class="fv-foot"><div class="primary-btn" data-isahistory>신청내역 확인</div></div>
   </div>`;
 }
 function startIsaCheck(){
+  s1state.isaTab = 'new';   // 신청현황 진입 시 신규가입 탭부터
   s1nav({page:'isacheck', title:'신청현황 조회', noBack:true, noHome:true, fromFav:false});
   s1state.history = [];
   setTimeout(()=>{
@@ -4922,12 +4966,15 @@ document.addEventListener('click', (e)=>{
   }
   // 신청현황 → 가입서류 제출방법 선택 플로팅
   if(t.closest('[data-isamethod]')){ openMethodSheet(ISA_METHOD_SHEET); return; }
+  // 신청현황 탭 전환(신규가입/계좌이전/만기연장)
+  const isatab = t.closest('[data-isatab]');
+  if(isatab){ s1state.isaTab = isatab.dataset.isatab; renderS1(); return; }
   // 신청내역 확인 → 신청현황 화면
   if(t.closest('[data-isahistory]')){ s1nav({page:'isaresult', title:'신청현황', noHome:true}); return; }
-  // 발급번호 제출
+  // 발급번호 제출(홈택스 14자리)
   if(t.closest('[data-isaissuedone]')){
-    const no = (document.getElementById('isaIssueNo')||{}).value || '';
-    if(!no.trim()){ flash('발급번호를 입력해주세요.'); return; }
+    const no = ['isaIssue1','isaIssue2','isaIssue3','isaIssue4'].map(id=>(document.getElementById(id)||{}).value||'').join('').replace(/\D/g,'');
+    if(no.length < 14){ flash('발급번호 14자리를 정확히 입력해주세요.'); return; }
     flash('발급번호가 제출되었어요. 확인 후 알림톡으로 안내해 드릴게요. (시연용)');
     return;
   }
