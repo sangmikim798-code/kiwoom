@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>키움증권 디지털 ARS</title>
 <link rel="icon" type="image/x-icon" href="assets/kiwoom-favicon.ico">
 <link rel="apple-touch-icon" href="assets/kiwoom-favicon.ico">
@@ -1945,6 +1945,14 @@ body{
   padding:14px 15px;font-size:15px;font-weight:700;color:#0f172a;outline:none;font-family:inherit}
 .dars .d1a-input:focus{border-color:var(--purple)}
 .dars .d1a-input::placeholder{color:#b3bac6;font-weight:600}
+/* 모바일·태블릿(터치): input 포커스 시 iOS 자동 확대(폰트<16px 트리거) 방지 — 최소 16px 보장(큰글씨 배율은 유지) */
+@media (hover:none) and (pointer:coarse){
+  .ir-input{font-size:max(16px, calc(14.5px*var(--scale)))!important}
+  .otp-row .auth-input, .otp-row .auth-input::placeholder{font-size:max(16px, calc(14px*var(--scale)))!important}
+  .ord-input{font-size:max(16px, calc(15px*var(--scale)))!important}
+  .dars .d1a-input{font-size:max(16px, calc(15px*var(--scale)))!important}
+  .auth-input, .ss-input{font-size:max(16px, calc(16px*var(--scale)))!important}
+}
 .dars .d1a-prov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px;
   background:#fff;border:1.5px solid var(--dline);border-radius:18px;padding:18px 12px}
 .dars .d1a-prov{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer}
