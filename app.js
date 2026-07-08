@@ -3282,6 +3282,41 @@ function renderFilledV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 계좌잔고·예수금(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 요약 카드 + 보유종목 카드(스크롤) + 상담원 연결 */
+function renderHoldingsV40(){
+  const stk = [
+    {n:'삼성전자',   q:10, avg:78000,  cur:83200},
+    {n:'SK하이닉스', q:3,  avg:198000, cur:212500},
+    {n:'현대차',     q:5,  avg:241000, cur:228000},
+    {n:'카카오',     q:20, avg:54200,  cur:49800},
+  ];
+  let totEval=0, totCost=0;
+  const listHTML = stk.map(s=>{
+    const ev=s.q*s.cur, pl=(s.cur-s.avg)*s.q, rt=((s.cur-s.avg)/s.avg*100);
+    totEval+=ev; totCost+=s.q*s.avg;
+    const up=pl>=0, cls=up?'up':'down', sign=up?'+':'';
+    return `<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${s.n}</div><div class="fv-sub">${s.q}주 · 평단 ${won(s.avg)}원</div></div>
+      <div class="hv-right"><div class="hv-amt">${won(ev)}원</div><div class="hv-pl ${cls}">${sign}${won(pl)} (${sign}${rt.toFixed(1)}%)</div></div>
+    </div>`;
+  }).join('');
+  const totPl=totEval-totCost, totRt=totPl/totCost*100;
+  const up=totPl>=0, cls=up?'up':'down', sign=up?'+':'';
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">계좌잔고·예수금</div><div class="td-desc">인증하신 계좌의 잔고와 예수금을 확인해요</div></div>
+    <div class="fv-chip full hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="hv-summary">
+      <div class="hv-row"><span>총 평가금액</span><b>${won(totEval)}원</b></div>
+      <div class="hv-row"><span>총 평가손익</span><b class="${cls}">${sign}${won(totPl)}원 (${sign}${totRt.toFixed(1)}%)</b></div>
+      <div class="hv-row"><span>출금가능 예수금</span><b>2,150,000원</b></div>
+    </div>
+    <div class="hv-secttl">보유 종목 ${stk.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="계좌잔고·예수금 조회">상담원 연결</div></div>
+  </div>`;
+}
+
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
 function pinReset(){ pinState = {buf:'', stage:'new', first:''}; }
@@ -3548,6 +3583,8 @@ function renderS1(){
       html = renderIodPurpose();
     } else if(isV40() && s1state.resultKey==='filled'){
       html = renderFilledV40();   // Ver 4.0 · 체결내역(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='holdings'){
+      html = renderHoldingsV40();   // Ver 4.0 · 계좌잔고·예수금(디지털ARS 조회) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')

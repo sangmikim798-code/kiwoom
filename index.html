@@ -1218,6 +1218,18 @@ body{
 /* 상담원 연결 버튼 = 회색(보조 버튼, 마젠타 primary와 구분) */
 .flow.toss .fv-foot .primary-btn{margin:0;background:#E7EAEE;color:var(--ink-2);box-shadow:none}
 .flow.toss .fv-foot .primary-btn:active{background:#DADEE4}
+/* Ver 4.0 · 계좌잔고·예수금 화면 (hv-*) */
+.fv-chip.hv-acct{flex:none;margin:0 24px 12px;cursor:default;justify-content:flex-start}
+.hv-summary{flex:none;margin:0 24px 14px;background:#F5F6F8;border-radius:16px;padding:8px 16px}
+.hv-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:calc(13.5px*var(--scale))}
+.hv-row span{color:var(--sub);font-weight:700}
+.hv-row b{color:var(--ink);font-weight:800}
+.hv-row b.up,.hv-pl.up{color:#E11900}
+.hv-row b.down,.hv-pl.down{color:#1565C0}
+.hv-secttl{flex:none;padding:0 24px 8px;font-size:calc(13px*var(--scale));font-weight:800;color:var(--ink)}
+.hv-right{flex:none;text-align:right}
+.hv-amt{font-size:calc(14px*var(--scale));font-weight:800;color:var(--ink)}
+.hv-pl{margin-top:3px;font-size:calc(11.5px*var(--scale));font-weight:700}
 /* Ver 4.0 · 상담원 연결 화면 — 토스 헤더(뒤로가기)만 감싸고 본문은 기존 .agent-connect(중앙정렬) 재사용 */
 .acv-wrap{min-height:100%;background:#fff}
 .acv-wrap .agent-connect{padding-top:8px}
