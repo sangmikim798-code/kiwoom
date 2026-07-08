@@ -2066,9 +2066,8 @@ function showEndPopup(){
   const screen = document.getElementById('screen'); if(!screen) return;
   const el = document.createElement('div');
   if(isV40()){
-    const warn = sessionAuthed
-      ? `<span class="ap-warn">${bigFont ? '입력한 정보는 저장하지 않아요.' : '입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>이용을 마치면 인증정보를 남기거나 저장하지 않아요.'}</span>`
-      : `<span class="ap-warn">디지털 ARS 이용이 종료돼요.</span>`;
+    // 일반 모드: 인증 여부와 무관하게 항상 기존 전체 문구 / 큰글씨: 짧게
+    const warn = `<span class="ap-warn">${bigFont ? '입력한 정보는 저장하지 않아요.' : '입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>이용을 마치면 인증정보를 남기거나 저장하지 않아요.'}</span>`;
     el.className = 'app-pop-ov v40'; el.id = 'arsModal';
     el.innerHTML = `<div class="app-pop">
       <div class="ap-logo end">${I.power}</div>
