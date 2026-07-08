@@ -2057,6 +2057,33 @@ function showPopup(label){
 }
 function closeModal(){ const m=document.getElementById('arsModal'); if(m) m.remove(); }
 
+/* 서비스 종료 안내 팝업 (Ver 4.0: 토스 스타일 · 입력 인증정보 무효화 안내) */
+function showEndPopup(){
+  closeModal();
+  const screen = document.getElementById('screen'); if(!screen) return;
+  const el = document.createElement('div');
+  if(isV40()){
+    const warn = sessionAuthed
+      ? `<span class="ap-warn">입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>세션이 끝나면 인증정보를 남기거나 저장하지 않아요.</span>`
+      : `<span class="ap-warn">디지털 ARS 세션이 종료돼요.</span>`;
+    el.className = 'app-pop-ov v40'; el.id = 'arsModal';
+    el.innerHTML = `<div class="app-pop">
+      <div class="ap-logo end">${I.power}</div>
+      <div class="ap-title">서비스를 종료할게요</div>
+      <div class="ap-desc">이용해 주셔서 감사합니다.<br>${warn}</div>
+      <div class="ap-btns">
+        <div class="ap-btn cancel" data-mcancel>취소</div>
+        <div class="ap-btn go" data-endok>종료하기</div>
+      </div>
+    </div>`;
+    screen.appendChild(el);
+    requestAnimationFrame(()=>el.classList.add('on'));
+    return;
+  }
+  // 레거시(비 v40)
+  flash('서비스를 종료합니다. 이용해 주셔서 감사합니다.');
+}
+
 /* ---------- 상태 ---------- */
 let mode = '간편';     // 일반 | 간편
 let bigFont = false;
@@ -4536,6 +4563,15 @@ document.addEventListener('click', (e)=>{
 
   // 음성 ARS 연결 안내 팝업
   if(t.closest('[data-mok]')){ closeModal(); s1nav({page:'voice', title:'음성 ARS 연결', fromFav:false}); return; }
+  if(t.closest('[data-endok]')){   // 서비스 종료: 세션·입력 인증정보 폐기(저장 안 함) 후 메인 초기화
+    closeModal();
+    sessionAuthed = false;
+    authAcct = {type:ACCOUNTS[0].type, no:ACCOUNTS[0].no};   // 입력 인증계좌 초기화
+    s1state.page='home'; s1state.fromFav=false; s1state.history=[]; s1state.sarsPath=[];
+    renderS1();
+    flash('서비스가 종료되었어요. 이용해 주셔서 감사합니다. (시연용)');
+    return;
+  }
   // 직원연결 메뉴: 안내 팝업 없이 바로 상담원 연결 화면으로 이동(클릭 메뉴 내용 표기)
   const staff = t.closest('[data-staffconnect]');
   if(staff){ s1nav({page:'agent', title:'상담원 연결', agentLabel: staff.dataset.staffconnect, fromFav:false}); return; }
@@ -5241,7 +5277,7 @@ document.addEventListener('click', (e)=>{
     } else if(which==='chat'){
       openAiChat();
     } else if(which==='end'){
-      flash('서비스를 종료합니다. 이용해 주셔서 감사합니다.');
+      showEndPopup();
     } else if(which==='voice'){
       showPopup();
     } else if(which==='agent'){
