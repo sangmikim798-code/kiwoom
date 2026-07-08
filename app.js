@@ -1998,6 +1998,9 @@ function voiceConnectScreen(){
   </div>`;
 }
 
+/* 인증정보 폐기 안내 문구 — 일반: [상황 안내]+상세 문구 / 큰글씨(bigFont): 짧고 쉬운 한 줄 */
+function wipeNote(lead){ return bigFont ? '입력한 정보는 저장하지 않아요.' : `${lead}<br>입력하신 인증정보는 남기거나 저장하지 않아요.`; }
+
 /* Ver 4.0 · 음성 ARS 연결 화면 — 토스 헤더(뒤로가기만) + 중앙정렬 본문(수화기 아이콘·연결정보·통화 종료, renderAgentV40와 동일 구조) */
 function renderVoiceV40(){
   return `<div class="acv-wrap">
@@ -2012,7 +2015,7 @@ function renderVoiceV40(){
         <div class="ac-row"><span class="k">예상 대기</span><span class="v">약 30초</span></div>
       </div>
       <div class="primary-btn" data-s1back>통화 종료</div>
-      <div class="notice">음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
+      <div class="notice">${wipeNote('음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.')}</div>
     </div>
   </div>`;
 }
@@ -2064,7 +2067,7 @@ function showEndPopup(){
   const el = document.createElement('div');
   if(isV40()){
     const warn = sessionAuthed
-      ? `<span class="ap-warn">입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>이용을 마치면 인증정보를 남기거나 저장하지 않아요.</span>`
+      ? `<span class="ap-warn">${bigFont ? '입력한 정보는 저장하지 않아요.' : '입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>이용을 마치면 인증정보를 남기거나 저장하지 않아요.'}</span>`
       : `<span class="ap-warn">디지털 ARS 이용이 종료돼요.</span>`;
     el.className = 'app-pop-ov v40'; el.id = 'arsModal';
     el.innerHTML = `<div class="app-pop">
@@ -2842,7 +2845,7 @@ function openAppLink(key){
   const logo  = v40 ? `<div class="ap-logo"><img src="${logoSrc}" alt="${c.app||'영웅문S#'}"></div>` : `<div class="ap-logo">S#</div>`;
   const title = c.popTitle || (v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결');
   const desc  = c.popDesc || (v40
-    ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">지금 보고 계신 디지털 ARS는 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</span>`
+    ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">${wipeNote('지금 보고 계신 디지털 ARS는 종료돼요.')}</span>`
     : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`);
   const goTxt = c.popBtn || '영웅문S# 열기';
   // Ver 4.0은 중간 단계 플로우(앱 실행›계좌 연동›화면 이동) 미노출
@@ -3470,7 +3473,7 @@ function renderVoiceConnect(){
           <div class="ir"><span class="k">연결 메뉴</span><span class="v">${label}</span></div>
           <div class="ir"><span class="k">계좌 연동</span><span class="v">${acctVal}</span></div>
         </div>
-        <div class="auth-note">음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
+        <div class="auth-note">${wipeNote('음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.')}</div>
         <div class="primary-btn" data-voicego>음성 ARS 연결</div>
       </div>`;
 }
@@ -3484,7 +3487,7 @@ function renderVoiceDone(){
         <div class="iod-done-t">음성 ARS로 연결됐어요</div>
         <div class="iod-done-d">${menuLine}<br>잠시만 기다려 주세요.</div>
       </div>
-      <div class="iod-done-note">이 디지털 ARS 화면은 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
+      <div class="iod-done-note">${wipeNote('이 디지털 ARS 화면은 종료돼요.')}</div>
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
@@ -3499,7 +3502,7 @@ function renderHeroDone(){
         <div class="iod-done-t">${app} 앱으로 연결됐어요</div>
         <div class="iod-done-d">${acctLine}<b>${title}</b> 화면으로 이동했어요.</div>
       </div>
-      <div class="iod-done-note">이 디지털 ARS 화면은 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
+      <div class="iod-done-note">${wipeNote('이 디지털 ARS 화면은 종료돼요.')}</div>
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
