@@ -1222,6 +1222,9 @@ body{
 /* 상담원 연결 버튼 = 회색(보조 버튼, 마젠타 primary와 구분) */
 .flow.toss .fv-foot .primary-btn{margin:0;background:#E7EAEE;color:var(--ink-2);box-shadow:none}
 .flow.toss .fv-foot .primary-btn:active{background:#DADEE4}
+/* 주요 액션(마젠타) — 기본 fv-foot 버튼은 회색이라 강조가 필요한 CTA만 accent */
+.flow.toss .fv-foot .primary-btn.accent{background:linear-gradient(135deg,#F0188E,#E6007F);color:#fff;box-shadow:0 8px 20px rgba(230,0,127,.28)}
+.flow.toss .fv-foot .primary-btn.accent:active{background:linear-gradient(135deg,#F0188E,#E6007F);filter:brightness(.95)}
 /* Ver 4.0 · 계좌잔고·예수금 화면 (hv-*) */
 .fv-chip.hv-acct{flex:none;margin:0 24px 12px;cursor:default;justify-content:flex-start}
 .hv-summary{flex:none;margin:0 24px 14px;background:#F5F6F8;border-radius:16px;padding:8px 16px}
@@ -2645,7 +2648,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260708h"></script>
+<script src="app.js?v=20260708i"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
