@@ -1910,10 +1910,10 @@ const ARS_CAT6 = [
     staffLeaf('장기미사용 ID 제한해제'),
   ]),
   catNode('5. 계좌개설·사고', 'idcard', [
-    drillNode('사고등록',          ivN(6,1)),
-    drillNode('주소·전화번호 변경', ivN(6,0)),
+    {t:'사고등록',          media:'accident'},   // 음성ARS 중심(긴급) — accvoice→4종 서브리스트 / accapp→영S#
+    {t:'주소·전화번호 변경', media:'addr'},       // 영S#/음성ARS 2매체
+    {t:'비대면 계좌개설',    media:'acctopen'},    // 키움계좌개설 앱 중심 — kiwoom앱 / 영S#
     staffLeaf('계좌 사고등록 해지'),
-    staffLeaf('비대면 계좌개설'),
     staffLeaf('계좌폐쇄'),
     staffLeaf('신분증 진위확인'),
   ]),
@@ -2763,6 +2763,10 @@ const APP_LINK = {
   misuinfo: {title:'미수·반대매매 조회'},
   myacctinfo: {title:'계좌번호·MY계좌 정보확인'},
   songinfo: {title:'송금'}, xferinfo: {title:'계좌 간 자금이체'}, songresinfo: {title:'송금결과확인 조회'},
+  accinfo: {title:'사고등록'}, addrinfo: {title:'주소·전화번호 변경'}, acctopeninfo: {title:'비대면 계좌개설'},
+  acctopenkiwoom: {title:'비대면 계좌개설', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
+    popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
+    popDesc:'<b>비대면 계좌개설</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2929,7 +2933,27 @@ const SONGRES_SHEET = { title:'송금결과를 어떻게 확인할까요?', sub:
   {kind:'songresapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 조회하기', desc:'앱을 열어 송금 결과를 확인해요'},
   {kind:'songresvoice', ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 확인해요'},
 ]};
-const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET };
+/* 계좌개설·사고(cat4) — 항목 맞춤: 사고등록=음성ARS 중심(긴급) / 비대면 계좌개설=키움계좌개설 앱 중심 */
+const KIWOOM_OPEN_IC = '<img src="assets/kiwoom-favicon.ico" alt="키움계좌개설">';
+const ACC_SHEET = { title:'사고등록을 어떻게 할까요?', sub:'긴급 시 음성 ARS로 즉시 도와드려요', methods:[
+  {kind:'accvoice', ic:CS_ICON.voice, nm:'음성 ARS로 사고등록하기',  desc:'음성 안내에 따라 즉시 정지·등록해요'},
+  {kind:'accapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 사고등록하기', desc:'앱을 열어 사고등록을 진행해요'},
+]};
+const ACC_VOICE_SHEET = { title:'어떤 사고를 등록할까요?', sub:'음성 ARS로 선택하신 사고등록을 도와드려요', noIcon:true, methods:[
+  {kind:'accv0', nm:'계좌출금 정지 사고등록', desc:'계좌 출금·이체를 즉시 정지해요'},
+  {kind:'accv1', nm:'제휴카드 분실 사고등록', desc:'제휴 체크·신용카드 사용을 정지해요'},
+  {kind:'accv2', nm:'OTP 사고등록',          desc:'OTP 분실·도난 시 보안매체를 정지해요'},
+  {kind:'accv3', nm:'사고등록 내역조회',      desc:'등록된 사고내역을 확인해요'},
+]};
+const ADDR_SHEET = { title:'주소·전화번호 변경을 어떻게 할까요?', sub:'편하신 방법으로 변경을 도와드려요', methods:[
+  {kind:'addrapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 변경하기', desc:'앱을 열어 주소·연락처를 변경해요'},
+  {kind:'addrvoice', ic:CS_ICON.voice, nm:'음성 ARS로 변경하기',   desc:'음성 안내에 따라 변경해요'},
+]};
+const ACCTOPEN_SHEET = { title:'비대면 계좌개설을 어떻게 할까요?', sub:'키움계좌개설 앱으로 간편하게 도와드려요', methods:[
+  {kind:'acctopenkiwoom', ic:KIWOOM_OPEN_IC, nm:'키움계좌개설 앱에서 개설하기', desc:'휴대폰 인증과 신분증 촬영으로 바로 개설해요'},
+  {kind:'acctopenapp',    ic:IOD_HERO_IC,    nm:'영웅문S#에서 개설하기',       desc:'앱을 열어 비대면 계좌개설을 진행해요'},
+]};
+const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET };
 /* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
 const MYACCT_SHEET = { title:'계좌 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
   {kind:'myacctdigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 계좌 정보를 확인해요'},
@@ -4332,6 +4356,17 @@ document.addEventListener('click', (e)=>{
     if(kind==='xfervoice'){ flash('음성 ARS 「계좌 간 자금이체」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='songresapp'){ openAppLink('songresinfo'); return; }
     if(kind==='songresvoice'){ flash('음성 ARS 「송금결과확인 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    // 계좌개설·사고 (항목 맞춤)
+    if(kind==='accvoice'){ openMethodSheet(ACC_VOICE_SHEET); return; }   // 사고등록 → 4종 서브리스트
+    if(kind==='accv0'){ flash('음성 ARS 「계좌출금 정지 사고등록」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='accv1'){ flash('음성 ARS 「제휴카드 분실 사고등록」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='accv2'){ flash('음성 ARS 「OTP 사고등록」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='accv3'){ flash('음성 ARS 「사고등록 내역조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='accapp'){ openAppLink('accinfo'); return; }
+    if(kind==='addrapp'){ openAppLink('addrinfo'); return; }
+    if(kind==='addrvoice'){ flash('음성 ARS 「주소·전화번호 변경」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='acctopenkiwoom'){ openAppLink('acctopenkiwoom'); return; }   // 비대면 계좌개설 → 키움계좌개설 앱
+    if(kind==='acctopenapp'){ openAppLink('acctopeninfo'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
