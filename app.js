@@ -1922,13 +1922,11 @@ const ARS_CAT6 = [
     {t:'공모주 청약', media:'ipo'},       // 디지털ARS(일정·경쟁률)/영S#(청약)/음성ARS(5종) 3매체
   ]),
   catNode('7. 서류신청·제출', 'cert', [
-    staffLeaf('제증명 발급신청'),
-    staffLeaf('잔고증명서'),
-    staffLeaf('거래내역서'),
-    staffLeaf('금융거래목적확인서 제출'),
-    staffLeaf('고객확인(KYC/CDD) 등록'),
-    staffLeaf('투자자정보확인서 등록'),
-    staffLeaf('해외 양도소득 관련서류'),
+    {t:'증명서 발급',           media:'cert'},        // 제증명·잔고증명서·거래내역서 통합 — 디지털ARS(발급화면)/영S#
+    {t:'금융거래목적확인서 제출', media:'docpurpose'},   // 디지털ARS(제출화면)/영S#
+    {t:'고객확인(KYC/CDD) 등록', media:'dockyc'},
+    {t:'투자자정보확인서 등록',   media:'docinvestor'},
+    {t:'해외 양도소득 관련서류',  media:'docforeign'},
   ]),
   catNode('8. 업무신청', 'doc', [
     staffLeaf('모바일 OTP 발급'),
@@ -2765,6 +2763,8 @@ const APP_LINK = {
   songinfo: {title:'송금'}, xferinfo: {title:'계좌 간 자금이체'}, songresinfo: {title:'송금결과확인 조회'},
   accinfo: {title:'사고등록'}, addrinfo: {title:'주소·전화번호 변경'}, acctopeninfo: {title:'비대면 계좌개설'},
   rightsinfo: {title:'유상청약'}, ipoinfo: {title:'공모주 청약'},
+  certinfo: {title:'증명서 발급'}, purposedocinfo: {title:'금융거래목적확인서 제출'}, kycinfo: {title:'고객확인(KYC/CDD) 등록'},
+  investorinfo: {title:'투자자정보확인서 등록'}, foreigninfo: {title:'해외 양도소득 관련서류'},
   acctopenkiwoom: {title:'비대면 계좌개설', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>비대면 계좌개설</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2978,7 +2978,22 @@ const IPO_VOICE_SHEET = { title:'어떤 공모주 업무를 도와드릴까요?'
   {kind:'ipov3', nm:'청약 관련 조회',   desc:'청약 신청내역을 안내해요'},
   {kind:'ipov4', nm:'공모주정보 조회',  desc:'공모주 일정·정보를 안내해요'},
 ]};
-const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET, rights:RIGHTS_SHEET, ipo:IPO_SHEET };
+/* 서류신청·제출(cat7) — 각 항목 2매체(디지털ARS/영웅문S#) 플로팅. 서류 IVR 노드 없음 → 음성ARS 제외 */
+const CERT_SHEET = { title:'증명서를 어떻게 발급할까요?', sub:'편하신 방법으로 발급을 도와드려요', methods:[
+  {kind:'certdigital', ic:CS_ICON.web, nm:'디지털 ARS로 발급하기', desc:'지금 이 화면에서 증명서를 발급해요'},
+  {kind:'certapp',     ic:IOD_HERO_IC, nm:'영웅문S#으로 발급하기', desc:'앱을 열어 증명서를 발급해요'},
+]};
+/* 서류 제출 3종(금융거래목적확인서/KYC·CDD/투자자정보확인서/해외양도소득) — 디지털ARS 제출화면(공용 renderDocSubmitV40)/영S# */
+const docSheet = (title, verb, kd, ka) => ({ title, sub:`편하신 방법으로 ${verb}을 도와드려요`, methods:[
+  {kind:kd, ic:CS_ICON.web, nm:`디지털 ARS로 ${verb}하기`, desc:'지금 이 화면에서 서류를 촬영·첨부해 제출해요'},
+  {kind:ka, ic:IOD_HERO_IC, nm:`영웅문S#으로 ${verb}하기`, desc:'앱을 열어 서류를 제출해요'},
+]});
+const PURPOSE_SHEET  = docSheet('금융거래목적확인서를 어떻게 제출할까요?', '제출', 'purposedig', 'purposeapp');
+const KYC_SHEET      = docSheet('고객확인(KYC/CDD)을 어떻게 등록할까요?',    '등록', 'kycdig',     'kycapp');
+const INVESTOR_SHEET = docSheet('투자자정보확인서를 어떻게 등록할까요?',      '등록', 'investordig','investorapp');
+const FOREIGN_SHEET  = docSheet('해외 양도소득 서류를 어떻게 제출할까요?',    '제출', 'foreigndig', 'foreignapp');
+const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET, rights:RIGHTS_SHEET, ipo:IPO_SHEET,
+  cert:CERT_SHEET, docpurpose:PURPOSE_SHEET, dockyc:KYC_SHEET, docinvestor:INVESTOR_SHEET, docforeign:FOREIGN_SHEET };
 /* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
 const MYACCT_SHEET = { title:'계좌 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
   {kind:'myacctdigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 계좌 정보를 확인해요'},
@@ -3561,6 +3576,46 @@ function renderRightsV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 증명서 발급(디지털 ARS) 전용 화면 — 발급 가능 증명서 리스트 + 항목별 발급 버튼 + 상담원 연결 */
+function renderCertV40(){
+  const certs = [
+    {n:'잔고증명서',       d:'특정일 기준 보유 잔고 증명'},
+    {n:'거래내역서',       d:'기간별 거래내역 증명'},
+    {n:'외화예수금증명서', d:'외화 예수금 잔액 증명'},
+    {n:'외납세액명세서',   d:'외국 납부세액 내역 명세'},
+  ];
+  const listHTML = certs.map(x=>`<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.n}</div><div class="fv-sub">${x.d}</div></div>
+      <div class="fv-issue" data-flash="${x.n} 발급이 접수되었어요. 등록된 이메일로 보내드릴게요. (시연용)">발급</div>
+    </div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">증명서 발급</div><div class="td-desc">필요한 증명서를 발급받아요</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="hv-secttl">발급 가능 증명서 ${certs.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="증명서 발급">상담원 연결</div></div>
+  </div>`;
+}
+
+/* Ver 4.0 · 서류 제출(디지털 ARS) 전용 화면 — s1state.docLabel 기반 공용 화면(촬영·첨부 CTA + 안내 + 상담원 연결) */
+function renderDocSubmitV40(){
+  const label = s1state.docLabel || '서류';
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">${label}</div><div class="td-desc">서류를 촬영하거나 파일로 제출해요</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="doc-card">
+      <div class="doc-ic">${I.doc}</div>
+      <div class="doc-h">${label} 제출</div>
+      <div class="doc-d">서류를 촬영하거나 파일로 첨부해<br>간편하게 제출할 수 있어요</div>
+      <div class="doc-btn" data-flash="${label} 제출이 접수되었어요. 심사 후 알림으로 안내해 드릴게요. (시연용)">서류 촬영·첨부하기</div>
+    </div>
+    <div class="fv-note">제출 후 심사에 <b>1~2 영업일</b>이 걸릴 수 있어요. 반려 시 알림으로 안내해 드려요.</div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="${label} 제출">상담원 연결</div></div>
+  </div>`;
+}
+
 /* Ver 4.0 · 미수·반대매매(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 미수 요약 카드 + 반대매매 안내 + 대상 종목 카드(스크롤) + 상담원 연결 */
 function renderMisuV40(){
   const targets = [
@@ -3896,6 +3951,10 @@ function renderS1(){
       html = renderIpoV40();        // Ver 4.0 · 공모주 청약(디지털ARS 조회) 전용 화면
     } else if(isV40() && s1state.resultKey==='rights'){
       html = renderRightsV40();     // Ver 4.0 · 유상청약(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='certv40'){
+      html = renderCertV40();       // Ver 4.0 · 증명서 발급(디지털ARS) 전용 화면
+    } else if(isV40() && s1state.resultKey==='docsubmit'){
+      html = renderDocSubmitV40();  // Ver 4.0 · 서류 제출(디지털ARS, docLabel 기반) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4454,6 +4513,17 @@ document.addEventListener('click', (e)=>{
     if(kind==='ipov2'){ flash('음성 ARS 「청약 경쟁률 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='ipov3'){ flash('음성 ARS 「청약 관련 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='ipov4'){ flash('음성 ARS 「공모주정보 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    // 서류신청·제출 (디지털ARS/영웅문S# 2매체)
+    if(kind==='certdigital'){ s1nav({page:'result', resultKey:'certv40', title:'증명서 발급', noHome:true}); return; }   // 증명서 발급 — 디지털 ARS 화면
+    if(kind==='certapp'){ openAppLink('certinfo'); return; }
+    if(kind==='purposedig'){ s1nav({page:'result', resultKey:'docsubmit', title:'금융거래목적확인서', docLabel:'금융거래목적확인서', noHome:true}); return; }
+    if(kind==='purposeapp'){ openAppLink('purposedocinfo'); return; }
+    if(kind==='kycdig'){ s1nav({page:'result', resultKey:'docsubmit', title:'고객확인(KYC/CDD)', docLabel:'고객확인(KYC/CDD)', noHome:true}); return; }
+    if(kind==='kycapp'){ openAppLink('kycinfo'); return; }
+    if(kind==='investordig'){ s1nav({page:'result', resultKey:'docsubmit', title:'투자자정보확인서', docLabel:'투자자정보확인서', noHome:true}); return; }
+    if(kind==='investorapp'){ openAppLink('investorinfo'); return; }
+    if(kind==='foreigndig'){ s1nav({page:'result', resultKey:'docsubmit', title:'해외 양도소득 서류', docLabel:'해외 양도소득 서류', noHome:true}); return; }
+    if(kind==='foreignapp'){ openAppLink('foreigninfo'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
