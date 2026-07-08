@@ -5400,6 +5400,8 @@ function updateSceneLabel(){
 function selectRefFirm(firm){ refFirm = firm; switchScheme('ref'); }
 /* 시안 리스트: 시안 선택 → 해당 시안의 '메인(home) 화면'으로 띄움 (ver 지정 시 시안1 버전 전환) */
 function selectSian(v, ver){
+  // 탭 전환 시 #screen에 떠 있던 오버레이(챗봇·매체시트·상담팝업·앱연결·안내팝업·계단주문·계좌시트 등) 모두 닫고 해당 탭 메인화면으로 진입
+  closeAiChat(); closeMethodSheet(); closeConsult(); closeAppLink(); closeModal(); closeStkSheet(); closeAcctSheet(); closeCertSheet(); closeCalendar(); closeMenuDrawer();
   sianScheme = v;
   if(v==='s1'){
     if(ver) s1Ver = ver;
