@@ -1844,6 +1844,11 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
+    if(m.media){   // 입출금·이체: 연결매체 선택 플로팅(제네릭, MEDIA_SHEETS[m.media])
+      return `<div class="sars-item nav" data-mediasheet="${m.media}">
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
     if(hasKids){
       return `<div class="sars-item nav" data-sarsdown="${i}">
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
@@ -1889,11 +1894,9 @@ const ARS_CAT6 = [
     {t:'계좌번호·MY계좌 정보확인', myacct:true},   // 2매체(디지털ARS/영S#) 플로팅
   ]),
   catNode('3. 입출금·이체', 'transfer', [
-    drillNode('연계은행 송금',    ivN(4,0)),
-    drillNode('증권계좌 송금',    ivN(4,1)),
-    drillNode('타사 송금',        ivN(4,2)),
-    drillNode('계좌 간 자금이체',  ivN(4,4)),
-    drillNode('송금결과확인 조회', ivN(4,3)),
+    {t:'송금', media:'song'},   // 연계은행(ivN4,0)+증권계좌(ivN4,1)+타사(ivN4,2) 통합 → 2매체(영S#/음성ARS). 음성ARS 선택 시 3종 서브리스트.
+    {t:'계좌 간 자금이체', media:'xfer'},   // 2매체(영S#/음성ARS)
+    {t:'송금결과확인 조회', media:'songres'},   // 2매체(영S#/음성ARS)
     staffLeaf('출금불가·출금제한 임시조치 해지'),
     staffLeaf('환전'),
   ]),
@@ -2759,6 +2762,7 @@ const APP_LINK = {
   txninfo: {title:'거래내역 조회'},
   misuinfo: {title:'미수·반대매매 조회'},
   myacctinfo: {title:'계좌번호·MY계좌 정보확인'},
+  songinfo: {title:'송금'}, xferinfo: {title:'계좌 간 자금이체'}, songresinfo: {title:'송금결과확인 조회'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2907,6 +2911,25 @@ const SISE_VOICE_SHEET = { title:'어떤 시세를 안내해 드릴까요?', sub
   {kind:'siv4', nm:'K-OTC',        desc:'비상장주식 K-OTC 현재가를 안내해요'},
   {kind:'siv5', nm:'선물',         desc:'지수·상품 선물 현재가를 안내해요'},
 ]};
+/* 입출금·이체(cat3) — 각 항목 2매체(영웅문S#/음성ARS) 플로팅. data-mediasheet="key"→MEDIA_SHEETS[key] */
+const SONG_SHEET = { title:'송금을 어떻게 할까요?', sub:'편하신 방법으로 송금을 도와드려요', methods:[
+  {kind:'songapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 송금하기', desc:'앱을 열어 송금을 진행해요'},
+  {kind:'songvoice', ic:CS_ICON.voice, nm:'음성 ARS로 송금하기',   desc:'음성 안내에 따라 송금해요'},
+]};
+const SONG_VOICE_SHEET = { title:'어떤 송금을 도와드릴까요?', sub:'음성 ARS로 선택하신 송금을 안내해 드려요', noIcon:true, methods:[
+  {kind:'songv0', nm:'연계은행 송금', desc:'연계은행 계좌로 송금해요'},
+  {kind:'songv1', nm:'증권계좌 송금', desc:'증권계좌로 송금해요'},
+  {kind:'songv2', nm:'타사 송금',     desc:'타사 계좌로 송금해요'},
+]};
+const XFER_SHEET = { title:'계좌 간 자금이체를 어떻게 할까요?', sub:'편하신 방법으로 이체를 도와드려요', methods:[
+  {kind:'xferapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 이체하기', desc:'앱을 열어 자금이체를 진행해요'},
+  {kind:'xfervoice', ic:CS_ICON.voice, nm:'음성 ARS로 이체하기',   desc:'음성 안내에 따라 이체해요'},
+]};
+const SONGRES_SHEET = { title:'송금결과를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
+  {kind:'songresapp',   ic:IOD_HERO_IC,   nm:'영웅문S#으로 조회하기', desc:'앱을 열어 송금 결과를 확인해요'},
+  {kind:'songresvoice', ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 확인해요'},
+]};
+const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET };
 /* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
 const MYACCT_SHEET = { title:'계좌 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
   {kind:'myacctdigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 계좌 정보를 확인해요'},
@@ -4228,6 +4251,8 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-txnsheet]')){ openMethodSheet(TXN_SHEET); return; }    // 거래내역 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-misusheet]')){ openMethodSheet(MISU_SHEET); return; }  // 미수·반대매매 조회 → 연결매체 선택 플로팅(2매체)
   if(t.closest('[data-myacctsheet]')){ openMethodSheet(MYACCT_SHEET); return; }  // 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(2매체)
+  const msh = t.closest('[data-mediasheet]');
+  if(msh){ const cfg = MEDIA_SHEETS[msh.dataset.mediasheet]; if(cfg) openMethodSheet(cfg); return; }   // 입출금·이체 각 항목 → 2매체 플로팅
   const stkSel = t.closest('[data-stkpick]');
   if(stkSel){
     const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
@@ -4297,6 +4322,16 @@ document.addEventListener('click', (e)=>{
     if(kind==='misuapp'){ openAppLink('misuinfo'); return; }                                            // 미수·반대매매 — 영웅문S# 앱 연결
     if(kind==='myacctdigital'){ s1nav({page:'result', resultKey:'myacct', title:'계좌번호·MY계좌', noHome:true}); return; }   // 계좌번호·MY계좌 — 디지털 ARS 화면
     if(kind==='myacctapp'){ openAppLink('myacctinfo'); return; }                                        // 계좌번호·MY계좌 — 영웅문S# 앱 연결
+    // 입출금·이체 (영웅문S#/음성ARS 2매체)
+    if(kind==='songapp'){ openAppLink('songinfo'); return; }
+    if(kind==='songvoice'){ openMethodSheet(SONG_VOICE_SHEET); return; }   // 송금 → 3종 서브리스트
+    if(kind==='songv0'){ flash('음성 ARS 「연계은행 송금」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='songv1'){ flash('음성 ARS 「증권계좌 송금」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='songv2'){ flash('음성 ARS 「타사 송금」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='xferapp'){ openAppLink('xferinfo'); return; }
+    if(kind==='xfervoice'){ flash('음성 ARS 「계좌 간 자금이체」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='songresapp'){ openAppLink('songresinfo'); return; }
+    if(kind==='songresvoice'){ flash('음성 ARS 「송금결과확인 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
