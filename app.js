@@ -1998,13 +1998,51 @@ function voiceConnectScreen(){
   </div>`;
 }
 
+/* Ver 4.0 · 음성 ARS 연결 화면 — 토스 헤더(뒤로가기만) + 중앙정렬 본문(수화기 아이콘·연결정보·통화 종료, renderAgentV40와 동일 구조) */
+function renderVoiceV40(){
+  return `<div class="acv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="agent-connect">
+      <div class="ac-ic">${I.phone}</div>
+      <div class="ac-t">음성 ARS 연결 중</div>
+      <div class="ac-d">키움증권 음성 ARS에 연결하고 있어요.<br>잠시만 기다려 주세요.</div>
+      <div class="ac-info">
+        <div class="ac-row"><span class="k">연결 번호</span><span class="v">1544-9000</span></div>
+        <div class="ac-row"><span class="k">상태</span><span class="v">연결 중…</span></div>
+        <div class="ac-row"><span class="k">예상 대기</span><span class="v">약 30초</span></div>
+      </div>
+      <div class="primary-btn" data-s1back>통화 종료</div>
+      <div class="notice">음성 안내에 따라 키패드를 입력하시면 상담이 진행돼요.</div>
+    </div>
+  </div>`;
+}
+
 /* 음성 ARS 연결 안내 팝업 */
 function showPopup(label){
   closeModal();
   const name = label ? label.replace(/^[0-9#]+\.\s*/,'') : '';
-  const msg = name ? `‘${name}’ 메뉴는<br>음성 ARS 상담으로 연결됩니다.` : `음성 ARS 상담으로<br>연결해 드립니다.`;
   const screen = document.getElementById('screen');
   const el = document.createElement('div');
+  if(isV40()){   // Ver 4.0 계열: 토스 스타일 안내 팝업(app-pop 재사용 · 마젠타 스킨)
+    const msg = name
+      ? `‘${name}’ 메뉴를<br>음성 ARS로 연결해 드릴게요.`
+      : `키움증권 음성 ARS로 연결해 드릴게요.<br>음성 안내에 따라 원하시는 메뉴를 선택하세요.`;
+    el.className = 'app-pop-ov v40'; el.id = 'arsModal';
+    el.innerHTML = `<div class="app-pop">
+      <div class="ap-logo voice">${CS_ICON.voice}</div>
+      <div class="ap-title">음성 ARS로 연결할게요</div>
+      <div class="ap-desc">${msg}<span class="ap-warn">연결 번호 1544-9000 · 평일 08:00~18:00</span></div>
+      <div class="ap-btns">
+        <div class="ap-btn cancel" data-mcancel>취소</div>
+        <div class="ap-btn go" data-mok>연결하기</div>
+      </div>
+    </div>`;
+    screen.appendChild(el);
+    requestAnimationFrame(()=>el.classList.add('on'));
+    return;
+  }
+  // 레거시(비 v40) 안내 팝업
+  const msg = name ? `‘${name}’ 메뉴는<br>음성 ARS 상담으로 연결됩니다.` : `음성 ARS 상담으로<br>연결해 드립니다.`;
   el.className = 'modal-ov'; el.id = 'arsModal';
   el.innerHTML = `<div class="modal">
     <div class="m-ic">${I.phone}</div>
@@ -4136,7 +4174,8 @@ function renderS1(){
                    : pageTop(s1state.title||'상담원 연결') + agentConnectScreen(s1state.agentLabel);
   }
   else if(s1state.page==='voice'){
-    html = pageTop(s1state.title||'음성 ARS 연결') + voiceConnectScreen();
+    html = isV40() ? renderVoiceV40()   // Ver 4.0: 토스 헤더 + 중앙정렬 음성 ARS 연결 화면
+                   : pageTop(s1state.title||'음성 ARS 연결') + voiceConnectScreen();
   }
   else if(s1state.page==='ivmid'){
     const dae = IVR[s1state.ivI];
@@ -4514,7 +4553,7 @@ document.addEventListener('click', (e)=>{
     flash(`${app} 앱으로 연결합니다. 계좌정보 연동 후 ${ttl} 화면으로 이동합니다. (시연용)`);
     return;
   }
-  if(t.closest('[data-appcancel]') || (t.classList && t.classList.contains('app-pop-ov'))){ closeAppLink(); return; }
+  if(t.closest('[data-appcancel]') || (t.classList && t.classList.contains('app-pop-ov'))){ closeAppLink(); closeModal(); return; }   // app-pop-ov 오버레이 탭: 앱 연결 팝업/음성 ARS 안내 팝업(arsModal) 모두 닫기
 
   // Ver 4.0 · 상담연결 안내 팝업: 채널 선택 / 닫기(닫기버튼·배경탭)
   const csch = t.closest('[data-cschannel]');
