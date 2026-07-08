@@ -4491,9 +4491,14 @@ function openAiChat(){
   if(!screen || document.getElementById('aiChatOv')) return;
   const el = document.createElement('div');
   el.id = 'aiChatOv';
-  el.className = 'aichat-ov';
+  const v40 = isV40();   // Ver 4.0 계열: 문구 '디지털 ARS 열기' + 마젠타 토스 스킨 + 디지털ARS(모니터) 아이콘
+  el.className = 'aichat-ov' + (v40 ? ' v40' : '');
+  const floatIc = v40
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16.5V20"/></svg>'
+    : I.headset;
+  const floatTxt = v40 ? '디지털 ARS 열기' : '보이는 ARS 열기';
   el.innerHTML = `<img class="aichat-img" src="영웅문/AI업무챗봇.png" alt="AI 업무챗봇">
-    <div class="ars-float" data-arsopen><span class="af-ic">${I.headset}</span> 보이는 ARS 열기</div>`;
+    <div class="ars-float${v40?' v40':''}" data-arsopen><span class="af-ic">${floatIc}</span> ${floatTxt}</div>`;
   screen.appendChild(el);
 }
 function closeAiChat(){ const e=document.getElementById('aiChatOv'); if(e) e.remove(); }
