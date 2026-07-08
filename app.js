@@ -1829,6 +1829,11 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
+    if(m.txn){   // 거래내역 조회: 연결매체(디지털ARS/영S#/음성ARS) 선택 플로팅 진입(nav 스타일)
+      return `<div class="sars-item nav" data-txnsheet>
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
     if(hasKids){
       return `<div class="sars-item nav" data-sarsdown="${i}">
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
@@ -1869,7 +1874,7 @@ const ARS_CAT6 = [
   catNode('2. 계좌·잔고조회', 'wallet', [
     {t:'예수금 · 주문가능금액 조회', dep:true},   // 예수금·추정예탁자산(ivN3,0)+주문가능금액(ivN3,1) 통합 → 3매체(디지털ARS/영S#/음성ARS) 플로팅. 음성ARS 선택 시 각 IVR 연결.
     {t:'주식 · 신용 · 금융상품 잔고조회', bal:true},   // 현금주식(ivN3,2)+신용(ivN3,3)+금융상품평가·잔고(ivN3,5) 통합 → 3매체 플로팅. 음성ARS 선택 시 각 IVR 연결.
-    drillNode('거래내역 조회',            ivN(3,4)),
+    {t:'거래내역 조회', txn:true},   // 3매체(디지털ARS/영S#/음성ARS) 플로팅. 음성ARS 선택 시 하위(전체/매매/입출금/입출고) 각 IVR 연결.
     staffLeaf('미수·반대매매 조회'),
     staffLeaf('계좌번호·MY계좌 정보확인'),
   ]),
@@ -2741,6 +2746,7 @@ const APP_LINK = {
   idxinfo: {title:'지수·환율 정보'},
   depinfo: {title:'예수금·주문가능금액 조회'},
   balinfo: {title:'주식·신용·금융상품 잔고조회'},
+  txninfo: {title:'거래내역 조회'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2888,6 +2894,19 @@ const SISE_VOICE_SHEET = { title:'어떤 시세를 안내해 드릴까요?', sub
   {kind:'siv3', nm:'시간외 단일가', desc:'시간외 단일가 시세를 안내해요'},
   {kind:'siv4', nm:'K-OTC',        desc:'비상장주식 K-OTC 현재가를 안내해요'},
   {kind:'siv5', nm:'선물',         desc:'지수·상품 선물 현재가를 안내해요'},
+]};
+/* 계좌·잔고조회 > 거래내역 조회 → 연결매체 선택 플로팅(디지털ARS/영웅문S#/음성ARS) */
+const TXN_SHEET = { title:'거래내역을 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
+  {kind:'txndigital', ic:CS_ICON.web,   nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 거래내역을 확인해요'},
+  {kind:'txnapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 조회하기', desc:'앱을 열어 거래내역을 확인해요'},
+  {kind:'txnvoice',   ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 확인해요'},
+]};
+/* 음성 ARS 선택 시 → 거래내역 하위(전체/매매/입출금/입출고), 클릭 시 그에 맞는 IVR 메뉴로 연결 */
+const TXN_VOICE_SHEET = { title:'어떤 거래내역을 안내해 드릴까요?', sub:'음성 ARS로 선택하신 거래내역을 안내해 드려요', noIcon:true, methods:[
+  {kind:'txnv0', nm:'전체 조회',   desc:'전체 거래내역을 안내해요'},
+  {kind:'txnv1', nm:'매매 조회',   desc:'매매 거래내역을 안내해요'},
+  {kind:'txnv2', nm:'입출금 조회', desc:'입금·출금 내역을 안내해요'},
+  {kind:'txnv3', nm:'입출고 조회', desc:'입고·출고 내역을 안내해요'},
 ]};
 /* 계좌·잔고조회 > 주식·신용·금융상품 잔고조회 → 연결매체 선택 플로팅(디지털ARS/영웅문S#/음성ARS) */
 const BAL_SHEET = { title:'잔고를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
@@ -3366,6 +3385,35 @@ function renderBalanceV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 거래내역(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 기간 칩 + 거래내역(매매·입출금 구분) 카드(스크롤) + 상담원 연결 */
+function renderTradesV40(){
+  const tx = [
+    {d:'06.20', n:'삼성전자',      k:'매수', amt:-780000},
+    {d:'06.19', n:'예수금 입금',    k:'입금', amt:2000000},
+    {d:'06.18', n:'카카오',        k:'매도', amt:1010000},
+    {d:'06.16', n:'SK하이닉스',    k:'매수', amt:-594000},
+    {d:'06.14', n:'배당금 입금',    k:'입금', amt:18500},
+    {d:'06.12', n:'현대차',        k:'매도', amt:456000},
+  ];
+  const tagCls = k => k==='매수' ? 'buy' : k==='매도' ? 'sell' : 'cashtag';
+  const listHTML = tx.map(x=>{
+    const neg=x.amt<0, sign=neg?'-':'+';
+    return `<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.n} <span class="fv-tag ${tagCls(x.k)}">${x.k}</span></div><div class="fv-sub">${x.d}</div></div>
+      <div class="hv-amt ${neg?'txneg':'txpos'}">${sign}${won(Math.abs(x.amt))}원</div>
+    </div>`;
+  }).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">거래내역</div><div class="td-desc">선택한 기간의 거래내역을 확인해요</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="fv-chip hv-period" data-flash="조회 기간을 선택합니다. (시연용)"><span class="fv-ck">조회 기간</span><span class="fv-cv">2026.06.01 ~ 2026.06.24</span>${I.down}</div>
+    <div class="hv-secttl">거래내역 ${tx.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="거래내역 조회">상담원 연결</div></div>
+  </div>`;
+}
+
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
 function pinReset(){ pinState = {buf:'', stage:'new', first:''}; }
@@ -3636,6 +3684,8 @@ function renderS1(){
       html = renderHoldingsV40();   // Ver 4.0 · 예수금·주문가능금액(디지털ARS 조회) 전용 화면
     } else if(isV40() && s1state.resultKey==='balance'){
       html = renderBalanceV40();    // Ver 4.0 · 주식·신용·금융상품 잔고(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='trades'){
+      html = renderTradesV40();     // Ver 4.0 · 거래내역(디지털ARS 조회) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4083,6 +4133,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-idxsheet]')){ openMethodSheet(IDX_SHEET); return; }    // 지수정보·환율 안내 → 연결매체 선택 플로팅
   if(t.closest('[data-depsheet]')){ openMethodSheet(DEP_SHEET); return; }    // 예수금·주문가능금액 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-balsheet]')){ openMethodSheet(BAL_SHEET); return; }    // 주식·신용·금융상품 잔고조회 → 연결매체 선택 플로팅
+  if(t.closest('[data-txnsheet]')){ openMethodSheet(TXN_SHEET); return; }    // 거래내역 조회 → 연결매체 선택 플로팅
   const stkSel = t.closest('[data-stkpick]');
   if(stkSel){
     const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
@@ -4141,6 +4192,13 @@ document.addEventListener('click', (e)=>{
     if(kind==='balv0'){ flash('음성 ARS 「현금주식 잔고조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='balv1'){ flash('음성 ARS 「신용 잔고조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='balv2'){ flash('음성 ARS 「금융상품 평가·잔고 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='txndigital'){ s1nav({page:'result', resultKey:'trades', title:'거래내역', noHome:true}); return; }   // 거래내역 — 디지털 ARS(거래내역 화면)
+    if(kind==='txnapp'){ openAppLink('txninfo'); return; }                                              // 거래내역 — 영웅문S# 앱 연결
+    if(kind==='txnvoice'){ openMethodSheet(TXN_VOICE_SHEET); return; }                                  // 거래내역 — 음성 ARS → 하위 조회 선택
+    if(kind==='txnv0'){ flash('음성 ARS 「전체 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='txnv1'){ flash('음성 ARS 「매매 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='txnv2'){ flash('음성 ARS 「입출금 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='txnv3'){ flash('음성 ARS 「입출고 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
