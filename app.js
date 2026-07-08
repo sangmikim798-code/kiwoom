@@ -2064,8 +2064,8 @@ function showEndPopup(){
   const el = document.createElement('div');
   if(isV40()){
     const warn = sessionAuthed
-      ? `<span class="ap-warn">입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>세션이 끝나면 인증정보를 남기거나 저장하지 않아요.</span>`
-      : `<span class="ap-warn">디지털 ARS 세션이 종료돼요.</span>`;
+      ? `<span class="ap-warn">입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>이용을 마치면 인증정보를 남기거나 저장하지 않아요.</span>`
+      : `<span class="ap-warn">디지털 ARS 이용이 종료돼요.</span>`;
     el.className = 'app-pop-ov v40'; el.id = 'arsModal';
     el.innerHTML = `<div class="app-pop">
       <div class="ap-logo end">${I.power}</div>
