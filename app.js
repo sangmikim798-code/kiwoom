@@ -1839,6 +1839,11 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
+    if(m.myacct){   // 계좌번호·MY계좌 정보확인: 연결매체(디지털ARS/영S#) 선택 플로팅 진입(nav 스타일)
+      return `<div class="sars-item nav" data-myacctsheet>
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
     if(hasKids){
       return `<div class="sars-item nav" data-sarsdown="${i}">
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
@@ -1881,7 +1886,7 @@ const ARS_CAT6 = [
     {t:'주식 · 신용 · 금융상품 잔고조회', bal:true},   // 현금주식(ivN3,2)+신용(ivN3,3)+금융상품평가·잔고(ivN3,5) 통합 → 3매체 플로팅. 음성ARS 선택 시 각 IVR 연결.
     {t:'거래내역 조회', txn:true},   // 3매체(디지털ARS/영S#/음성ARS) 플로팅. 음성ARS 선택 시 하위(전체/매매/입출금/입출고) 각 IVR 연결.
     {t:'미수·반대매매 조회', misu:true},   // 2매체(디지털ARS/영S#) 플로팅
-    staffLeaf('계좌번호·MY계좌 정보확인'),
+    {t:'계좌번호·MY계좌 정보확인', myacct:true},   // 2매체(디지털ARS/영S#) 플로팅
   ]),
   catNode('3. 입출금·이체', 'transfer', [
     drillNode('연계은행 송금',    ivN(4,0)),
@@ -2753,6 +2758,7 @@ const APP_LINK = {
   balinfo: {title:'주식·신용·금융상품 잔고조회'},
   txninfo: {title:'거래내역 조회'},
   misuinfo: {title:'미수·반대매매 조회'},
+  myacctinfo: {title:'계좌번호·MY계좌 정보확인'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2900,6 +2906,11 @@ const SISE_VOICE_SHEET = { title:'어떤 시세를 안내해 드릴까요?', sub
   {kind:'siv3', nm:'시간외 단일가', desc:'시간외 단일가 시세를 안내해요'},
   {kind:'siv4', nm:'K-OTC',        desc:'비상장주식 K-OTC 현재가를 안내해요'},
   {kind:'siv5', nm:'선물',         desc:'지수·상품 선물 현재가를 안내해요'},
+]};
+/* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
+const MYACCT_SHEET = { title:'계좌 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
+  {kind:'myacctdigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 계좌 정보를 확인해요'},
+  {kind:'myacctapp',     ic:IOD_HERO_IC, nm:'영웅문S#으로 조회하기', desc:'앱을 열어 계좌번호·MY계좌 정보를 확인해요'},
 ]};
 /* 계좌·잔고조회 > 미수·반대매매 조회 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
 const MISU_SHEET = { title:'미수·반대매매를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
@@ -3462,6 +3473,35 @@ function renderMisuV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 계좌번호·MY계좌 정보(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 계좌 정보 카드 + MY계좌 설정 카드 + 상담원 연결 */
+function renderMyAcctV40(){
+  const info = [
+    ['계좌번호', authAcct.no],
+    ['예금주', '홍길동'],
+    ['계좌 종류', authAcct.type],
+    ['개설일', '2020.03.15'],
+    ['계좌 상태', '정상'],
+  ];
+  const my = [
+    ['계좌 별칭', '국내주식'],
+    ['대표계좌', '대표계좌로 설정됨'],
+    ['출금 계좌', '등록됨'],
+  ];
+  const rows = arr => arr.map(r=>`<div class="hv-row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">계좌번호·MY계좌</div><div class="td-desc">인증하신 계좌의 정보와 MY계좌 설정을 확인해요</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="my-body">
+      <div class="hv-secttl">계좌 정보</div>
+      <div class="hv-summary">${rows(info)}</div>
+      <div class="hv-secttl">MY계좌 설정</div>
+      <div class="hv-summary">${rows(my)}</div>
+    </div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="계좌번호·MY계좌 정보확인">상담원 연결</div></div>
+  </div>`;
+}
+
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
 function pinReset(){ pinState = {buf:'', stage:'new', first:''}; }
@@ -3736,6 +3776,8 @@ function renderS1(){
       html = renderTradesV40();     // Ver 4.0 · 거래내역(디지털ARS 조회) 전용 화면
     } else if(isV40() && s1state.resultKey==='misu'){
       html = renderMisuV40();       // Ver 4.0 · 미수·반대매매(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='myacct'){
+      html = renderMyAcctV40();     // Ver 4.0 · 계좌번호·MY계좌 정보(디지털ARS 조회) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4185,6 +4227,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-balsheet]')){ openMethodSheet(BAL_SHEET); return; }    // 주식·신용·금융상품 잔고조회 → 연결매체 선택 플로팅
   if(t.closest('[data-txnsheet]')){ openMethodSheet(TXN_SHEET); return; }    // 거래내역 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-misusheet]')){ openMethodSheet(MISU_SHEET); return; }  // 미수·반대매매 조회 → 연결매체 선택 플로팅(2매체)
+  if(t.closest('[data-myacctsheet]')){ openMethodSheet(MYACCT_SHEET); return; }  // 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(2매체)
   const stkSel = t.closest('[data-stkpick]');
   if(stkSel){
     const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
@@ -4252,6 +4295,8 @@ document.addEventListener('click', (e)=>{
     if(kind==='txnv3'){ flash('음성 ARS 「입출고 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='misudigital'){ s1nav({page:'result', resultKey:'misu', title:'미수·반대매매', noHome:true}); return; }   // 미수·반대매매 — 디지털 ARS 화면
     if(kind==='misuapp'){ openAppLink('misuinfo'); return; }                                            // 미수·반대매매 — 영웅문S# 앱 연결
+    if(kind==='myacctdigital'){ s1nav({page:'result', resultKey:'myacct', title:'계좌번호·MY계좌', noHome:true}); return; }   // 계좌번호·MY계좌 — 디지털 ARS 화면
+    if(kind==='myacctapp'){ openAppLink('myacctinfo'); return; }                                        // 계좌번호·MY계좌 — 영웅문S# 앱 연결
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
