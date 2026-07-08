@@ -2842,7 +2842,7 @@ function openAppLink(key){
   const logo  = v40 ? `<div class="ap-logo"><img src="${logoSrc}" alt="${c.app||'영웅문S#'}"></div>` : `<div class="ap-logo">S#</div>`;
   const title = c.popTitle || (v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결');
   const desc  = c.popDesc || (v40
-    ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">지금 보고 계신 디지털 ARS 웹은 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</span>`
+    ? `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">지금 보고 계신 디지털 ARS는 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</span>`
     : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`);
   const goTxt = c.popBtn || '영웅문S# 열기';
   // Ver 4.0은 중간 단계 플로우(앱 실행›계좌 연동›화면 이동) 미노출
@@ -3499,7 +3499,7 @@ function renderHeroDone(){
         <div class="iod-done-t">${app} 앱으로 연결됐어요</div>
         <div class="iod-done-d">${acctLine}<b>${title}</b> 화면으로 이동했어요.</div>
       </div>
-      <div class="iod-done-note">이 디지털 ARS 화면은 곧 종료되고,<br>인증 정보도 더 이상 유효하지 않아요.</div>
+      <div class="iod-done-note">이 디지털 ARS 화면은 종료돼요.<br>입력하신 인증정보는 남기거나 저장하지 않아요.</div>
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
