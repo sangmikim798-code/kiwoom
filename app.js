@@ -1901,13 +1901,9 @@ const ARS_CAT6 = [
     staffLeaf('환전'),
   ]),
   catNode('4. 인증·비밀번호', 'shield', [
-    drillNode('주문비밀번호 등록·변경',   ivN(5,0)),
-    drillNode('퀵넘버 플러스 조회·삭제',   ivN(5,2)),
-    drillNode('영업부 계좌개설 비밀번호 등록', ivN(5,1)),
-    staffLeaf('계좌 비밀번호 변경'),
-    staffLeaf('ID조회·PW초기화 / 재설정'),
-    staffLeaf('간편/공동인증 등록·해지'),
-    staffLeaf('장기미사용 ID 제한해제'),
+    {t:'비밀번호 관리', media:'pwmgmt'},   // 주문·계좌·영업부 비밀번호 — 디지털ARS/영S#/음성ARS(주문비번 4종)
+    {t:'인증·ID 관리',  media:'authid'},   // 간편·공동인증·ID조회·PW초기화 — 영S#/상담원(본인확인 필요)
+    {t:'부가서비스',    media:'etcsvc'},    // 퀵넘버·장기미사용 ID 제한해제 — 디지털ARS/영S#/음성ARS(퀵넘버 2종)
   ]),
   catNode('5. 계좌개설·사고', 'idcard', [
     {t:'사고등록',          media:'accident'},   // 음성ARS 중심(긴급) — accvoice→4종 서브리스트 / accapp→영S#
@@ -2761,6 +2757,7 @@ const APP_LINK = {
   investorinfo: {title:'투자자정보확인서 등록'}, foreigninfo: {title:'해외 양도소득 관련서류'},
   authacctinfo: {title:'인증·계좌 신청'}, shippinginfo: {title:'출고·이관 신청'}, creditinfo: {title:'신용·대출 만기연장'},
   noticeinfo: {title:'공지사항'}, eventinfo: {title:'이벤트 안내'},
+  pwmgmtinfo: {title:'비밀번호 관리'}, authidinfo: {title:'인증·ID 관리'}, etcsvcinfo: {title:'부가서비스'},
   acctopenkiwoom: {title:'비대면 계좌개설', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>비대면 계좌개설</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -3016,10 +3013,36 @@ const EVENT_SHEET = { title:'이벤트를 어떻게 볼까요?', sub:'편하신 
   {kind:'eventdigital', ic:CS_ICON.web, nm:'디지털 ARS로 보기', desc:'지금 이 화면에서 이벤트를 확인해요'},
   {kind:'eventapp',     ic:IOD_HERO_IC, nm:'영웅문S#으로 보기', desc:'앱을 열어 이벤트를 확인해요'},
 ]};
+/* 인증·비밀번호(cat4) — 항목 맞춤: 비밀번호 관리=디지털/영S#/음성ARS, 인증·ID=영S#/상담원, 부가서비스=디지털/영S#/음성ARS */
+const PWMGMT_SHEET = { title:'비밀번호를 어떻게 관리할까요?', sub:'편하신 방법으로 관리를 도와드려요', methods:[
+  {kind:'pwmgmtdigital', ic:CS_ICON.web,   nm:'디지털 ARS로 관리하기', desc:'지금 이 화면에서 비밀번호를 관리해요'},
+  {kind:'pwmgmtapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 관리하기', desc:'앱을 열어 비밀번호를 관리해요'},
+  {kind:'pwmgmtvoice',   ic:CS_ICON.voice, nm:'음성 ARS로 관리하기',   desc:'음성 안내에 따라 주문비밀번호를 관리해요'},
+]};
+const PWMGMT_VOICE_SHEET = { title:'어떤 비밀번호 업무를 도와드릴까요?', sub:'음성 ARS로 선택하신 업무를 안내해 드려요', noIcon:true, methods:[
+  {kind:'pwmv0', nm:'주문비밀번호 등록', desc:'ARS 주문비밀번호를 신규 등록해요'},
+  {kind:'pwmv1', nm:'주문비밀번호 변경', desc:'ARS 주문비밀번호를 변경해요'},
+  {kind:'pwmv2', nm:'ARS 이용신청',     desc:'ARS 주문 이용을 신청해요'},
+  {kind:'pwmv3', nm:'ARS 이용해지',     desc:'ARS 주문 이용을 해지해요'},
+]};
+const AUTHID_SHEET = { title:'인증·ID를 어떻게 관리할까요?', sub:'편하신 방법으로 관리를 도와드려요', methods:[
+  {kind:'authidapp', ic:IOD_HERO_IC,  nm:'영웅문S#으로 관리하기', desc:'앱을 열어 간편·공동인증·ID를 관리해요'},
+  {kind:'authidcs',  ic:CS_ICON.call, nm:'상담원 연결하기',       desc:'본인확인 후 상담원이 도와드려요'},
+]};
+const ETCSVC_SHEET = { title:'부가서비스를 어떻게 이용할까요?', sub:'편하신 방법으로 도와드려요', methods:[
+  {kind:'etcsvcdigital', ic:CS_ICON.web,   nm:'디지털 ARS로 관리하기', desc:'지금 이 화면에서 부가서비스를 관리해요'},
+  {kind:'etcsvcapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 관리하기', desc:'앱을 열어 부가서비스를 관리해요'},
+  {kind:'etcsvcvoice',   ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 퀵넘버를 관리해요'},
+]};
+const ETCSVC_VOICE_SHEET = { title:'어떤 퀵넘버 업무를 도와드릴까요?', sub:'음성 ARS로 선택하신 업무를 안내해 드려요', noIcon:true, methods:[
+  {kind:'etcv0', nm:'퀵넘버 플러스 조회', desc:'등록된 퀵넘버를 안내해요'},
+  {kind:'etcv1', nm:'퀵넘버 플러스 삭제', desc:'등록된 퀵넘버를 삭제해요'},
+]};
 const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET, rights:RIGHTS_SHEET, ipo:IPO_SHEET,
   cert:CERT_SHEET, docpurpose:PURPOSE_SHEET, dockyc:KYC_SHEET, docinvestor:INVESTOR_SHEET, docforeign:FOREIGN_SHEET,
   authacct:AUTHACCT_SHEET, shipping:SHIPPING_SHEET, credit:CREDIT_SHEET,
-  arsguide:ARSGUIDE_SHEET, notice:NOTICE_SHEET, event:EVENT_SHEET };
+  arsguide:ARSGUIDE_SHEET, notice:NOTICE_SHEET, event:EVENT_SHEET,
+  pwmgmt:PWMGMT_SHEET, authid:AUTHID_SHEET, etcsvc:ETCSVC_SHEET };
 /* 공지·이용안내 디지털ARS 정보 리스트(renderInfoListV40, s1state.infoKey 기반) */
 const INFO_LISTS = {
   arsguide: { title:'ARS 이용안내', desc:'ARS 서비스 이용 안내를 확인해요', sectl:'이용안내', items:[
@@ -3056,6 +3079,17 @@ const APPLY_GROUPS = {
   credit: { title:'신용·대출 만기연장', desc:'신용융자·대출 만기를 연장해요', items:[
     {n:'신용융자 만기연장', d:'신용융자 상환 만기를 연장해요'},
     {n:'대출 만기연장',     d:'대출 상환 만기를 연장해요'},
+  ]},
+  // 인증·비밀번호(cat4) 그룹 — 버튼 라벨(btn)·안내문(actMsg)이 '신청'과 다름
+  pwmgmt: { title:'비밀번호 관리', desc:'주문·계좌·영업부 비밀번호를 관리해요', sectl:'비밀번호', btn:'설정', actMsg:'설정 화면으로 이동합니다', items:[
+    {n:'주문비밀번호 등록·변경',      d:'ARS 주문비밀번호를 등록·변경해요'},
+    {n:'계좌 비밀번호 변경',          d:'계좌 비밀번호를 변경해요'},
+    {n:'영업부 계좌개설 비밀번호 등록', d:'영업부 개설계좌 비밀번호를 등록해요'},
+  ]},
+  etcsvc: { title:'부가서비스', desc:'퀵넘버·장기미사용 ID를 관리해요', sectl:'부가서비스', btn:'관리', actMsg:'처리 화면으로 이동합니다', items:[
+    {n:'퀵넘버 플러스 조회',    d:'등록된 퀵넘버를 조회해요'},
+    {n:'퀵넘버 플러스 삭제',    d:'등록된 퀵넘버를 삭제해요'},
+    {n:'장기미사용 ID 제한해제', d:'장기미사용으로 제한된 ID를 해제해요'},
   ]},
 };
 /* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
@@ -3683,15 +3717,17 @@ function renderDocSubmitV40(){
 /* Ver 4.0 · 업무신청(디지털 ARS) 전용 화면 — s1state.applyGroup(APPLY_GROUPS) 기반, 그룹 내 신청 가능 업무 리스트 + 항목별 신청 버튼 + 상담원 연결 */
 function renderApplyGroupV40(){
   const g = APPLY_GROUPS[s1state.applyGroup] || APPLY_GROUPS.authacct;
+  const btn = g.btn || '신청';
+  const msg = g.actMsg || '신청이 접수되었어요';
   const listHTML = g.items.map(x=>`<div class="fv-item">
       <div class="fv-it"><div class="fv-nm">${x.n}</div><div class="fv-sub">${x.d}</div></div>
-      <div class="fv-issue" data-flash="${x.n} 신청이 접수되었어요. (시연용)">신청</div>
+      <div class="fv-issue" data-flash="${x.n} ${msg}. (시연용)">${btn}</div>
     </div>`).join('');
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
     <div class="toss-dhead"><div class="td-title">${g.title}</div><div class="td-desc">${g.desc}</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
-    <div class="hv-secttl">신청 가능 업무 ${g.items.length}</div>
+    <div class="hv-secttl">${g.sectl || '신청 가능 업무'} ${g.items.length}</div>
     <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
     <div class="fv-foot"><div class="primary-btn" data-staffconnect="${g.title}">상담원 연결</div></div>
   </div>`;
@@ -4645,6 +4681,21 @@ document.addEventListener('click', (e)=>{
     if(kind==='noticeapp'){ openAppLink('noticeinfo'); return; }
     if(kind==='eventdigital'){ s1nav({page:'result', resultKey:'infolist', title:'이벤트 안내', infoKey:'event', noHome:true}); return; }   // 이벤트 — 디지털 ARS 화면
     if(kind==='eventapp'){ openAppLink('eventinfo'); return; }
+    // 인증·비밀번호 (항목 맞춤)
+    if(kind==='pwmgmtdigital'){ s1nav({page:'result', resultKey:'applygroup', title:'비밀번호 관리', applyGroup:'pwmgmt', noHome:true}); return; }   // 비밀번호 관리 — 디지털 ARS 화면
+    if(kind==='pwmgmtapp'){ openAppLink('pwmgmtinfo'); return; }
+    if(kind==='pwmgmtvoice'){ openMethodSheet(PWMGMT_VOICE_SHEET); return; }   // 비밀번호 관리 → 주문비밀번호 4종 서브리스트
+    if(kind==='pwmv0'){ flash('음성 ARS 「주문비밀번호 등록」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='pwmv1'){ flash('음성 ARS 「주문비밀번호 변경」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='pwmv2'){ flash('음성 ARS 「ARS 이용신청」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='pwmv3'){ flash('음성 ARS 「ARS 이용해지」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='authidapp'){ openAppLink('authidinfo'); return; }
+    if(kind==='authidcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'인증·ID 관리', noHome:true}); return; }
+    if(kind==='etcsvcdigital'){ s1nav({page:'result', resultKey:'applygroup', title:'부가서비스', applyGroup:'etcsvc', noHome:true}); return; }   // 부가서비스 — 디지털 ARS 화면
+    if(kind==='etcsvcapp'){ openAppLink('etcsvcinfo'); return; }
+    if(kind==='etcsvcvoice'){ openMethodSheet(ETCSVC_VOICE_SHEET); return; }   // 부가서비스 → 퀵넘버 2종 서브리스트
+    if(kind==='etcv0'){ flash('음성 ARS 「퀵넘버 플러스 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='etcv1'){ flash('음성 ARS 「퀵넘버 플러스 삭제」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
