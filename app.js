@@ -3242,7 +3242,9 @@ function openMethodSheet(cfg){
   const el = document.createElement('div');
   el.className = 'consult-ov method-ov' + (bigFont?' bigfont':''); el.id = 'methodPop';
   const noIcon = cfg.noIcon;   // 아이콘 열 없이(텍스트만) 렌더
-  const rows = (cfg.methods||[]).map(m=>
+  let methods = cfg.methods || [];
+  if(s1Ver==='v42'){ methods = methods.filter(m => m.ic !== CS_ICON.web); }   // Ver 4.2: 매체 플로팅에서 '디지털 ARS'(CS_ICON.web) 항목 전부 숨김
+  const rows = methods.map(m=>
     `<div class="cs-row${noIcon?' no-ic':''}" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
       ${noIcon ? '' : `<div class="cs-ic">${m.ic}</div>`}
       <div class="cs-body"><div class="cs-nm">${m.nm}</div><div class="cs-desc">${m.desc}</div></div>
