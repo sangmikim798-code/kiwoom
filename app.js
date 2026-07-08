@@ -3360,37 +3360,48 @@ function renderHoldingsV40(){
   </div>`;
 }
 
-/* Ver 4.0 · 주식·신용·금융상품 잔고(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 평가 요약 카드 + 보유 종목(현금/신용/펀드 구분) 카드(스크롤) + 상담원 연결 */
+/* Ver 4.0 · 주식·신용·금융상품 잔고(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 평가 요약 카드 + [전체/현금/신용/금융상품] 필터 탭 + 보유 종목 카드(스크롤) + 상담원 연결 */
+let balFilter = '전체';   // 잔고조회 유형 필터
+const BAL_TABS = ['전체','현금','신용','금융상품'];
 function renderBalanceV40(){
   const stk = [
-    {n:'삼성전자',        q:10, avg:78000,  cur:83200,  k:'현금'},
-    {n:'SK하이닉스',      q:3,  avg:198000, cur:212500, k:'신용'},
-    {n:'현대차',          q:5,  avg:241000, cur:228000, k:'현금'},
-    {n:'KODEX 200',       q:20, avg:38000,  cur:38500,  k:'펀드'},
+    {n:'삼성전자',         q:10, avg:78000,  cur:83200,  k:'현금'},
+    {n:'현대차',           q:5,  avg:241000, cur:228000, k:'현금'},
+    {n:'SK하이닉스',       q:3,  avg:198000, cur:212500, k:'신용'},
+    {n:'카카오',           q:20, avg:54200,  cur:49800,  k:'신용'},
+    {n:'KODEX 200',        q:20, avg:38000,  cur:38500,  k:'금융상품'},
+    {n:'TIGER 미국S&P500', q:12, avg:18000,  cur:18200,  k:'금융상품'},
   ];
+  const kCls = k => k==='신용' ? 'credit' : k==='금융상품' ? 'fund' : 'cash';
+  // 요약은 전체 기준
   let totEval=0, totCost=0;
-  const kCls = k => k==='신용' ? 'credit' : k==='펀드' ? 'fund' : 'cash';
-  const listHTML = stk.map(s=>{
-    const ev=s.q*s.cur, pl=(s.cur-s.avg)*s.q, rt=((s.cur-s.avg)/s.avg*100);
-    totEval+=ev; totCost+=s.q*s.avg;
-    const up=pl>=0, cls=up?'up':'down', sign=up?'+':'';
-    return `<div class="fv-item">
-      <div class="fv-it"><div class="fv-nm">${s.n} <span class="bal-tag ${kCls(s.k)}">${s.k}</span></div><div class="fv-sub">${s.q}주 · 평단 ${won(s.avg)}원</div></div>
-      <div class="hv-right"><div class="hv-amt">${won(ev)}원</div><div class="hv-pl ${cls}">${sign}${won(pl)} (${sign}${rt.toFixed(1)}%)</div></div>
-    </div>`;
-  }).join('');
+  stk.forEach(s=>{ totEval+=s.q*s.cur; totCost+=s.q*s.avg; });
   const totPl=totEval-totCost, totRt=totPl/totCost*100;
-  const up=totPl>=0, cls=up?'up':'down', sign=up?'+':'';
+  const uc=totPl>=0?'up':'down', us=totPl>=0?'+':'';
+  // 리스트는 필터 적용
+  const filtered = balFilter==='전체' ? stk : stk.filter(s=>s.k===balFilter);
+  const listHTML = filtered.length
+    ? filtered.map(s=>{
+        const ev=s.q*s.cur, pl=(s.cur-s.avg)*s.q, rt=((s.cur-s.avg)/s.avg*100);
+        const up=pl>=0, cls=up?'up':'down', sign=up?'+':'';
+        return `<div class="fv-item">
+          <div class="fv-it"><div class="fv-nm">${s.n} <span class="bal-tag ${kCls(s.k)}">${s.k}</span></div><div class="fv-sub">${s.q}주 · 평단 ${won(s.avg)}원</div></div>
+          <div class="hv-right"><div class="hv-amt">${won(ev)}원</div><div class="hv-pl ${cls}">${sign}${won(pl)} (${sign}${rt.toFixed(1)}%)</div></div>
+        </div>`;
+      }).join('')
+    : `<div class="fv-empty">해당 유형의 보유 종목이 없어요.</div>`;
+  const tabs = BAL_TABS.map(tb=>`<div class="fv-tab ${tb===balFilter?'on':''}" data-balfilter="${tb}">${tb}</div>`).join('');
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
     <div class="toss-dhead"><div class="td-title">주식·신용·금융상품 잔고</div><div class="td-desc">인증하신 계좌의 보유 잔고를 확인해요</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
     <div class="hv-summary">
       <div class="hv-row"><span>총 평가금액</span><b>${won(totEval)}원</b></div>
-      <div class="hv-row"><span>총 평가손익</span><b class="${cls}">${sign}${won(totPl)}원 (${sign}${totRt.toFixed(1)}%)</b></div>
+      <div class="hv-row"><span>총 평가손익</span><b class="${uc}">${us}${won(totPl)}원 (${us}${totRt.toFixed(1)}%)</b></div>
       <div class="hv-row"><span>총 매입금액</span><b>${won(totCost)}원</b></div>
     </div>
-    <div class="hv-secttl">보유 종목 ${stk.length}</div>
+    <div class="fv-tabs bal-tabs">${tabs}</div>
+    <div class="hv-secttl">보유 종목 ${filtered.length}</div>
     <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
     <div class="fv-foot"><div class="primary-btn" data-staffconnect="주식·신용·금융상품 잔고조회">상담원 연결</div></div>
   </div>`;
@@ -4611,6 +4622,9 @@ document.addEventListener('click', (e)=>{
   // 체결내역 체결/미체결/예약 구분
   const otab = t.closest('[data-ordertab]');
   if(otab){ orderTab = otab.dataset.ordertab; renderS1(); return; }
+  // 잔고조회 전체/현금/신용/금융상품 필터
+  const bftab = t.closest('[data-balfilter]');
+  if(bftab){ balFilter = bftab.dataset.balfilter; renderS1(); return; }
   // 거래내역 필터: 종목검색 / 기간선택 오버레이
   if(t.closest('[data-stockclear]')){ txFilter.stock=''; renderS1(); return; }
   if(t.closest('[data-creditclear]')){ const sd = s1state.page==='creditsell'?'sell':'buy'; resetOrder(); orderState.side=sd; renderS1(); return; }
