@@ -3302,7 +3302,7 @@ function renderHoldingsV40(){
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
     <div class="toss-dhead"><div class="td-title">예수금 · 주문가능금액</div><div class="td-desc">인증하신 계좌의 예수금과 주문가능금액을 확인해요</div></div>
-    <div class="fv-chip full hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
     <div class="hv-summary">
       <div class="hv-row"><span>예수금 (D+0)</span><b>${won(dep)}원</b></div>
       <div class="hv-row"><span>출금가능금액</span><b>${won(withdrawable)}원</b></div>
