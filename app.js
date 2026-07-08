@@ -1918,8 +1918,8 @@ const ARS_CAT6 = [
     staffLeaf('신분증 진위확인'),
   ]),
   catNode('6. 공모주·유상청약', 'ipo', [
-    drillNode('유상청약',    ivN(7,0)),
-    drillNode('공모주 청약', ivN(7,1)),
+    {t:'유상청약',    media:'rights'},   // 디지털ARS(조회)/영S#(청약)/음성ARS(4종) 3매체
+    {t:'공모주 청약', media:'ipo'},       // 디지털ARS(일정·경쟁률)/영S#(청약)/음성ARS(5종) 3매체
   ]),
   catNode('7. 서류신청·제출', 'cert', [
     staffLeaf('제증명 발급신청'),
@@ -2764,6 +2764,7 @@ const APP_LINK = {
   myacctinfo: {title:'계좌번호·MY계좌 정보확인'},
   songinfo: {title:'송금'}, xferinfo: {title:'계좌 간 자금이체'}, songresinfo: {title:'송금결과확인 조회'},
   accinfo: {title:'사고등록'}, addrinfo: {title:'주소·전화번호 변경'}, acctopeninfo: {title:'비대면 계좌개설'},
+  rightsinfo: {title:'유상청약'}, ipoinfo: {title:'공모주 청약'},
   acctopenkiwoom: {title:'비대면 계좌개설', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>비대면 계좌개설</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2953,7 +2954,31 @@ const ACCTOPEN_SHEET = { title:'비대면 계좌개설을 어떻게 할까요?',
   {kind:'acctopenkiwoom', ic:KIWOOM_OPEN_IC, nm:'키움계좌개설 앱에서 개설하기', desc:'휴대폰 인증과 신분증 촬영으로 바로 개설해요'},
   {kind:'acctopenapp',    ic:IOD_HERO_IC,    nm:'영웅문S#에서 개설하기',       desc:'앱을 열어 비대면 계좌개설을 진행해요'},
 ]};
-const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET };
+/* 공모주·유상청약(cat5) — 각 항목 3매체(디지털ARS 조회/영웅문S# 청약/음성ARS) 플로팅 */
+const RIGHTS_SHEET = { title:'유상청약을 어떻게 할까요?', sub:'편하신 방법으로 청약을 도와드려요', methods:[
+  {kind:'rightsdigital', ic:CS_ICON.web,   nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 유상청약 권리를 확인해요'},
+  {kind:'rightsapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 청약하기', desc:'앱을 열어 유상청약을 진행해요'},
+  {kind:'rightsvoice',   ic:CS_ICON.voice, nm:'음성 ARS로 청약하기',   desc:'음성 안내에 따라 청약해요'},
+]};
+const RIGHTS_VOICE_SHEET = { title:'어떤 유상청약을 도와드릴까요?', sub:'음성 ARS로 선택하신 업무를 안내해 드려요', noIcon:true, methods:[
+  {kind:'rightsv0', nm:'당일 유상청약 신청',     desc:'당일 유상증자 청약을 신청해요'},
+  {kind:'rightsv1', nm:'당일 유상청약 취소',     desc:'당일 청약을 취소해요'},
+  {kind:'rightsv2', nm:'유상청약 예약신청·취소', desc:'예약 청약을 신청·취소해요'},
+  {kind:'rightsv3', nm:'유상청약 내역확인',      desc:'청약 신청·배정·환불 내역을 확인해요'},
+]};
+const IPO_SHEET = { title:'공모주 청약을 어떻게 할까요?', sub:'편하신 방법으로 청약을 도와드려요', methods:[
+  {kind:'ipodigital', ic:CS_ICON.web,   nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 공모주 일정·경쟁률을 확인해요'},
+  {kind:'ipoapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 청약하기', desc:'앱을 열어 공모주 청약을 진행해요'},
+  {kind:'ipovoice',   ic:CS_ICON.voice, nm:'음성 ARS로 청약하기',   desc:'음성 안내에 따라 청약해요'},
+]};
+const IPO_VOICE_SHEET = { title:'어떤 공모주 업무를 도와드릴까요?', sub:'음성 ARS로 선택하신 업무를 안내해 드려요', noIcon:true, methods:[
+  {kind:'ipov0', nm:'청약 입력',        desc:'공모주 청약을 신청해요'},
+  {kind:'ipov1', nm:'청약 취소',        desc:'공모주 청약을 취소해요'},
+  {kind:'ipov2', nm:'청약 경쟁률 조회', desc:'종목별 청약 경쟁률을 안내해요'},
+  {kind:'ipov3', nm:'청약 관련 조회',   desc:'청약 신청내역을 안내해요'},
+  {kind:'ipov4', nm:'공모주정보 조회',  desc:'공모주 일정·정보를 안내해요'},
+]};
+const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET, rights:RIGHTS_SHEET, ipo:IPO_SHEET };
 /* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
 const MYACCT_SHEET = { title:'계좌 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
   {kind:'myacctdigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 계좌 정보를 확인해요'},
@@ -3494,6 +3519,48 @@ function renderTradesV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 공모주 청약(디지털 ARS 조회) 전용 화면 — 진행 중 공모주 일정·경쟁률(조회 전용, 청약은 앱/음성) */
+function renderIpoV40(){
+  const ipo = [
+    {n:'에이펙스반도체', st:'청약중', stc:'live', d:'06.24~06.25 · 확정공모가 36,000원', rt:'1,204:1',  rts:'통합 경쟁률'},
+    {n:'대명에너지',     st:'예정',   stc:'wait', d:'07.01~07.02 · 희망밴드 18,000~21,000원', rt:'—', rts:'수요예측 중'},
+    {n:'케이지모빌리티', st:'환불',   stc:'done', d:'06.10~06.11 · 공모가 24,500원', rt:'배정 12주', rts:'환불 06.13'},
+  ];
+  const listHTML = ipo.map(x=>`<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.n} <span class="fv-tag ${x.stc}">${x.st}</span></div><div class="fv-sub">${x.d}</div></div>
+      <div class="fv-rt">${x.rt}<span class="fv-rtsub">${x.rts}</span></div>
+    </div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">공모주 청약</div><div class="td-desc">진행 중인 공모주 일정과 경쟁률을 확인해요</div></div>
+    <div class="fv-note">청약 신청은 <b>영웅문S#</b> 또는 <b>음성 ARS</b>에서 진행할 수 있어요. 이 화면에서는 일정·경쟁률을 조회해요.</div>
+    <div class="hv-secttl">진행 중 공모주 ${ipo.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="공모주 청약">상담원 연결</div></div>
+  </div>`;
+}
+
+/* Ver 4.0 · 유상청약(디지털 ARS 조회) 전용 화면 — 보유 종목 유상증자 청약 권리(조회 전용, 청약은 앱/음성) */
+function renderRightsV40(){
+  const rights = [
+    {n:'셀트리온바이오', st:'청약중', stc:'live', d:'06.23~06.27 · 신주 발행가 12,000원', rt:'배정 30주', rts:'초과청약 가능'},
+    {n:'한화에너지',     st:'예정',   stc:'wait', d:'07.03~07.05 · 발행가 미정',        rt:'배정 예정', rts:'권리락 07.01'},
+  ];
+  const listHTML = rights.map(x=>`<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.n} <span class="fv-tag ${x.stc}">${x.st}</span></div><div class="fv-sub">${x.d}</div></div>
+      <div class="fv-rt">${x.rt}<span class="fv-rtsub">${x.rts}</span></div>
+    </div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">유상청약</div><div class="td-desc">보유 종목의 유상증자 청약 권리를 확인해요</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="fv-note">청약 신청은 <b>영웅문S#</b> 또는 <b>음성 ARS</b>에서 진행할 수 있어요. 이 화면에서는 청약 권리를 조회해요.</div>
+    <div class="hv-secttl">청약 대상 권리 ${rights.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="유상청약">상담원 연결</div></div>
+  </div>`;
+}
+
 /* Ver 4.0 · 미수·반대매매(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 미수 요약 카드 + 반대매매 안내 + 대상 종목 카드(스크롤) + 상담원 연결 */
 function renderMisuV40(){
   const targets = [
@@ -3825,6 +3892,10 @@ function renderS1(){
       html = renderMisuV40();       // Ver 4.0 · 미수·반대매매(디지털ARS 조회) 전용 화면
     } else if(isV40() && s1state.resultKey==='myacct'){
       html = renderMyAcctV40();     // Ver 4.0 · 계좌번호·MY계좌 정보(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='ipo'){
+      html = renderIpoV40();        // Ver 4.0 · 공모주 청약(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='rights'){
+      html = renderRightsV40();     // Ver 4.0 · 유상청약(디지털ARS 조회) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4367,6 +4438,22 @@ document.addEventListener('click', (e)=>{
     if(kind==='addrvoice'){ flash('음성 ARS 「주소·전화번호 변경」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='acctopenkiwoom'){ openAppLink('acctopenkiwoom'); return; }   // 비대면 계좌개설 → 키움계좌개설 앱
     if(kind==='acctopenapp'){ openAppLink('acctopeninfo'); return; }
+    // 공모주·유상청약 (디지털ARS/영웅문S#/음성ARS 3매체)
+    if(kind==='rightsdigital'){ s1nav({page:'result', resultKey:'rights', title:'유상청약', noHome:true}); return; }   // 유상청약 — 디지털 ARS 화면
+    if(kind==='rightsapp'){ openAppLink('rightsinfo'); return; }
+    if(kind==='rightsvoice'){ openMethodSheet(RIGHTS_VOICE_SHEET); return; }   // 유상청약 → 4종 서브리스트
+    if(kind==='rightsv0'){ flash('음성 ARS 「당일 유상청약 신청」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='rightsv1'){ flash('음성 ARS 「당일 유상청약 취소」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='rightsv2'){ flash('음성 ARS 「유상청약 예약신청·취소」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='rightsv3'){ flash('음성 ARS 「유상청약 내역확인」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='ipodigital'){ s1nav({page:'result', resultKey:'ipo', title:'공모주 청약', noHome:true}); return; }   // 공모주 청약 — 디지털 ARS 화면
+    if(kind==='ipoapp'){ openAppLink('ipoinfo'); return; }
+    if(kind==='ipovoice'){ openMethodSheet(IPO_VOICE_SHEET); return; }   // 공모주 청약 → 5종 서브리스트
+    if(kind==='ipov0'){ flash('음성 ARS 「청약 입력」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='ipov1'){ flash('음성 ARS 「청약 취소」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='ipov2'){ flash('음성 ARS 「청약 경쟁률 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='ipov3'){ flash('음성 ARS 「청약 관련 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='ipov4'){ flash('음성 ARS 「공모주정보 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }

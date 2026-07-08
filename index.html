@@ -1245,8 +1245,16 @@ body{
 .my-body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
 .my-body::-webkit-scrollbar{display:none}
 .fv-tag.cashtag{background:#EEF0F3;color:#5A6070}
+.fv-tag.live{background:#FFE4ED;color:var(--up)}
+.fv-tag.done{background:#EEF0F3;color:#5A6070}
 .hv-amt.txneg{color:#E11900}
 .hv-amt.txpos{color:#1565C0}
+/* 공모주·유상청약 — 조회 안내 노트(중립 회색) + 우측 상태값 */
+.fv-note{flex:none;margin:0 24px 14px;padding:12px 14px;background:#F5F6F8;border-radius:12px;
+  font-size:calc(12px*var(--scale));color:#5A6070;line-height:1.5;font-weight:600}
+.fv-note b{color:var(--ink);font-weight:800}
+.fv-rt{font-size:calc(13px*var(--scale));font-weight:800;color:var(--ink);flex:none;text-align:right}
+.fv-rt .fv-rtsub{display:block;font-size:calc(11px*var(--scale));font-weight:600;color:#9098A3;margin-top:2px}
 /* Ver 4.0 · 상담원 연결 화면 — 토스 헤더(뒤로가기)만 감싸고 본문은 기존 .agent-connect(중앙정렬) 재사용 */
 .acv-wrap{min-height:100%;background:#fff}
 .acv-wrap .agent-connect{padding-top:8px}
