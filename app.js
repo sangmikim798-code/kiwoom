@@ -1819,6 +1819,11 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
+    if(m.dep){   // 예수금·주문가능금액 조회: 연결매체(디지털ARS/영S#/음성ARS) 선택 플로팅 진입(nav 스타일)
+      return `<div class="sars-item nav" data-depsheet>
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
     if(hasKids){
       return `<div class="sars-item nav" data-sarsdown="${i}">
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
@@ -1857,10 +1862,9 @@ const ARS_CAT6 = [
     {t:'지수정보 · 환율 안내', idx:true},  // 지수정보/해외지수/환율/주식시황(IVR[1].subs 2,3,4,8) 통합 → 3매체(영S#/챗봇/음성ARS) 플로팅. 음성ARS 선택 시 소메뉴 리스트(직원연결 제외).
   ]),
   catNode('2. 계좌·잔고조회', 'wallet', [
-    drillNode('예수금·추정예탁자산 조회', ivN(3,0)),
+    {t:'예수금 · 주문가능금액 조회', dep:true},   // 예수금·추정예탁자산(ivN3,0)+주문가능금액(ivN3,1) 통합 → 3매체(디지털ARS/영S#/음성ARS) 플로팅. 음성ARS 선택 시 각 IVR 연결.
     drillNode('현금주식 잔고조회',        ivN(3,2)),
     drillNode('신용 잔고조회',            ivN(3,3)),
-    drillNode('주문가능 금액조회',        ivN(3,1)),
     drillNode('거래내역 조회',            ivN(3,4)),
     drillNode('금융상품 평가·잔고 조회',  ivN(3,5)),
     staffLeaf('미수·반대매매 조회'),
@@ -2732,6 +2736,7 @@ const APP_LINK = {
   chefilled: {title:'체결내역 조회'},
   sisequote: {title:'시세 조회'},
   idxinfo: {title:'지수·환율 정보'},
+  depinfo: {title:'예수금·주문가능금액 조회'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2879,6 +2884,17 @@ const SISE_VOICE_SHEET = { title:'어떤 시세를 안내해 드릴까요?', sub
   {kind:'siv3', nm:'시간외 단일가', desc:'시간외 단일가 시세를 안내해요'},
   {kind:'siv4', nm:'K-OTC',        desc:'비상장주식 K-OTC 현재가를 안내해요'},
   {kind:'siv5', nm:'선물',         desc:'지수·상품 선물 현재가를 안내해요'},
+]};
+/* 계좌·잔고조회 > 예수금·주문가능금액 조회 → 연결매체 선택 플로팅(디지털ARS/영웅문S#/음성ARS) */
+const DEP_SHEET = { title:'예수금·주문가능금액을 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
+  {kind:'depdigital', ic:CS_ICON.web,   nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 예수금·잔고를 확인해요'},
+  {kind:'depapp',     ic:IOD_HERO_IC,   nm:'영웅문S#으로 조회하기', desc:'앱을 열어 예수금·주문가능금액을 확인해요'},
+  {kind:'depvoice',   ic:CS_ICON.voice, nm:'음성 ARS로 안내받기',   desc:'음성 안내에 따라 확인해요'},
+]};
+/* 음성 ARS 선택 시 → 통합했던 2개 조회(예수금·추정예탁자산 / 주문가능금액), 클릭 시 그에 맞는 IVR 메뉴로 연결 */
+const DEP_VOICE_SHEET = { title:'어떤 조회를 안내해 드릴까요?', sub:'음성 ARS로 선택하신 조회를 안내해 드려요', noIcon:true, methods:[
+  {kind:'depv0', nm:'예수금·추정예탁자산 조회', desc:'예수금과 추정 예탁자산을 안내해요'},
+  {kind:'depv1', nm:'주문가능 금액조회',        desc:'주문 가능 금액을 안내해요'},
 ]};
 /* 주문·체결확인 > 지수정보·환율 안내 → 연결매체 선택 플로팅(영웅문S#/챗봇/음성ARS) */
 const IDX_SHEET = { title:'지수·환율 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
@@ -3977,6 +3993,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-chesheet]')){ openMethodSheet(CHE_SHEET); return; }   // 체결내역 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-sisesheet]')){ openMethodSheet(SISE_SHEET); return; }  // 시세 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-idxsheet]')){ openMethodSheet(IDX_SHEET); return; }    // 지수정보·환율 안내 → 연결매체 선택 플로팅
+  if(t.closest('[data-depsheet]')){ openMethodSheet(DEP_SHEET); return; }    // 예수금·주문가능금액 조회 → 연결매체 선택 플로팅
   const stkSel = t.closest('[data-stkpick]');
   if(stkSel){
     const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
@@ -4024,6 +4041,11 @@ document.addEventListener('click', (e)=>{
     if(kind==='idxchat'){ flash('AI 챗봇에게 물어보면 지수·환율 정보를 바로 알려드려요. (시연용)'); return; }   // 지수·환율 — AI 챗봇
     if(kind==='idxvoice'){ openMethodSheet(IDX_VOICE_SHEET); return; }                                 // 지수·환율 — 음성 ARS → 소메뉴 리스트
     if(kind.indexOf('idxv')===0){ flash(`음성 ARS 「${mrow.dataset.mlabel}」 메뉴로 연결해 드릴게요. (시연용)`); return; }   // idxv0~8 공통
+    if(kind==='depdigital'){ s1nav({page:'result', resultKey:'holdings', title:'계좌잔고·예수금', noHome:true}); return; }   // 예수금·주문가능금액 — 디지털 ARS(계좌잔고·예수금 화면)
+    if(kind==='depapp'){ openAppLink('depinfo'); return; }                                              // 예수금·주문가능금액 — 영웅문S# 앱 연결
+    if(kind==='depvoice'){ openMethodSheet(DEP_VOICE_SHEET); return; }                                  // 예수금·주문가능금액 — 음성 ARS → 2개 조회 선택
+    if(kind==='depv0'){ flash('음성 ARS 「예수금·추정예탁자산 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='depv1'){ flash('음성 ARS 「주문가능 금액조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
