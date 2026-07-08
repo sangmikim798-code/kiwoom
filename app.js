@@ -1929,15 +1929,9 @@ const ARS_CAT6 = [
     {t:'해외 양도소득 관련서류',  media:'docforeign'},
   ]),
   catNode('8. 업무신청', 'doc', [
-    staffLeaf('모바일 OTP 발급'),
-    staffLeaf('출금계좌 등록'),
-    staffLeaf('외화 출금계좌 등록'),
-    staffLeaf('온라인 실명확인'),
-    staffLeaf('유가증권 대체출고(타명의)'),
-    staffLeaf('타사대체출고'),
-    staffLeaf('해외주식 입/출고'),
-    staffLeaf('중개형ISA 이관/이수'),
-    staffLeaf('신용/대출 만기연장'),
+    {t:'인증·계좌 신청',     media:'authacct'},   // OTP·출금계좌 2종·실명확인 — 디지털ARS(신청화면)/영S#/상담원
+    {t:'출고·이관 신청',     media:'shipping'},   // 대체출고·타사대체·해외입출고·ISA — 3매체
+    {t:'신용·대출 만기연장', media:'credit'},      // 신용융자·대출 만기연장 — 3매체
   ]),
   catNode('9. 공지·이용안내', 'bell', [
     drillNode('ARS 이용안내 및 공지사항', ivN(6,2)),
@@ -2765,6 +2759,7 @@ const APP_LINK = {
   rightsinfo: {title:'유상청약'}, ipoinfo: {title:'공모주 청약'},
   certinfo: {title:'증명서 발급'}, purposedocinfo: {title:'금융거래목적확인서 제출'}, kycinfo: {title:'고객확인(KYC/CDD) 등록'},
   investorinfo: {title:'투자자정보확인서 등록'}, foreigninfo: {title:'해외 양도소득 관련서류'},
+  authacctinfo: {title:'인증·계좌 신청'}, shippinginfo: {title:'출고·이관 신청'}, creditinfo: {title:'신용·대출 만기연장'},
   acctopenkiwoom: {title:'비대면 계좌개설', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>비대면 계좌개설</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2992,8 +2987,37 @@ const PURPOSE_SHEET  = docSheet('금융거래목적확인서를 어떻게 제출
 const KYC_SHEET      = docSheet('고객확인(KYC/CDD)을 어떻게 등록할까요?',    '등록', 'kycdig',     'kycapp');
 const INVESTOR_SHEET = docSheet('투자자정보확인서를 어떻게 등록할까요?',      '등록', 'investordig','investorapp');
 const FOREIGN_SHEET  = docSheet('해외 양도소득 서류를 어떻게 제출할까요?',    '제출', 'foreigndig', 'foreignapp');
+/* 업무신청(cat8) — 성격별 3그룹, 각 3매체(디지털ARS 신청화면/영웅문S#/상담원) 플로팅. 업무신청 IVR 노드 없음 → 음성ARS 대신 상담원 */
+const applySheet = (title, kd, ka, kc) => ({ title, sub:'편하신 방법으로 신청을 도와드려요', methods:[
+  {kind:kd, ic:CS_ICON.web,  nm:'디지털 ARS로 신청하기', desc:'지금 이 화면에서 업무를 신청해요'},
+  {kind:ka, ic:IOD_HERO_IC,  nm:'영웅문S#으로 신청하기', desc:'앱을 열어 업무를 신청해요'},
+  {kind:kc, ic:CS_ICON.call, nm:'상담원 연결하기',      desc:'담당 상담원이 직접 도와드려요'},
+]});
+const AUTHACCT_SHEET = applySheet('인증·계좌 업무를 어떻게 신청할까요?', 'authacctdig', 'authacctapp', 'authacctcs');
+const SHIPPING_SHEET = applySheet('출고·이관 업무를 어떻게 신청할까요?', 'shippingdig', 'shippingapp', 'shippingcs');
+const CREDIT_SHEET   = applySheet('만기연장을 어떻게 신청할까요?',        'creditdig',   'creditapp',   'creditcs');
 const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET, rights:RIGHTS_SHEET, ipo:IPO_SHEET,
-  cert:CERT_SHEET, docpurpose:PURPOSE_SHEET, dockyc:KYC_SHEET, docinvestor:INVESTOR_SHEET, docforeign:FOREIGN_SHEET };
+  cert:CERT_SHEET, docpurpose:PURPOSE_SHEET, dockyc:KYC_SHEET, docinvestor:INVESTOR_SHEET, docforeign:FOREIGN_SHEET,
+  authacct:AUTHACCT_SHEET, shipping:SHIPPING_SHEET, credit:CREDIT_SHEET };
+/* 업무신청 디지털ARS 신청화면 — 그룹별 신청 가능 업무 리스트(renderApplyGroupV40, s1state.applyGroup 기반) */
+const APPLY_GROUPS = {
+  authacct: { title:'인증·계좌 신청', desc:'OTP·출금계좌·실명확인을 신청해요', items:[
+    {n:'모바일 OTP 발급',    d:'스마트폰 OTP를 새로 발급해요'},
+    {n:'출금계좌 등록',      d:'원화 출금계좌를 등록해요'},
+    {n:'외화 출금계좌 등록',  d:'외화 출금계좌를 등록해요'},
+    {n:'온라인 실명확인',    d:'비대면으로 실명을 확인해요'},
+  ]},
+  shipping: { title:'출고·이관 신청', desc:'대체출고·타사이관·해외 입출고를 신청해요', items:[
+    {n:'유가증권 대체출고(타명의)', d:'타명의 계좌로 유가증권을 대체출고해요'},
+    {n:'타사대체출고',            d:'타 증권사로 주식을 대체출고해요'},
+    {n:'해외주식 입·출고',        d:'해외주식을 입고·출고해요'},
+    {n:'중개형ISA 이관·이수',     d:'중개형 ISA 계좌를 이관·이수해요'},
+  ]},
+  credit: { title:'신용·대출 만기연장', desc:'신용융자·대출 만기를 연장해요', items:[
+    {n:'신용융자 만기연장', d:'신용융자 상환 만기를 연장해요'},
+    {n:'대출 만기연장',     d:'대출 상환 만기를 연장해요'},
+  ]},
+};
 /* 계좌·잔고조회 > 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
 const MYACCT_SHEET = { title:'계좌 정보를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
   {kind:'myacctdigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 계좌 정보를 확인해요'},
@@ -3616,6 +3640,23 @@ function renderDocSubmitV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 업무신청(디지털 ARS) 전용 화면 — s1state.applyGroup(APPLY_GROUPS) 기반, 그룹 내 신청 가능 업무 리스트 + 항목별 신청 버튼 + 상담원 연결 */
+function renderApplyGroupV40(){
+  const g = APPLY_GROUPS[s1state.applyGroup] || APPLY_GROUPS.authacct;
+  const listHTML = g.items.map(x=>`<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.n}</div><div class="fv-sub">${x.d}</div></div>
+      <div class="fv-issue" data-flash="${x.n} 신청이 접수되었어요. (시연용)">신청</div>
+    </div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">${g.title}</div><div class="td-desc">${g.desc}</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="hv-secttl">신청 가능 업무 ${g.items.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="${g.title}">상담원 연결</div></div>
+  </div>`;
+}
+
 /* Ver 4.0 · 미수·반대매매(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 미수 요약 카드 + 반대매매 안내 + 대상 종목 카드(스크롤) + 상담원 연결 */
 function renderMisuV40(){
   const targets = [
@@ -3955,6 +3996,8 @@ function renderS1(){
       html = renderCertV40();       // Ver 4.0 · 증명서 발급(디지털ARS) 전용 화면
     } else if(isV40() && s1state.resultKey==='docsubmit'){
       html = renderDocSubmitV40();  // Ver 4.0 · 서류 제출(디지털ARS, docLabel 기반) 전용 화면
+    } else if(isV40() && s1state.resultKey==='applygroup'){
+      html = renderApplyGroupV40(); // Ver 4.0 · 업무신청(디지털ARS, applyGroup 기반) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4524,6 +4567,16 @@ document.addEventListener('click', (e)=>{
     if(kind==='investorapp'){ openAppLink('investorinfo'); return; }
     if(kind==='foreigndig'){ s1nav({page:'result', resultKey:'docsubmit', title:'해외 양도소득 서류', docLabel:'해외 양도소득 서류', noHome:true}); return; }
     if(kind==='foreignapp'){ openAppLink('foreigninfo'); return; }
+    // 업무신청 (디지털ARS/영웅문S#/상담원 3매체)
+    if(kind==='authacctdig'){ s1nav({page:'result', resultKey:'applygroup', title:'인증·계좌 신청', applyGroup:'authacct', noHome:true}); return; }
+    if(kind==='authacctapp'){ openAppLink('authacctinfo'); return; }
+    if(kind==='authacctcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'인증·계좌 신청', noHome:true}); return; }
+    if(kind==='shippingdig'){ s1nav({page:'result', resultKey:'applygroup', title:'출고·이관 신청', applyGroup:'shipping', noHome:true}); return; }
+    if(kind==='shippingapp'){ openAppLink('shippinginfo'); return; }
+    if(kind==='shippingcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'출고·이관 신청', noHome:true}); return; }
+    if(kind==='creditdig'){ s1nav({page:'result', resultKey:'applygroup', title:'신용·대출 만기연장', applyGroup:'credit', noHome:true}); return; }
+    if(kind==='creditapp'){ openAppLink('creditinfo'); return; }
+    if(kind==='creditcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'신용·대출 만기연장', noHome:true}); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
