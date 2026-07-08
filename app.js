@@ -1834,6 +1834,11 @@ function renderArsTree(tree, opts){
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
         <span class="sars-arw">${I.chev}</span></div>`;
     }
+    if(m.misu){   // 미수·반대매매 조회: 연결매체(디지털ARS/영S#) 선택 플로팅 진입(nav 스타일)
+      return `<div class="sars-item nav" data-misusheet>
+        <span class="sars-num">${num}</span><div class="ivt">${name}</div>
+        <span class="sars-arw">${I.chev}</span></div>`;
+    }
     if(hasKids){
       return `<div class="sars-item nav" data-sarsdown="${i}">
         <span class="sars-num">${num}</span><div class="ivt">${name}</div>
@@ -1875,7 +1880,7 @@ const ARS_CAT6 = [
     {t:'예수금 · 주문가능금액 조회', dep:true},   // 예수금·추정예탁자산(ivN3,0)+주문가능금액(ivN3,1) 통합 → 3매체(디지털ARS/영S#/음성ARS) 플로팅. 음성ARS 선택 시 각 IVR 연결.
     {t:'주식 · 신용 · 금융상품 잔고조회', bal:true},   // 현금주식(ivN3,2)+신용(ivN3,3)+금융상품평가·잔고(ivN3,5) 통합 → 3매체 플로팅. 음성ARS 선택 시 각 IVR 연결.
     {t:'거래내역 조회', txn:true},   // 3매체(디지털ARS/영S#/음성ARS) 플로팅. 음성ARS 선택 시 하위(전체/매매/입출금/입출고) 각 IVR 연결.
-    staffLeaf('미수·반대매매 조회'),
+    {t:'미수·반대매매 조회', misu:true},   // 2매체(디지털ARS/영S#) 플로팅
     staffLeaf('계좌번호·MY계좌 정보확인'),
   ]),
   catNode('3. 입출금·이체', 'transfer', [
@@ -2747,6 +2752,7 @@ const APP_LINK = {
   depinfo: {title:'예수금·주문가능금액 조회'},
   balinfo: {title:'주식·신용·금융상품 잔고조회'},
   txninfo: {title:'거래내역 조회'},
+  misuinfo: {title:'미수·반대매매 조회'},
   iodpwopen: {title:'계좌 비밀번호 재설정', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>계좌 비밀번호 재설정</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2894,6 +2900,11 @@ const SISE_VOICE_SHEET = { title:'어떤 시세를 안내해 드릴까요?', sub
   {kind:'siv3', nm:'시간외 단일가', desc:'시간외 단일가 시세를 안내해요'},
   {kind:'siv4', nm:'K-OTC',        desc:'비상장주식 K-OTC 현재가를 안내해요'},
   {kind:'siv5', nm:'선물',         desc:'지수·상품 선물 현재가를 안내해요'},
+]};
+/* 계좌·잔고조회 > 미수·반대매매 조회 → 연결매체 선택 플로팅(디지털ARS/영웅문S# 2매체) */
+const MISU_SHEET = { title:'미수·반대매매를 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
+  {kind:'misudigital', ic:CS_ICON.web, nm:'디지털 ARS로 조회하기', desc:'지금 이 화면에서 바로 미수·반대매매를 확인해요'},
+  {kind:'misuapp',     ic:IOD_HERO_IC, nm:'영웅문S#으로 조회하기', desc:'앱을 열어 미수·반대매매를 확인해요'},
 ]};
 /* 계좌·잔고조회 > 거래내역 조회 → 연결매체 선택 플로팅(디지털ARS/영웅문S#/음성ARS) */
 const TXN_SHEET = { title:'거래내역을 어떻게 확인할까요?', sub:'편하신 방법으로 조회를 도와드려요', methods:[
@@ -3414,6 +3425,32 @@ function renderTradesV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 미수·반대매매(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 미수 요약 카드 + 반대매매 안내 + 대상 종목 카드(스크롤) + 상담원 연결 */
+function renderMisuV40(){
+  const targets = [
+    {n:'삼성전자',   q:10, amt:832000},
+    {n:'SK하이닉스', q:2,  amt:425000},
+  ];
+  const listHTML = targets.map(x=>`<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.n} <span class="fv-tag sell">반대매매 대상</span></div><div class="fv-sub">${x.q}주 · 예상 처분금액</div></div>
+      <div class="hv-amt">${won(x.amt)}원</div>
+    </div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">미수·반대매매</div><div class="td-desc">미수금과 반대매매 예정을 확인해요</div></div>
+    <div class="fv-chip hv-acct"><span class="fv-cv">${authAcct.type} ${authAcct.no}</span></div>
+    <div class="hv-summary">
+      <div class="hv-row"><span>미수금</span><b class="up">1,240,000원</b></div>
+      <div class="hv-row"><span>연체이자</span><b>3,200원</b></div>
+      <div class="hv-row"><span>반대매매 예정일</span><b>2026.06.26 (D+2)</b></div>
+    </div>
+    <div class="misu-note">미수금을 <b>06.25(D+1)</b>까지 상환하지 않으면, 06.26일 반대매매가 자동으로 진행돼요.</div>
+    <div class="hv-secttl">반대매매 예정 종목 ${targets.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="미수·반대매매 조회">상담원 연결</div></div>
+  </div>`;
+}
+
 /* ===== 간편비밀번호(PIN) 변경 — 2단계 입력(새 PIN → 확인) ===== */
 let pinState = {buf:'', stage:'new', first:''};
 function pinReset(){ pinState = {buf:'', stage:'new', first:''}; }
@@ -3686,6 +3723,8 @@ function renderS1(){
       html = renderBalanceV40();    // Ver 4.0 · 주식·신용·금융상품 잔고(디지털ARS 조회) 전용 화면
     } else if(isV40() && s1state.resultKey==='trades'){
       html = renderTradesV40();     // Ver 4.0 · 거래내역(디지털ARS 조회) 전용 화면
+    } else if(isV40() && s1state.resultKey==='misu'){
+      html = renderMisuV40();       // Ver 4.0 · 미수·반대매매(디지털ARS 조회) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4134,6 +4173,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-depsheet]')){ openMethodSheet(DEP_SHEET); return; }    // 예수금·주문가능금액 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-balsheet]')){ openMethodSheet(BAL_SHEET); return; }    // 주식·신용·금융상품 잔고조회 → 연결매체 선택 플로팅
   if(t.closest('[data-txnsheet]')){ openMethodSheet(TXN_SHEET); return; }    // 거래내역 조회 → 연결매체 선택 플로팅
+  if(t.closest('[data-misusheet]')){ openMethodSheet(MISU_SHEET); return; }  // 미수·반대매매 조회 → 연결매체 선택 플로팅(2매체)
   const stkSel = t.closest('[data-stkpick]');
   if(stkSel){
     const step = stkSel.dataset.stkstep, v = stkSel.dataset.stkpick;
@@ -4199,6 +4239,8 @@ document.addEventListener('click', (e)=>{
     if(kind==='txnv1'){ flash('음성 ARS 「매매 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='txnv2'){ flash('음성 ARS 「입출금 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='txnv3'){ flash('음성 ARS 「입출고 조회」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='misudigital'){ s1nav({page:'result', resultKey:'misu', title:'미수·반대매매', noHome:true}); return; }   // 미수·반대매매 — 디지털 ARS 화면
+    if(kind==='misuapp'){ openAppLink('misuinfo'); return; }                                            // 미수·반대매매 — 영웅문S# 앱 연결
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
