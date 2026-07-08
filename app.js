@@ -1934,9 +1934,9 @@ const ARS_CAT6 = [
     {t:'신용·대출 만기연장', media:'credit'},      // 신용융자·대출 만기연장 — 3매체
   ]),
   catNode('9. 공지·이용안내', 'bell', [
-    drillNode('ARS 이용안내 및 공지사항', ivN(6,2)),
-    staffLeaf('서비스 점검·공지사항'),
-    staffLeaf('이벤트 안내'),
+    {t:'ARS 이용안내 및 공지사항', media:'arsguide'},   // 디지털ARS(이용안내 화면)/음성ARS(4종 서브)
+    {t:'서비스 점검·공지사항',     media:'notice'},      // 디지털ARS(공지 리스트)/영S#
+    {t:'이벤트 안내',             media:'event'},        // 디지털ARS(이벤트 리스트)/영S#
   ]),
 ];
 
@@ -2760,6 +2760,7 @@ const APP_LINK = {
   certinfo: {title:'증명서 발급'}, purposedocinfo: {title:'금융거래목적확인서 제출'}, kycinfo: {title:'고객확인(KYC/CDD) 등록'},
   investorinfo: {title:'투자자정보확인서 등록'}, foreigninfo: {title:'해외 양도소득 관련서류'},
   authacctinfo: {title:'인증·계좌 신청'}, shippinginfo: {title:'출고·이관 신청'}, creditinfo: {title:'신용·대출 만기연장'},
+  noticeinfo: {title:'공지사항'}, eventinfo: {title:'이벤트 안내'},
   acctopenkiwoom: {title:'비대면 계좌개설', app:'키움계좌개설', logo:'assets/kiwoom-favicon.ico',
     popTitle:'키움계좌개설 앱을 열게요', popBtn:'키움계좌개설 열기',
     popDesc:'<b>비대면 계좌개설</b>을 위해<br>키움계좌개설 앱으로 이동할게요.<br><span class="ap-warn">휴대폰 인증과 신분증 촬영이 필요해요.</span>'},
@@ -2996,9 +2997,48 @@ const applySheet = (title, kd, ka, kc) => ({ title, sub:'편하신 방법으로 
 const AUTHACCT_SHEET = applySheet('인증·계좌 업무를 어떻게 신청할까요?', 'authacctdig', 'authacctapp', 'authacctcs');
 const SHIPPING_SHEET = applySheet('출고·이관 업무를 어떻게 신청할까요?', 'shippingdig', 'shippingapp', 'shippingcs');
 const CREDIT_SHEET   = applySheet('만기연장을 어떻게 신청할까요?',        'creditdig',   'creditapp',   'creditcs');
+/* 공지·이용안내(cat9) — 항목 맞춤: ARS이용안내=디지털ARS/음성ARS, 공지사항·이벤트=디지털ARS/영S#. 모두 정보 열람(디지털 리스트 화면) */
+const ARSGUIDE_SHEET = { title:'ARS 이용안내를 어떻게 볼까요?', sub:'편하신 방법으로 안내를 도와드려요', methods:[
+  {kind:'arsguidedigital', ic:CS_ICON.web,   nm:'디지털 ARS로 보기',   desc:'지금 이 화면에서 이용안내를 확인해요'},
+  {kind:'arsguidevoice',   ic:CS_ICON.voice, nm:'음성 ARS로 안내받기', desc:'음성 안내에 따라 이용안내를 들어요'},
+]};
+const ARSGUIDE_VOICE_SHEET = { title:'어떤 안내를 들으실까요?', sub:'음성 ARS로 선택하신 안내를 들려드려요', noIcon:true, methods:[
+  {kind:'arsgv0', nm:'ARS 이용시간 안내',            desc:'ARS 서비스 이용시간을 안내해요'},
+  {kind:'arsgv1', nm:'ARS 주문서비스 이용신청·비밀번호', desc:'주문서비스 신청·주문비밀번호를 안내해요'},
+  {kind:'arsgv2', nm:'ARS 관심종목 안내',            desc:'ARS 관심종목 이용을 안내해요'},
+  {kind:'arsgv3', nm:'ARS 이용비용 안내',            desc:'ARS 서비스 이용비용을 안내해요'},
+]};
+const NOTICE_SHEET = { title:'공지사항을 어떻게 볼까요?', sub:'편하신 방법으로 안내를 도와드려요', methods:[
+  {kind:'noticedigital', ic:CS_ICON.web, nm:'디지털 ARS로 보기', desc:'지금 이 화면에서 공지사항을 확인해요'},
+  {kind:'noticeapp',     ic:IOD_HERO_IC, nm:'영웅문S#으로 보기', desc:'앱을 열어 공지사항을 확인해요'},
+]};
+const EVENT_SHEET = { title:'이벤트를 어떻게 볼까요?', sub:'편하신 방법으로 안내를 도와드려요', methods:[
+  {kind:'eventdigital', ic:CS_ICON.web, nm:'디지털 ARS로 보기', desc:'지금 이 화면에서 이벤트를 확인해요'},
+  {kind:'eventapp',     ic:IOD_HERO_IC, nm:'영웅문S#으로 보기', desc:'앱을 열어 이벤트를 확인해요'},
+]};
 const MEDIA_SHEETS = { song:SONG_SHEET, xfer:XFER_SHEET, songres:SONGRES_SHEET, accident:ACC_SHEET, addr:ADDR_SHEET, acctopen:ACCTOPEN_SHEET, rights:RIGHTS_SHEET, ipo:IPO_SHEET,
   cert:CERT_SHEET, docpurpose:PURPOSE_SHEET, dockyc:KYC_SHEET, docinvestor:INVESTOR_SHEET, docforeign:FOREIGN_SHEET,
-  authacct:AUTHACCT_SHEET, shipping:SHIPPING_SHEET, credit:CREDIT_SHEET };
+  authacct:AUTHACCT_SHEET, shipping:SHIPPING_SHEET, credit:CREDIT_SHEET,
+  arsguide:ARSGUIDE_SHEET, notice:NOTICE_SHEET, event:EVENT_SHEET };
+/* 공지·이용안내 디지털ARS 정보 리스트(renderInfoListV40, s1state.infoKey 기반) */
+const INFO_LISTS = {
+  arsguide: { title:'ARS 이용안내', desc:'ARS 서비스 이용 안내를 확인해요', sectl:'이용안내', items:[
+    {t:'ARS 이용시간 안내',        d:'평일 08:00~22:00 · 주말·공휴일 휴무'},
+    {t:'ARS 주문서비스 이용신청',   d:'주문서비스 신청 후 주문비밀번호 등록이 필요해요'},
+    {t:'ARS 관심종목 안내',        d:'관심종목 등록 시 빠르게 시세를 확인해요'},
+    {t:'ARS 이용비용 안내',        d:'음성 주문 수수료·이용료를 안내해요'},
+  ]},
+  notice: { title:'공지사항', desc:'서비스 점검·공지사항을 확인해요', sectl:'공지사항', items:[
+    {t:'디지털 ARS 서비스 정기점검 안내', d:'2026.06.25 02:00~04:00 · 일시 중단', tag:'점검', tc:'wait'},
+    {t:'전자금융거래 이용약관 개정 안내',  d:'2026.07.01 시행',                  tag:'공지', tc:'done'},
+    {t:'여름철 고객센터 단축운영 안내',    d:'2026.07.20~08.10',                 tag:'공지', tc:'done'},
+  ]},
+  event: { title:'이벤트 안내', desc:'진행 중인 이벤트를 확인해요', sectl:'진행 이벤트', items:[
+    {t:'중개형 ISA 타사 이전 혜택',  d:'최대 551만원 혜택 · ~2026.08.31',  tag:'진행중', tc:'live'},
+    {t:'해외주식 환율우대 이벤트',   d:'환전 수수료 우대 · ~2026.07.31',   tag:'진행중', tc:'live'},
+    {t:'신규 고객 수수료 지원',      d:'국내주식 거래 수수료 지원 · 종료',  tag:'종료',   tc:'done'},
+  ]},
+};
 /* 업무신청 디지털ARS 신청화면 — 그룹별 신청 가능 업무 리스트(renderApplyGroupV40, s1state.applyGroup 기반) */
 const APPLY_GROUPS = {
   authacct: { title:'인증·계좌 신청', desc:'OTP·출금계좌·실명확인을 신청해요', items:[
@@ -3657,6 +3697,21 @@ function renderApplyGroupV40(){
   </div>`;
 }
 
+/* Ver 4.0 · 공지·이용안내(디지털 ARS) 전용 화면 — s1state.infoKey(INFO_LISTS) 기반 정보 리스트(제목·설명·상태태그, 버튼 없음) + 상담원 연결 */
+function renderInfoListV40(){
+  const g = INFO_LISTS[s1state.infoKey] || INFO_LISTS.arsguide;
+  const listHTML = g.items.map(x=>`<div class="fv-item">
+      <div class="fv-it"><div class="fv-nm">${x.t}${x.tag?` <span class="fv-tag ${x.tc}">${x.tag}</span>`:''}</div><div class="fv-sub">${x.d}</div></div>
+    </div>`).join('');
+  return `<div class="fv-wrap">
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-dhead"><div class="td-title">${g.title}</div><div class="td-desc">${g.desc}</div></div>
+    <div class="hv-secttl">${g.sectl} ${g.items.length}</div>
+    <div class="fv-card"><div class="fv-list">${listHTML}</div></div>
+    <div class="fv-foot"><div class="primary-btn" data-staffconnect="${g.title}">상담원 연결</div></div>
+  </div>`;
+}
+
 /* Ver 4.0 · 미수·반대매매(디지털 ARS 조회) 전용 화면 — 토스톤 헤더 + 미수 요약 카드 + 반대매매 안내 + 대상 종목 카드(스크롤) + 상담원 연결 */
 function renderMisuV40(){
   const targets = [
@@ -3998,6 +4053,8 @@ function renderS1(){
       html = renderDocSubmitV40();  // Ver 4.0 · 서류 제출(디지털ARS, docLabel 기반) 전용 화면
     } else if(isV40() && s1state.resultKey==='applygroup'){
       html = renderApplyGroupV40(); // Ver 4.0 · 업무신청(디지털ARS, applyGroup 기반) 전용 화면
+    } else if(isV40() && s1state.resultKey==='infolist'){
+      html = renderInfoListV40();   // Ver 4.0 · 공지·이용안내(디지털ARS, infoKey 기반) 전용 화면
     } else {
       const render = RESULT[s1state.resultKey];
       html = pageTop(s1state.title||'조회 결과')
@@ -4577,6 +4634,17 @@ document.addEventListener('click', (e)=>{
     if(kind==='creditdig'){ s1nav({page:'result', resultKey:'applygroup', title:'신용·대출 만기연장', applyGroup:'credit', noHome:true}); return; }
     if(kind==='creditapp'){ openAppLink('creditinfo'); return; }
     if(kind==='creditcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'신용·대출 만기연장', noHome:true}); return; }
+    // 공지·이용안내 (항목 맞춤)
+    if(kind==='arsguidedigital'){ s1nav({page:'result', resultKey:'infolist', title:'ARS 이용안내', infoKey:'arsguide', noHome:true}); return; }   // ARS 이용안내 — 디지털 ARS 화면
+    if(kind==='arsguidevoice'){ openMethodSheet(ARSGUIDE_VOICE_SHEET); return; }   // ARS 이용안내 → 4종 서브리스트
+    if(kind==='arsgv0'){ flash('음성 ARS 「ARS 이용시간 안내」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='arsgv1'){ flash('음성 ARS 「ARS 주문서비스 이용신청」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='arsgv2'){ flash('음성 ARS 「ARS 관심종목 안내」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='arsgv3'){ flash('음성 ARS 「ARS 이용비용 안내」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind==='noticedigital'){ s1nav({page:'result', resultKey:'infolist', title:'공지사항', infoKey:'notice', noHome:true}); return; }   // 공지사항 — 디지털 ARS 화면
+    if(kind==='noticeapp'){ openAppLink('noticeinfo'); return; }
+    if(kind==='eventdigital'){ s1nav({page:'result', resultKey:'infolist', title:'이벤트 안내', infoKey:'event', noHome:true}); return; }   // 이벤트 — 디지털 ARS 화면
+    if(kind==='eventapp'){ openAppLink('eventinfo'); return; }
     return;
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
