@@ -414,10 +414,11 @@ body{
 .toss-home.v40main .toss-top{padding:16px 20px 8px}
 .toss-home.v40main .toss-hero{padding:8px 20px 16px}
 .toss-home.v40main .th-hi{line-height:1.36}
-.toss-home.v40main .toss-faq{margin:2px 16px 18px;padding:14px 10px 8px}
-.toss-home.v40main .toss-list{padding:2px 12px 18px}
-/* 대메뉴 항목 상하 여백 확대 + 아이콘·텍스트 간격 정리 */
-.toss-home.v40main .toss-cat{padding:13px 12px;gap:14px}
+/* 인사글·FAQ카드·대메뉴 행 좌우 경계를 로고(좌 20px)에 맞춰 폭 통일(20..좌우20 = 폭 320) */
+.toss-home.v40main .toss-faq{margin:2px 20px 18px;padding:14px 10px 8px}
+.toss-home.v40main .toss-list{padding:2px 20px 18px}
+/* 대메뉴 항목 상하 여백 확대 + 아이콘·화살표 위치는 유지(좌우 4px)해 행 배경만 카드폭에 정렬 */
+.toss-home.v40main .toss-cat{padding:13px 4px;gap:14px}
 .toss-home.v40main .toss-cat + .toss-cat{margin-top:2px}
 /* 폰트 일관성: FAQ 항목명 = 대메뉴명(16px). 안내글(FAQ 헤더·대메뉴 설명)은 이미 12.5px로 통일 상태 유지 */
 .toss-home.v40main .tf-t{font-size:calc(16px*var(--scale))}
@@ -2682,7 +2683,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709j"></script>
+<script src="app.js?v=20260709k"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
