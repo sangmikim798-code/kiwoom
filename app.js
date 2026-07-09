@@ -2353,9 +2353,10 @@ function authStep(method){
                  : '본인 명의 계좌번호와 비밀번호를 입력해 주세요';
   const note = isa ? '인증하신 계좌의 중개형 ISA 가입·이전 신청현황을 확인해요.' : (iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '본인 명의 계좌만 조회 가능해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.'));
   const acctVal = iod ? (s1state.iodAcctNo||'') : (che ? (s1state.cheAcctNo||'') : '');   // 계좌 선택(인증 후 계좌리스트)에서 자동 입력된 계좌번호
-  // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: 기존 auth-head
+  // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: 기존 auth-head. ISA는 안내+인증 1페이지 통합 → 타이틀 'ISA 가입서류 제출'
+  const acctTitle = isa ? 'ISA 가입서류 제출' : '계좌 인증';
   const heading = v40
-    ? `<div class="toss-dhead"><div class="td-title">계좌 인증</div><div class="td-desc">${acctDesc}</div></div>`
+    ? `<div class="toss-dhead"><div class="td-title">${acctTitle}</div><div class="td-desc">${acctDesc}</div></div>`
     : `<div class="auth-head">${head}</div>`;
   const findlink = iod
     ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>`
@@ -2369,7 +2370,7 @@ function authStep(method){
         <div class="ir-input ir-pw" data-pwopen><span id="acctPwDisp" class="acct-dots" data-ph="비밀번호 입력 (4~8자리)">${'●'.repeat((s1state.acctPw||'').length)}</span></div></div>
     </div>
     <div class="auth-note">${note}</div>
-    <div class="primary-btn" data-authdone>확인</div>
+    <div class="primary-btn" data-authdone>${isa ? '계좌 인증하고 조회하기' : '확인'}</div>
     ${findlink}
   </div>`;
 }
@@ -3321,19 +3322,9 @@ function renderIodResult(){
 }
 
 /* ===== 중개형 ISA 서민형 가입서류 제출 플로우 (Ver 4.0) =====
-   FAQ 진입 → 신청현황 조회 안내(intro) → 계좌인증(공용 재사용) → 조회 로딩 → 신청현황 → 제출방법 선택 → 서류제출/발급번호 입력 */
+   FAQ 진입 → 계좌인증(안내+인증 1페이지 통합, 타이틀 'ISA 가입서류 제출'·버튼 '계좌 인증하고 조회하기') → 조회 로딩 → 신청현황 → 제출방법 선택 → 서류제출/발급번호 입력 */
 const ISA_TABS = [['new','신규가입'],['transfer','계좌이전'],['renew','만기연장']];
-/* 1) 신청현황 조회 안내(진입) — 계좌인증 시작 */
-function renderIsaIntro(){
-  return `<div class="fv-wrap">
-    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    ${untactSteps(ISA_STEPS, 0)}
-    <div class="toss-dhead"><div class="td-title">ISA 서민형 가입서류 제출</div><div class="td-desc">중개형 ISA 가입·이전 신청내역을 조회하고 서류를 제출해요</div></div>
-    <div class="fv-note">본인 명의 계좌 인증 후 신청현황을 조회할 수 있어요.</div>
-    <div class="fv-foot"><div class="primary-btn accent" data-isaauth>계좌 인증하고 조회하기</div></div>
-  </div>`;
-}
-/* 2) 신청현황 조회 로딩 */
+/* 1) 신청현황 조회 로딩 */
 function renderIsaChecking(){
   return pageTop(s1state.title||'신청현황 조회', true)
     + untactSteps(ISA_STEPS, 1)
@@ -4251,9 +4242,6 @@ function renderS1(){
   else if(s1state.page==='herodone'){
     html = renderHeroDone();
   }
-  else if(s1state.page==='isaintro'){
-    html = renderIsaIntro();
-  }
   else if(s1state.page==='isacheck'){
     html = renderIsaChecking();
   }
@@ -4972,13 +4960,11 @@ document.addEventListener('click', (e)=>{
     s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
-  // ISA 서민형 가입서류 제출: FAQ 진입 → 신청현황 조회 안내(intro)
-  if(t.closest('[data-isastart]')){ s1state.authNext=null; s1nav({page:'isaintro', title:'ISA 가입서류 제출', fromFav:false, noBack:false, noHome:true}); return; }
-  // intro → 계좌인증(공용 계좌인증 재사용, isa 플래그)
-  if(t.closest('[data-isaauth]')){
+  // ISA 가입서류 제출: FAQ 진입 → 계좌인증(안내+인증 1페이지 통합, 공용 계좌인증 재사용·isa 플래그)
+  if(t.closest('[data-isastart]')){
     s1state.authNext = {go:'iodcheck', isa:true};
     s1state.iodAcctNo = '';
-    s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
+    s1nav({page:'authstep', authMethod:'account', title:'ISA 가입서류 제출', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
   // 신청현황 → 가입서류 제출방법 선택 플로팅
