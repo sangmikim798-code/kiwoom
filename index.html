@@ -1341,6 +1341,8 @@ body{
 /* Ver 4.0 · 상담원 연결 화면 — 토스 헤더(뒤로가기)만 감싸고 본문은 기존 .agent-connect(중앙정렬) 재사용 */
 .acv-wrap{min-height:100%;background:#fff}
 .acv-wrap .agent-connect{padding-top:8px}
+/* Ver 4.0 상담원 연결(v40 전용): 카드 좌우 16px → 버튼(margin 0 16px)과 동일 폭 (세로중앙정렬은 미적용=상단정렬 유지) */
+.acv-v40 .agent-connect .ac-info{margin:20px 16px 16px}
 
 .kp-ov{position:absolute;inset:0;z-index:150;background:rgba(20,12,40,.35);
   display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .2s}
@@ -2711,7 +2713,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710g"></script>
+<script src="app.js?v=20260710i"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

@@ -2029,7 +2029,15 @@ function agentConnectScreen(label){
 function renderAgentV40(label){
   const nm = (label && label!=='직원연결') ? stripNum(label) : '';
   const desc = nm ? `‘${nm}’ 관련 상담부서로<br>상담원에게 연결해 드려요.` : `상담원에게 바로 연결해 드려요.<br>아래 버튼을 눌러 상담을 시작하세요.`;
-  return `<div class="acv-wrap">
+  const v40 = (s1Ver==='v40');   // Ver 4.0만: '상담 대기'·설명글 삭제·카드=버튼 동일폭·연결 후 홈 이동(v41/v42는 기존 유지)
+  const waitRow = v40
+    ? `<div class="ac-row"><span class="k">상담 대기</span><span class="v">3명</span></div>`
+    : `<div class="ac-row"><span class="k">예상 대기</span><span class="v">약 1분</span></div>`;
+  const noticeRow = v40 ? '' : `<div class="notice">연결 시 음성 통화 또는 채팅 상담으로 진행돼요.</div>`;
+  const connectBtn = v40
+    ? `<div class="primary-btn" data-agentgo>상담원 연결하기</div>`
+    : `<div class="primary-btn" data-flash="상담원에게 연결합니다. (시연용)">상담원 연결하기</div>`;
+  return `<div class="acv-wrap${v40?' acv-v40':''}">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
     <div class="agent-connect">
       <div class="ac-ic">${I.headset}</div>
@@ -2038,10 +2046,10 @@ function renderAgentV40(label){
       <div class="ac-info">
         ${nm ? `<div class="ac-row"><span class="k">상담 분야</span><span class="v">${nm}</span></div>` : ''}
         <div class="ac-row"><span class="k">상담 가능 시간</span><span class="v">평일 08:00 ~ 18:00</span></div>
-        <div class="ac-row"><span class="k">예상 대기</span><span class="v">약 1분</span></div>
+        ${waitRow}
       </div>
-      <div class="primary-btn" data-flash="상담원에게 연결합니다. (시연용)">상담원 연결하기</div>
-      <div class="notice">연결 시 음성 통화 또는 채팅 상담으로 진행돼요.</div>
+      ${connectBtn}
+      ${noticeRow}
     </div>
   </div>`;
 }
@@ -5253,6 +5261,7 @@ document.addEventListener('click', (e)=>{
   // 금융거래목적확인서 등록 → 완료 화면 / 완료 화면 '확인' → 메인
   if(t.closest('[data-iodpurposedone]')){ s1nav({page:'iodpurposedone', title:'등록 완료', noBack:true, noHome:true}); return; }
   if(t.closest('[data-iodhome]')){ s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
+  if(t.closest('[data-agentgo]')){ flash('상담원에게 연결합니다. 잠시만 기다려 주세요. (시연용)'); s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }   // 상담원 연결하기 → 연결 안내 후 홈으로
   // 음성 ARS 연결 버튼 → 연결 완료 화면
   if(t.closest('[data-voicego]')){ s1nav({page:'voicedone', title:'음성 ARS 연결', noBack:true, noHome:true}); return; }
 
