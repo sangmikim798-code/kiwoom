@@ -304,6 +304,11 @@ body{
 .bigfont-toggle.on{color:var(--primary)}
 .bigfont-toggle.on .bf-sw{background:var(--primary)}
 .bigfont-toggle.on .bf-knob{transform:translateX(14px)}
+/* 우상단 큰글씨 토글 + 사고신고 아이콘 묶음 */
+.th-right{display:flex;align-items:center;gap:12px;flex:none}
+.acc-report{display:flex;align-items:center;gap:4px;color:var(--primary);cursor:pointer;white-space:nowrap;font-size:calc(12px*var(--scale));font-weight:700}
+.acc-report svg{width:calc(17px*var(--scale));height:calc(17px*var(--scale));flex:none}
+.acc-report:active{transform:scale(.97)}
 
 /* ===== Ver 4.0 · 토스 스타일 스킨 (포인트=키움 마젠타 #E6007F · 네이비 #14183C) ===== */
 /* 디자인 토큰 오버라이드 → s1 전 컴포넌트(var() 기반) 자동 재도색 */
@@ -2663,7 +2668,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260708y"></script>
+<script src="app.js?v=20260709a"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
