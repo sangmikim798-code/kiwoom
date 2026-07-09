@@ -3417,15 +3417,15 @@ function renderIsaSubmit(){
 }
 /* 6) 온라인 발급번호 입력 화면 */
 function renderIsaIssue(){
-  const seg = (id,len)=>`<input class="isa-seg" id="${id}" inputmode="numeric" maxlength="${len}" placeholder="${'0'.repeat(len)}">`;
+  const seg = (id,len)=>`<input class="isa-seg" id="${id}" inputmode="numeric" maxlength="${len}" placeholder="${'0'.repeat(len)}" oninput="isaSegInput(this)">`;
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
     ${untactSteps(ISA_STEPS, 2)}
     <div class="toss-dhead"><div class="td-title">온라인 발급번호 입력</div><div class="td-desc">홈택스에서 발급받은 소득확인증명서 번호를 입력해요</div></div>
     <div class="my-body">
       <div class="fv-note">소득확인증명서(개인종합자산관리계좌 가입용)의 <b>온라인 발급번호 14자리</b>를 입력해 주세요.<br>확인되면 별도 서류 제출 없이 처리돼요.</div>
-      <div class="hv-secttl">홈택스 발급번호</div>
       <div class="doc-card isa-issue-card">
+        <div class="isa-issue-h">홈택스 발급번호</div>
         <div class="isa-issue-row">${seg('isaIssue1',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue2',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue3',3)}<span class="isa-seg-dash">-</span>${seg('isaIssue4',3)}</div>
         <div class="doc-btn" data-isaissuedone>발급번호 제출하기</div>
       </div>
@@ -3434,6 +3434,15 @@ function renderIsaIssue(){
     </div>
     <div class="fv-foot"><div class="primary-btn" data-isahistory>신청내역 확인</div></div>
   </div>`;
+}
+/* 발급번호 세그먼트 입력: 숫자만 허용 + 자리수 다 채우면 다음 칸으로 자동 이동 */
+function isaSegInput(el){
+  el.value = el.value.replace(/\D/g,'').slice(0, el.maxLength);
+  if(el.value.length >= el.maxLength){
+    const segs = [].slice.call((el.closest('.isa-issue-row')||document).querySelectorAll('.isa-seg'));
+    const i = segs.indexOf(el);
+    if(i>=0 && i < segs.length-1) segs[i+1].focus();
+  }
 }
 function startIsaCheck(){
   s1state.isaTab = 'new';   // 신청현황 진입 시 신규가입 탭부터
