@@ -411,12 +411,12 @@ body{
 
 /* ===== Ver 4.0 메인 전용 여백·폰트 정리 (v41 그리드·v42·드릴다운 미적용) ===== */
 /* 상하 리듬: 로고→인사말→FAQ→대메뉴 사이 숨통 확보 */
-/* 로고 PNG 좌측 투명여백(≈전체폭 4.56%, 렌더 +5.4px) 보정: padding-left 15 → 로고 '키' 글자가 20px에 정렬(인사글·FAQ·대메뉴와 동일 시작라인) */
-.toss-home.v40main .toss-top{padding:16px 20px 8px 15px}
-.toss-home.v40main .toss-hero{padding:8px 20px 16px}
+/* 로고 자연 위치(좌 padding 20 + PNG 투명여백 ≈5.4px) → '키' 글자가 ≈25px에서 시작 = 인사글·FAQ 시작점(25)과 정렬 */
+.toss-home.v40main .toss-top{padding:16px 20px 8px}
+.toss-home.v40main .toss-hero{padding:8px 20px 16px 25px}
 .toss-home.v40main .th-hi{line-height:1.36}
 /* 인사글·FAQ카드·대메뉴 행 좌우 경계를 로고(좌 20px)에 맞춰 폭 통일(20..좌우20 = 폭 320) */
-.toss-home.v40main .toss-faq{margin:2px 20px 18px;padding:14px 10px 8px}
+.toss-home.v40main .toss-faq{margin:2px 20px 18px 25px;padding:14px 10px 8px}
 .toss-home.v40main .toss-list{padding:2px 20px 18px}
 /* 대메뉴 항목 상하 여백 확대 + 아이콘·화살표 위치는 유지(좌우 4px)해 행 배경만 카드폭에 정렬 */
 .toss-home.v40main .toss-cat{padding:13px 4px;gap:14px}
@@ -2684,7 +2684,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709l"></script>
+<script src="app.js?v=20260709m"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
