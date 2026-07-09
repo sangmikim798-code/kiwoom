@@ -2241,6 +2241,17 @@ const V40_FAQ = [
   {t:'ISA 가입서류를 내고 싶어요',   svg:'<img src="assets/file-upload.png" alt="ISA 가입서류 제출">'},
   {t:'자주 묻는 질문',   svg:'<img src="assets/question.png" alt="자주 묻는 질문">'},
 ];
+/* v40 전용 FAQ: 4번째 항목을 '비밀번호를 재설정하고 싶어요'로 교체(자물쇠 아이콘·인라인 SVG). v41/v42는 기존 V40_FAQ 유지 */
+const PW_LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.3" width="15" height="10.4" rx="2.4" fill="#E6007F"/><path d="M8 10.3V8a4 4 0 0 1 8 0v2.3" stroke="#F7A8D3" stroke-width="2.2"/><circle cx="12" cy="14.6" r="1.55" fill="#fff"/><rect x="11.2" y="15.1" width="1.6" height="3.1" rx=".8" fill="#fff"/></svg>';
+const V40_FAQ_V40 = [ V40_FAQ[0], V40_FAQ[1], V40_FAQ[2],
+  {t:'비밀번호를 재설정하고 싶어요', svg:PW_LOCK_SVG},
+];
+/* '비밀번호를 재설정하고 싶어요' 클릭 → 어떤 비밀번호를 재설정할지 선택 시트(매체 플로팅 바텀시트 방식) */
+const PWRESET_SHEET = { title:'어떤 비밀번호를 재설정할까요?', sub:'재설정할 비밀번호를 선택해 주세요', noIcon:true, methods:[
+  {kind:'pwreset0', nm:'ID 비밀번호',        desc:'로그인 ID의 비밀번호를 재설정해요'},
+  {kind:'pwreset1', nm:'증권계좌 비밀번호',   desc:'증권계좌의 비밀번호를 재설정해요'},
+  {kind:'pwreset2', nm:'공동인증서 비밀번호', desc:'공동인증서 비밀번호를 재설정해요'},
+]};
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
   const rowHtml = it=>{
@@ -2248,6 +2259,7 @@ function tossFaqCard(){
     const act = it.t==='입출금이 안돼요' ? `data-iodstart`
               : it.t==='ISA 가입서류를 내고 싶어요' ? `data-isastart`
               : it.t==='증명서 발급 현황이 궁금해요' ? `data-certstart`
+              : it.t==='비밀번호를 재설정하고 싶어요' ? `data-pwreset`
               : `data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"`;
     return `<div class="tf-row" ${act}><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`;
   };
@@ -2263,10 +2275,10 @@ function tossFaqCard(){
   // v40: 헤더(문구+더보기)를 회색영역 밖(인사말 아래)으로 분리
   if(open){
     // 더보기: 전체 질문을 회색영역에 목록으로(애니메이션 없음)
-    return head + `<div class="toss-faq open"><div class="tf-list">${V40_FAQ.map(rowHtml).join('')}</div></div>`;
+    return head + `<div class="toss-faq open"><div class="tf-list">${V40_FAQ_V40.map(rowHtml).join('')}</div></div>`;
   }
   // 접힘: 회색영역=대메뉴 1행 높이, 질문이 아래→위로 자동 슬라이드(티커). 끝에 첫 항목 복제로 무한루프 이음새 제거
-  const rows = V40_FAQ.map(rowHtml).join('') + rowHtml(V40_FAQ[0]);
+  const rows = V40_FAQ_V40.map(rowHtml).join('') + rowHtml(V40_FAQ_V40[0]);
   return head + `<div class="toss-faq"><div class="tf-list tf-ticker">${rows}</div></div>`;
 }
 function banner(){
@@ -4968,6 +4980,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-misusheet]')){ openMethodSheet(MISU_SHEET); return; }  // 미수·반대매매 조회 → 연결매체 선택 플로팅(2매체)
   if(t.closest('[data-myacctsheet]')){ openMethodSheet(MYACCT_SHEET); return; }  // 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(2매체)
   if(t.closest('[data-chealt]')){ openMethodSheet(CHE_SHEET); return; }   // 체결·주문내역 계좌인증 화면 '다른 방법으로 조회하기' → 매체 플로팅
+  if(t.closest('[data-pwreset]')){ openMethodSheet(PWRESET_SHEET); return; }   // FAQ '비밀번호를 재설정하고 싶어요' → 어떤 비밀번호 재설정할지 선택 시트
   const msh = t.closest('[data-mediasheet]');
   if(msh){ const cfg = MEDIA_SHEETS[msh.dataset.mediasheet]; if(cfg) openMethodSheet(cfg); return; }   // 입출금·이체 각 항목 → 2매체 플로팅
   const stkSel = t.closest('[data-stkpick]');
@@ -5119,6 +5132,7 @@ document.addEventListener('click', (e)=>{
     if(kind==='pwmv1'){ flash('음성 ARS 「주문비밀번호 변경」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='pwmv2'){ flash('음성 ARS 「ARS 이용신청」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='pwmv3'){ flash('음성 ARS 「ARS 이용해지」 메뉴로 연결해 드릴게요. (시연용)'); return; }
+    if(kind.indexOf('pwreset')===0){ flash(`「${mrow.dataset.mlabel}」 재설정 화면으로 이동합니다. (시연용)`); return; }   // FAQ 비밀번호 재설정 — ID/증권계좌/공동인증서 선택
     if(kind==='authidapp'){ openAppLink('authidinfo'); return; }
     if(kind==='authidcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'인증·ID 관리', noHome:true}); return; }
     if(kind==='etcsvcdigital'){ s1nav({page:'result', resultKey:'applygroup', title:'부가서비스', applyGroup:'etcsvc', noHome:true}); return; }   // 부가서비스 — 디지털 ARS 화면
