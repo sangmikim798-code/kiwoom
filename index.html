@@ -1146,6 +1146,12 @@ body{
 .cs-badge.gray{background:#ECECF2;color:#5A5A70}
 .cs-badge.warn{background:#FFF1E0;color:#C07800}
 .cs-desc{font-size:calc(12.5px*var(--scale));color:#7A7A8C;line-height:1.55;margin-top:7px}
+/* Ver 4.0 매체시트 간결화(v40lite): 아이콘 없음 + 매체 단어 강조색(마젠타) + 짧은 설명 */
+.consult-ov.v40lite{--primary:#E6007F}   /* methodPop은 .flow.toss 밖 → 강조색 마젠타 직접 지정 */
+.consult-ov.v40lite .cs-row{padding:15px 16px}
+.consult-ov.v40lite .cs-nm{font-weight:600}
+.consult-ov.v40lite .cs-em{color:var(--primary);font-weight:800}
+.consult-ov.v40lite .cs-desc{margin-top:4px}
 .cs-arw{flex:none;color:#C4C4D2}
 .cs-arw svg{width:18px;height:18px}
 .cs-row.soon{background:#FAFAFC;border-style:dashed;border-color:#DEDEE6;cursor:default}
@@ -2704,7 +2710,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710c"></script>
+<script src="app.js?v=20260710d"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

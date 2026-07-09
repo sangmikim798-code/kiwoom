@@ -3629,21 +3629,36 @@ function renderCertReissue(){
   </div>`;
 }
 /* 결과 화면 버튼 → 방법 선택 플로팅(상담팝업 스타일 재사용: consult-ov/cs-*) */
+/* Ver 4.0 매체시트 간결화: 아이콘 제거 + 매체 단어 강조색 + 짧은 설명 (매체 키워드 매칭 시) */
+const CS_MEDIA_KW = ['키움계좌개설 앱','디지털 ARS','영웅문S#','AI 챗봇','음성 ARS','상담원'];   // 긴 것 우선(부분일치 방지)
+const CS_MEDIA_SHORT = { '디지털 ARS':'이 화면에서 바로', '영웅문S#':'앱에서 바로', '키움계좌개설 앱':'앱에서 바로', 'AI 챗봇':'챗봇에게 바로', '음성 ARS':'음성 안내로', '상담원':'상담원이 도와드려요' };
+function csMediaKw(nm){ return CS_MEDIA_KW.find(k => nm.indexOf(k) >= 0); }
 function openMethodSheet(cfg){
   const prev = document.getElementById('methodPop'); if(prev) prev.remove();   // 기존 시트 즉시 제거(중복 id 방지)
   const screen = document.getElementById('screen'); if(!screen || !cfg) return;
+  const v40lite = (s1Ver==='v40');   // Ver 4.0: 간결 스타일(아이콘 없음·매체명 강조·짧은 설명)
   const el = document.createElement('div');
-  el.className = 'consult-ov method-ov' + (bigFont?' bigfont':''); el.id = 'methodPop';
+  el.className = 'consult-ov method-ov' + (bigFont?' bigfont':'') + (v40lite?' v40lite':''); el.id = 'methodPop';
   const noIcon = cfg.noIcon;   // 아이콘 열 없이(텍스트만) 렌더
   let methods = cfg.methods || [];
   if(s1Ver==='v42'){ methods = methods.filter(m => m.ic !== CS_ICON.web); }   // Ver 4.2: 매체 플로팅에서 '디지털 ARS'(CS_ICON.web) 항목 전부 숨김
   if(s1Ver!=='v40'){ methods = methods.filter(m => !m.v40only); }   // v40only 항목(예: 사고신고 시트 상담원 연결)은 Ver 4.0에서만 노출
-  const rows = methods.map(m=>
-    `<div class="cs-row${noIcon?' no-ic':''}" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
+  const rows = methods.map(m=>{
+    if(v40lite){   // 아이콘 제거 + 매체명 강조 + (매체시트면) 짧은 설명
+      const kw = csMediaKw(m.nm);
+      const nmHtml = kw ? m.nm.replace(kw, `<b class="cs-em">${kw}</b>`) : m.nm;
+      const desc = kw ? (CS_MEDIA_SHORT[kw] || m.desc) : m.desc;
+      return `<div class="cs-row no-ic" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
+        <div class="cs-body"><div class="cs-nm">${nmHtml}</div>${desc?`<div class="cs-desc">${desc}</div>`:''}</div>
+        <div class="cs-arw">${I.chev}</div>
+      </div>`;
+    }
+    return `<div class="cs-row${noIcon?' no-ic':''}" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
       ${noIcon ? '' : `<div class="cs-ic">${m.ic}</div>`}
       <div class="cs-body"><div class="cs-nm">${m.nm}</div><div class="cs-desc">${m.desc}</div></div>
       <div class="cs-arw">${I.chev}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   el.innerHTML = `<div class="consult-sheet">
     <div class="cs-grip"></div>
     <div class="cs-head"><div class="cs-title">${cfg.title}</div><div class="cs-sub">${cfg.sub}</div></div>
