@@ -307,6 +307,7 @@ body{
 .acc-report{display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--primary);cursor:pointer;white-space:nowrap;font-size:calc(11px*var(--scale));font-weight:700}
 .acc-report svg{width:calc(23px*var(--scale));height:calc(23px*var(--scale));flex:none}
 .acc-report:active{transform:scale(.95)}
+.toss-home.v40main .acc-report{color:var(--busy)}   /* 사고신고 색상을 하단 서비스종료(--busy)와 통일 (v40 전용) */
 
 /* ===== Ver 4.0 · 토스 스타일 스킨 (포인트=키움 마젠타 #E6007F · 네이비 #14183C) ===== */
 /* 디자인 토큰 오버라이드 → s1 전 컴포넌트(var() 기반) 자동 재도색 */
@@ -2703,7 +2704,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709y"></script>
+<script src="app.js?v=20260709z"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
