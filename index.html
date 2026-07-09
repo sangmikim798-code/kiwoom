@@ -431,9 +431,8 @@ body{
   75%,93%{transform:translateY(-216px)}
   100%{transform:translateY(-288px)}
 }
-/* 더보기 펼침: 전체 질문 목록 표시(애니메이션 없음, 높이 자동) */
-.toss-home.v40main .toss-faq.open{height:auto;overflow:visible;padding:6px 10px}
-.toss-home.v40main .toss-faq.open .tf-row{height:auto;padding:12px 8px;border-radius:12px}
+/* 더보기 펼침: 전체 질문 목록(애니메이션 없음, 높이 자동). 행 지오메트리는 접힘과 동일(72px·padding0/14)로 유지 → '입출금이 안돼요' 위치가 토글해도 안 튐 */
+.toss-home.v40main .toss-faq.open{height:auto}
 .toss-home.v40main .toss-list{padding:2px 20px 18px}
 /* 대메뉴 항목 상하 여백 확대 + 아이콘·화살표 위치는 유지(좌우 4px)해 행 배경만 카드폭에 정렬 */
 .toss-home.v40main .toss-cat{padding:13px 4px;gap:14px}
@@ -2700,7 +2699,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709o"></script>
+<script src="app.js?v=20260709p"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
