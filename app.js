@@ -4258,8 +4258,7 @@ function renderS1(){
       if(path.length===0){
         // 상단 로고~인사말은 고정(sticky), 아래 FAQ·카테고리 리스트만 스크롤
         html += `<div class="toss-stick"><div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div><div class="th-right">${bf}</div></div>`
-          + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div></div>`
-          + `<div class="acc-report-bar">${accReport}</div></div>`
+          + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div>${accReport}</div></div>`
           + tossFaqCard()
           + ((s1Ver==='v41' && !bigFont) ? tossCatGrid() : tossCatList());   // v41: 3×3 그리드 (단 큰글씨 ON이면 v40과 동일한 리스트) / v40: 항상 리스트
       } else {
