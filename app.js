@@ -2676,6 +2676,9 @@ const CERT_OPTS = {
   certUseDep: {t:'제출 용도', opts:['비자·유학용','은행 제출용','관공서 제출용','기타']},
   certLang:   {t:'발급 언어', opts:['국문','영문','국·영문 병기']},
   certTaxYear:{t:'과세 연도', opts:['2025년','2024년','2023년','2022년']},
+  reDate:  {t:'기준일자',  opts:['2026.07.09','2026.07.08','2026.06.30','2026.06.29']},   // 증명서 재발급 전용(단순 리스트)
+  reUse:   {t:'발급 용도', opts:['제출용','은행 제출용','관공서 제출용','회사 제출용','기타']},
+  reCopies:{t:'발급 부수', opts:['1부','2부','3부','5부']},
 };
 const certSel = {};   // 선택값 저장(없으면 첫 옵션이 기본값)
 function certVal(key){ return certSel[key] || CERT_OPTS[key].opts[0]; }
@@ -2689,7 +2692,7 @@ function openCertSheet(key){
   const o = CERT_OPTS[key]; if(!o) return;
   const screen=document.getElementById('screen'); if(!screen) return;
   const cur = certVal(key);
-  const el=document.createElement('div'); el.className='tx-ov'; el.id='certSheet'; el.dataset.certkey=key;
+  const el=document.createElement('div'); el.className='tx-ov' + (isV40()?' v40':''); el.id='certSheet'; el.dataset.certkey=key;   // v40: 마젠타 강조
   el.innerHTML=`<div class="ps-sheet">
     <div class="ps-top"><div class="ps-title">${o.t}</div><div class="ps-x" data-certclose>✕</div></div>
     <div class="acct-list">` + o.opts.map(v=>`
@@ -3506,7 +3509,7 @@ function renderCertStatus(){
 function renderCertReissue(){
   const nm = s1state.certName || '증명서';
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'위탁종합'} ${authAcct.no}` : '위탁종합 5257-5602';
-  const F = (k,v)=>`<div class="ir"><span class="k">${k}</span><span class="v" data-flash="${k} 선택은 시연 준비 중입니다. (시연용)">${v} ${I.down}</span></div>`;
+  const D = key=>`<div class="ir"><span class="k">${CERT_OPTS[key].t}</span><span class="v sel" data-certsel="${key}">${certVal(key)} ${I.down}</span></div>`;   // 실제 선택 바텀시트(CERT_OPTS/openCertSheet 재사용)
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
     ${untactSteps(CERT_STEPS, 2)}
@@ -3515,9 +3518,9 @@ function renderCertReissue(){
     <div class="hv-secttl">발급 정보</div>
     <div class="auth-info" style="margin:0 24px 14px">
       <div class="ir"><span class="k">증명서 종류</span><span class="v">${nm}</span></div>
-      ${F('기준일자','2026.07.09')}
-      ${F('발급 용도','제출용')}
-      ${F('발급 부수','1부')}
+      ${D('reDate')}
+      ${D('reUse')}
+      ${D('reCopies')}
       <div class="ir"><span class="k">수령 방법</span><span class="v">등록 이메일 발송</span></div>
     </div>
     <div class="fv-note">재발급 수수료는 없어요. 신청하시면 심사 없이 <b>등록된 이메일</b>로 즉시 발송돼요.</div>
