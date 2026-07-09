@@ -2106,8 +2106,8 @@ function showPopup(label){
     el.innerHTML = `<div class="app-pop">
       <div class="ap-logo voice">${CS_ICON.voice}</div>
       <div class="ap-title">음성 ARS로 연결할게요</div>
-      <div class="ap-desc">${msg}<span class="ap-warn">연결 번호 1544-9000 · 평일 08:00~18:00</span></div>
-      <div class="ap-btns">
+      <div class="ap-desc">${msg}<span class="ap-warn">연결 번호 1544-9900 · 평일 08:00~18:00</span></div>
+      <div class="ap-btns half">
         <div class="ap-btn cancel" data-mcancel>취소</div>
         <div class="ap-btn go" data-mok>연결하기</div>
       </div>
@@ -2131,6 +2131,27 @@ function showPopup(label){
   screen.appendChild(el);
 }
 function closeModal(){ const m=document.getElementById('arsModal'); if(m) m.remove(); }
+/* Ver 4.0 · 음성 ARS 연결하기 → 실제 휴대폰 통화화면(다이얼패드+통화중) 전체화면 오버레이 + 상단 '디지털 ARS 열기' 플로팅 */
+function openVoiceCall(){
+  closeModal();
+  const screen = document.getElementById('screen'); if(!screen) return;
+  const el = document.createElement('div');
+  el.className = 'callscreen-ov'; el.id = 'callScreen';
+  const dialIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16.5V20"/></svg>';
+  const keys = [['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']];
+  const keypad = keys.map(([d,l])=>`<div class="ck"><span class="ck-d">${d}</span><span class="ck-l">${l}</span></div>`).join('');
+  el.innerHTML = `<div class="call-float" data-arsopen><span class="cf-ic">${dialIc}</span>디지털 ARS 열기</div>
+    <div class="call-info">
+      <div class="call-name">키움증권 음성 ARS</div>
+      <div class="call-num">1544-9900</div>
+      <div class="call-status">통화 중</div>
+    </div>
+    <div class="call-keypad">${keypad}</div>
+    <div class="call-endwrap"><div class="call-end" data-callend title="통화 종료">${I.phone}</div><div class="call-endlb">통화 종료</div></div>`;
+  screen.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function closeVoiceCall(){ const el=document.getElementById('callScreen'); if(el) el.remove(); }
 
 /* 서비스 종료 안내 팝업 (Ver 4.0: 토스 스타일 · 입력 인증정보 무효화 안내) */
 function showEndPopup(){
@@ -4956,10 +4977,11 @@ document.addEventListener('click', (e)=>{
   const t = e.target;
 
   // AI 챗봇 → '보이는 ARS 열기' 플로팅 버튼: 챗봇 닫고 보이는 ARS 화면으로
-  if(t.closest('[data-arsopen]')){ closeAiChat(); selectSian('s1'); return; }
+  if(t.closest('[data-arsopen]')){ closeAiChat(); closeVoiceCall(); selectSian('s1'); return; }   // AI챗봇/통화화면 '디지털 ARS 열기' → 메인
 
-  // 음성 ARS 연결 안내 팝업
-  if(t.closest('[data-mok]')){ closeModal(); s1nav({page:'voice', title:'음성 ARS 연결', fromFav:false}); return; }
+  // 음성 ARS 연결 안내 팝업 → 연결하기: Ver 4.0은 휴대폰 통화화면(다이얼패드), 그 외는 기존 연결화면
+  if(t.closest('[data-mok]')){ closeModal(); if(s1Ver==='v40'){ openVoiceCall(); return; } s1nav({page:'voice', title:'음성 ARS 연결', fromFav:false}); return; }
+  if(t.closest('[data-callend]')){ closeVoiceCall(); selectSian('s1'); return; }   // 통화 종료 → 디지털 ARS 메인
   if(t.closest('[data-endok]')){   // 서비스 종료: 세션·입력 인증정보 폐기(저장 안 함) 후 메인 초기화
     closeModal();
     sessionAuthed = false;
