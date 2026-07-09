@@ -2244,7 +2244,7 @@ const V40_FAQ = [
 /* v40 전용 FAQ: 4번째 항목을 '비밀번호를 재설정하고 싶어요'로 교체(자물쇠 아이콘·인라인 SVG). v41/v42는 기존 V40_FAQ 유지 */
 const PW_LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.3" width="15" height="10.4" rx="2.4" fill="#E6007F"/><path d="M8 10.3V8a4 4 0 0 1 8 0v2.3" stroke="#F7A8D3" stroke-width="2.2"/><circle cx="12" cy="14.6" r="1.55" fill="#fff"/><rect x="11.2" y="15.1" width="1.6" height="3.1" rx=".8" fill="#fff"/></svg>';
 const V40_FAQ_V40 = [ V40_FAQ[0], V40_FAQ[1], V40_FAQ[2],
-  {t:'비밀번호를 재설정하고 싶어요', svg:PW_LOCK_SVG},
+  {t:'비밀번호를 재설정하고 싶어요', svg:'<img src="assets/question.png" alt="비밀번호 재설정">'},
 ];
 /* '비밀번호를 재설정하고 싶어요' 클릭 → 어떤 비밀번호를 재설정할지 선택 시트(매체 플로팅 바텀시트 방식) */
 const PWRESET_SHEET = { title:'어떤 비밀번호를 재설정할까요?', sub:'재설정할 비밀번호를 선택해 주세요', noIcon:true, methods:[

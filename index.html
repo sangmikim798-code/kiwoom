@@ -1620,8 +1620,8 @@ body{
 
 /* ===== 하단 네비게이션 ===== */
 .tabbar{display:flex;background:#fff;border-top:1px solid var(--line);padding:9px 6px calc(9px + env(safe-area-inset-bottom));flex:none}
-.tabbar .tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--sub);transition:.15s}
-.tabbar .tb svg{width:23px;height:23px}
+.tabbar .tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;color:var(--sub);transition:.15s}
+.tabbar .tb svg{width:calc(23px*var(--scale));height:calc(23px*var(--scale))}
 .tabbar .tb span{font-size:calc(11px*var(--scale));font-weight:700}
 .tabbar .tb.on{color:var(--primary)}
 .tabbar .tb.end{color:var(--busy)}
@@ -2703,7 +2703,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709x"></script>
+<script src="app.js?v=20260709y"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
