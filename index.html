@@ -297,16 +297,16 @@ body{
 
 /* ===== 큰글씨 on/off 토글 스위치 (Ver 4.0 메인 우상단) ===== */
 /* 큰글씨 — 아이콘 + 아래 라벨, 적용(ON) 시 강조색(마젠타) */
-.bigfont-toggle{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;
+.bigfont-toggle{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;
   padding:0;font-size:calc(11px*var(--scale));font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap}
 .bigfont-toggle .bf-ic{width:calc(23px*var(--scale));height:calc(23px*var(--scale));flex:none}
 .bigfont-toggle:active{transform:scale(.95)}
 .bigfont-toggle.on{color:var(--primary)}
-/* 우상단 큰글씨 토글 + 사고신고 아이콘 묶음 */
-.th-right{display:flex;align-items:center;gap:12px;flex:none}
-.acc-report{display:flex;align-items:center;gap:4px;color:var(--primary);cursor:pointer;white-space:nowrap;font-size:calc(12px*var(--scale));font-weight:700}
-.acc-report svg{width:calc(17px*var(--scale));height:calc(17px*var(--scale));flex:none}
-.acc-report:active{transform:scale(.97)}
+/* 우상단 큰글씨 + 사고신고 아이콘 묶음(둘 다 아이콘+아래 라벨 세로형) */
+.th-right{display:flex;align-items:center;gap:14px;flex:none}
+.acc-report{display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--primary);cursor:pointer;white-space:nowrap;font-size:calc(11px*var(--scale));font-weight:700}
+.acc-report svg{width:calc(23px*var(--scale));height:calc(23px*var(--scale));flex:none}
+.acc-report:active{transform:scale(.95)}
 
 /* ===== Ver 4.0 · 토스 스타일 스킨 (포인트=키움 마젠타 #E6007F · 네이비 #14183C) ===== */
 /* 디자인 토큰 오버라이드 → s1 전 컴포넌트(var() 기반) 자동 재도색 */
@@ -333,10 +333,7 @@ body{
 .toss-back{width:38px;height:38px;display:grid;place-items:center;color:var(--navy);cursor:pointer}
 .toss-back svg{width:24px;height:24px;transform:rotate(180deg)}
 /* 히어로 타이틀 (토스 큰 볼드 2줄) */
-.toss-hero{padding:10px 22px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
-/* 사고신고 — 인사말('무엇을 도와드릴까요?')과 같은 라인 우측 끝 */
-.toss-hero .th-hi{white-space:nowrap}
-.toss-hero .acc-report{flex:none;margin-bottom:3px}
+.toss-hero{padding:10px 22px 10px}
 .flow.toss .toss-home:has(.toss-grid) .toss-hero{padding:6px 22px 4px}
 .flow.toss .toss-home:has(.toss-grid) .toss-faq{margin-bottom:6px}
 .th-hi{font-size:calc(23px*var(--scale));font-weight:800;color:var(--navy);line-height:1.32;letter-spacing:-.7px}
@@ -2669,7 +2666,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709f"></script>
+<script src="app.js?v=20260709g"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
