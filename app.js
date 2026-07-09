@@ -4254,7 +4254,9 @@ function renderS1(){
       const bf = `<div class="bigfont-toggle ${bigFont?'on':''}" data-bigfont title="큰글씨 ${bigFont?'끄기':'켜기'}"><svg class="bf-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14h-5"/><path d="M16 16v-3.5a2.5 2.5 0 0 1 5 0V16"/><path d="M4.5 13h6"/><path d="m3 16 4.5-9 4.5 9"/></svg><span class="bf-t">큰글씨</span></div>`;
       // 우상단 사고신고 아이콘 → 사고등록 매체 플로팅(ACC_SHEET) 재사용
       const accReport = `<div class="acc-report" data-mediasheet="accident" title="사고신고" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span class="acc-report-t">사고신고</span></div>`;
-      html = `<div class="home-wrap toss-home${bigFont?' bigfont':''}">`;
+      // Ver 4.0 메인화면(대메뉴 목록)에만 적용하는 여백·폰트 정리 훅 (v41 그리드·v42·드릴다운 미적용)
+      const v40main = (s1Ver==='v40' && path.length===0) ? ' v40main' : '';
+      html = `<div class="home-wrap toss-home${bigFont?' bigfont':''}${v40main}">`;
       if(path.length===0){
         // 상단 로고~인사말은 고정(sticky), 아래 FAQ·카테고리 리스트만 스크롤
         html += `<div class="toss-stick"><div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div><div class="th-right">${bf}${accReport}</div></div>`

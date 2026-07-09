@@ -409,6 +409,22 @@ body{
 .toss-home.bigfont .tc-ic{width:48px;height:48px}
 .toss-home.bigfont .tc-ic svg{width:27px;height:27px}
 
+/* ===== Ver 4.0 메인 전용 여백·폰트 정리 (v41 그리드·v42·드릴다운 미적용) ===== */
+/* 상하 리듬: 로고→인사말→FAQ→대메뉴 사이 숨통 확보 */
+.toss-home.v40main .toss-top{padding:16px 20px 8px}
+.toss-home.v40main .toss-hero{padding:8px 20px 16px}
+.toss-home.v40main .th-hi{line-height:1.36}
+.toss-home.v40main .toss-faq{margin:2px 16px 18px;padding:14px 10px 8px}
+.toss-home.v40main .toss-list{padding:2px 12px 18px}
+/* 대메뉴 항목 상하 여백 확대 + 아이콘·텍스트 간격 정리 */
+.toss-home.v40main .toss-cat{padding:13px 12px;gap:14px}
+.toss-home.v40main .toss-cat + .toss-cat{margin-top:2px}
+/* 폰트 일관성: FAQ 항목명 = 대메뉴명(16px). 안내글(FAQ 헤더·대메뉴 설명)은 이미 12.5px로 통일 상태 유지 */
+.toss-home.v40main .tf-t{font-size:calc(16px*var(--scale))}
+.toss-home.v40main .tc-nm{font-size:calc(16px*var(--scale))}
+.toss-home.v40main .tc-desc{margin-top:4px}
+.toss-home.v40main .tf-row{padding:12px 8px}
+
 /* ISA 배너 */
 .banner{margin:18px 16px 8px;border-radius:20px;padding:18px 20px;color:#fff;position:relative;overflow:hidden;
   background:linear-gradient(120deg,#7C2FE0 0%,#B43DD0 60%,#FF7BB0 130%);box-shadow:0 12px 28px rgba(124,47,224,.35)}
@@ -2666,7 +2682,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709g"></script>
+<script src="app.js?v=20260709i"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
