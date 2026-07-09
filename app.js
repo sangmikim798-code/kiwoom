@@ -2248,9 +2248,13 @@ function authSelect(){
   ];
   if(iod || che) methods = methods.filter(m=>m.key!=='account');   // 계좌번호 찾기(iod)·계좌 조회(che) 단계에서는 계좌번호 인증 제외
   const head = iod ? '계좌번호를 찾아드릴게요<br>본인 인증 방법을 선택해 주세요' : '본인 인증 방법을<br>선택해주세요';
-  // che: Ver 4.0 토스 헤딩(타이틀+설명)
-  const heading = che
-    ? `<div class="toss-dhead"><div class="td-title">계좌 조회</div><div class="td-desc">${cheAuthCtx()?cheAuthCtx()+'을 확인할 ':''}본인 인증 방법을 선택해 주세요</div></div>`
+  const selTitle = iod ? '계좌번호 찾기' : (che ? '계좌 조회' : '본인 인증');
+  const selDesc  = iod ? '본인 인증 후 계좌번호를 찾아드릴게요'
+                : che ? `${cheAuthCtx()?cheAuthCtx()+'을 확인할 ':''}본인 인증 방법을 선택해 주세요`
+                : '본인 인증 방법을 선택해 주세요';
+  // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: auth-head
+  const heading = isV40()
+    ? `<div class="toss-dhead"><div class="td-title">${selTitle}</div><div class="td-desc">${selDesc}</div></div>`
     : `<div class="auth-head">${head}</div>`;
   return `<div class="auth-wrap${che?' cheauth':''}">
     ${heading}
@@ -2277,12 +2281,12 @@ function authStep(method){
       ).join('') + `</div>`;
     const iod = isIodFlow();
     const cheP = isCheAuth();
-    const toss = iod || cheP;   // 토스 톤(v40 계열)
-    const reqNote = toss ? '위 정보로 휴대폰 인증을 진행할게요.' : '위 정보로 휴대폰 본인인증을 진행합니다.';
-    const otpNote = toss ? '인증번호를 보내드렸어요. 문자를 확인해 주세요.' : '인증번호를 발송했습니다. 문자를 확인해주세요.';
+    const v40 = isV40();   // v40 계열: 토스 톤 + Ver 4.0 헤딩(타이틀+설명)
+    const reqNote = v40 ? '위 정보로 휴대폰 인증을 진행할게요.' : '위 정보로 휴대폰 본인인증을 진행합니다.';
+    const otpNote = v40 ? '인증번호를 보내드렸어요. 문자를 확인해 주세요.' : '인증번호를 발송했습니다. 문자를 확인해주세요.';
     // 토스: 헤딩이 '인증번호 입력'이라 라벨/placeholder 중복 → 제거
-    const otpLabel = toss ? '' : `<label>인증번호</label>`;
-    const otpPh    = toss ? '' : '인증번호 6자리 입력';
+    const otpLabel = v40 ? '' : `<label>인증번호</label>`;
+    const otpPh    = v40 ? '' : '인증번호 6자리 입력';
     const tail = s1state.otpSent
       ? `<div class="auth-field" style="margin-top:20px">
           ${otpLabel}
@@ -2296,10 +2300,10 @@ function authStep(method){
       : `<div class="auth-note">${reqNote}</div>
         <div class="primary-btn" data-otpreq>인증 요청하기</div>`;
     // 인증 요청 후에는 '인증번호 입력' 화면처럼 헤딩 전환 + 고객정보카드 숨김
-    const head = (toss && s1state.otpSent) ? '인증번호 6자리를<br>입력해주세요' : '본인 명의 휴대폰으로<br>인증을 진행해주세요';
-    const showInfo = !(toss && s1state.otpSent);
-    // che: Ver 4.0 토스 헤딩(타이틀+설명)
-    const heading = cheP
+    const head = (v40 && s1state.otpSent) ? '인증번호 6자리를<br>입력해주세요' : '본인 명의 휴대폰으로<br>인증을 진행해주세요';
+    const showInfo = !(v40 && s1state.otpSent);
+    // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: auth-head
+    const heading = v40
       ? (s1state.otpSent
           ? `<div class="toss-dhead"><div class="td-title">인증번호 입력</div><div class="td-desc">문자로 받은 인증번호 6자리를 입력해 주세요</div></div>`
           : `<div class="toss-dhead"><div class="td-title">휴대폰 인증</div><div class="td-desc">본인 명의 휴대폰으로 인증해 주세요</div></div>`)
@@ -2323,7 +2327,7 @@ function authStep(method){
       {nm:'페이코',   s:'PAYCO',bg:'#FF1F40', fg:'#fff'},
     ];
     const cheS = isCheAuth();
-    const sHeading = cheS
+    const sHeading = isV40()
       ? `<div class="toss-dhead"><div class="td-title">간편 인증</div><div class="td-desc">이용하실 간편인증서를 선택해 주세요</div></div>`
       : `<div class="auth-head">간편인증서를<br>선택해주세요</div>`;
     return `<div class="auth-wrap${cheS?' cheauth':''}">
@@ -2340,13 +2344,18 @@ function authStep(method){
   const iod = isIodFlow();
   const che = isCheAuth();
   const isa = isIsaFlow();
+  const v40 = isV40();
+  const ctx = cheAuthCtx();
   const head = isa ? '중개형 ISA 신청현황을<br>조회할 계좌를 인증해주세요' : (iod ? '어떤 계좌에서<br>입출금이 안되나요?' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요');
+  const acctDesc = isa ? '중개형 ISA 신청현황을 확인할 계좌번호와 비밀번호를 입력해 주세요'
+                 : iod ? '입출금 상태를 확인할 계좌번호와 비밀번호를 입력해 주세요'
+                 : che ? `${ctx?ctx+'을 확인할 ':''}계좌번호와 비밀번호를 입력해 주세요`
+                 : '본인 명의 계좌번호와 비밀번호를 입력해 주세요';
   const note = isa ? '인증하신 계좌의 중개형 ISA 가입·이전 신청현황을 확인해요.' : (iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '본인 명의 계좌만 조회 가능해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.'));
   const acctVal = iod ? (s1state.iodAcctNo||'') : (che ? (s1state.cheAcctNo||'') : '');   // 계좌 선택(인증 후 계좌리스트)에서 자동 입력된 계좌번호
-  // che: Ver 4.0 토스 헤딩(타이틀+설명, 설명은 진입 경로 컨텍스트 반영), 그 외: 기존 auth-head
-  const ctx = cheAuthCtx();
-  const heading = che
-    ? `<div class="toss-dhead"><div class="td-title">계좌 인증</div><div class="td-desc">${ctx?ctx+'을 확인할 ':''}계좌번호와 비밀번호를 입력해 주세요</div></div>`
+  // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: 기존 auth-head
+  const heading = v40
+    ? `<div class="toss-dhead"><div class="td-title">계좌 인증</div><div class="td-desc">${acctDesc}</div></div>`
     : `<div class="auth-head">${head}</div>`;
   const findlink = iod
     ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>`
@@ -3580,8 +3589,7 @@ function renderIodAcctSel(){
   return pageTop(s1state.title||'계좌 선택', true)
     + untactSteps(iodStepsFor(), 0)
     + `<div class="auth-wrap">
-        <div class="auth-head">인증된 명의로<br>계좌를 찾았어요</div>
-        <div class="iodsel-guide">입출금을 확인할 계좌를 선택해 주세요</div>
+        <div class="toss-dhead"><div class="td-title">계좌 선택</div><div class="td-desc">${isIsaFlow() ? '중개형 ISA 신청현황을 확인할 계좌를 선택해 주세요' : '입출금을 확인할 계좌를 선택해 주세요'}</div></div>
         <div class="iodsel-list">${rows}</div>
       </div>`;
 }
