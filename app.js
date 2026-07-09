@@ -2165,7 +2165,7 @@ function tossCatGrid(){
 const V40_FAQ = [
   {t:'입출금이 안돼요',   svg:'<img src="assets/error.png" alt="입출금 오류">'},
   {t:'각종 증명서 발급', svg:'<img src="assets/certificate.png" alt="증명서 발급">'},
-  {t:'ISA서민형 가입서류 제출하고 싶어요',   svg:'<img src="assets/file-upload.png" alt="ISA 서민형 가입서류 제출">'},
+  {t:'ISA 가입서류를 내고 싶어요',   svg:'<img src="assets/file-upload.png" alt="ISA 가입서류 제출">'},
   {t:'자주 묻는 질문',   svg:'<img src="assets/question.png" alt="자주 묻는 질문">'},
 ];
 function tossFaqCard(){
@@ -2174,7 +2174,7 @@ function tossFaqCard(){
   const rows = shown.map(it=>{
     // '입출금이 안돼요'는 실제 업무 플로우(계좌 인증 → 상태 확인 → 결과) 진입, 나머지는 시연용 안내
     const act = it.t==='입출금이 안돼요' ? `data-iodstart`
-              : it.t==='ISA서민형 가입서류 제출하고 싶어요' ? `data-isastart`
+              : it.t==='ISA 가입서류를 내고 싶어요' ? `data-isastart`
               : `data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"`;
     return `<div class="tf-row" ${act}><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`;
   }).join('');
