@@ -2364,6 +2364,7 @@ function authStep(method){
   const findlink = iod
     ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>`
     : (che ? `<div class="iod-findlink" data-cheacctfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>` : '');
+  const chealt = che ? `<div class="iod-findlink" data-chealt>다른 방법으로 조회하기 ›</div>` : '';   // 체결·주문내역: 계좌인증 대신 매체(영S#/음성ARS/디지털ARS) 플로팅
   return `<div class="auth-wrap${che?' cheauth':''}">
     ${heading}
     <div class="auth-info">
@@ -2375,6 +2376,7 @@ function authStep(method){
     <div class="auth-note">${note}</div>
     <div class="primary-btn" data-authdone>확인</div>
     ${findlink}
+    ${chealt}
   </div>`;
 }
 
@@ -4866,7 +4868,13 @@ document.addEventListener('click', (e)=>{
   }
   // 주식주문 계단식 플로팅: 진입 / 선택(단계 진행) / 닫기 — consult 닫기보다 먼저(stk-ov도 consult-ov라)
   if(t.closest('[data-stkorder]')){ stkOrder={method:'',kind:'',type:'',sub:''}; openStkSheet('method'); return; }
-  if(t.closest('[data-chesheet]')){ openMethodSheet(CHE_SHEET); return; }   // 체결내역 조회 → 연결매체 선택 플로팅
+  if(t.closest('[data-chesheet]')){   // 체결·주문내역 조회 → 계좌인증 먼저(디지털ARS 기본), 인증 화면에서 '다른 방법으로 조회하기'로 매체 플로팅
+    s1state.authNext = {go:'chefilled'};
+    s1state.cheAcctNo = '';
+    if(sessionAuthed){ gotoAuthNext(); return; }   // 이미 인증 → 체결내역 바로
+    s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
+    return;
+  }
   if(t.closest('[data-sisesheet]')){ openMethodSheet(SISE_SHEET); return; }  // 시세 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-idxsheet]')){ openMethodSheet(IDX_SHEET); return; }    // 지수정보·환율 안내 → 연결매체 선택 플로팅
   if(t.closest('[data-depsheet]')){ openMethodSheet(DEP_SHEET); return; }    // 예수금·주문가능금액 조회 → 연결매체 선택 플로팅
@@ -4874,6 +4882,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-txnsheet]')){ openMethodSheet(TXN_SHEET); return; }    // 거래내역 조회 → 연결매체 선택 플로팅
   if(t.closest('[data-misusheet]')){ openMethodSheet(MISU_SHEET); return; }  // 미수·반대매매 조회 → 연결매체 선택 플로팅(2매체)
   if(t.closest('[data-myacctsheet]')){ openMethodSheet(MYACCT_SHEET); return; }  // 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(2매체)
+  if(t.closest('[data-chealt]')){ openMethodSheet(CHE_SHEET); return; }   // 체결·주문내역 계좌인증 화면 '다른 방법으로 조회하기' → 매체 플로팅
   const msh = t.closest('[data-mediasheet]');
   if(msh){ const cfg = MEDIA_SHEETS[msh.dataset.mediasheet]; if(cfg) openMethodSheet(cfg); return; }   // 입출금·이체 각 항목 → 2매체 플로팅
   const stkSel = t.closest('[data-stkpick]');
