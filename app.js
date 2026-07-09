@@ -3385,7 +3385,7 @@ function renderIsaResult(){
     cta = '만기연장 서류 제출하기';
   }
   return `<div class="fv-wrap">
-    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+    <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div><div class="toss-rlink" data-isareissue>발급번호 재등록</div></div>
     <div class="toss-dhead"><div class="td-title">신청현황</div><div class="td-desc">중개형 ISA 신청내역을 확인해요</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${acct}</span></div>
     ${tabBar}
@@ -4971,6 +4971,8 @@ document.addEventListener('click', (e)=>{
   if(isatab){ s1state.isaTab = isatab.dataset.isatab; renderS1(); return; }
   // 신청내역 확인 → 신청현황 화면
   if(t.closest('[data-isahistory]')){ s1nav({page:'isaresult', title:'신청현황', noHome:true}); return; }
+  // 발급번호 재등록 → 발급번호 입력 화면
+  if(t.closest('[data-isareissue]')){ s1nav({page:'isaissue', title:'발급번호 재등록', noHome:true}); return; }
   // 발급번호 제출(홈택스 14자리)
   if(t.closest('[data-isaissuedone]')){
     const no = ['isaIssue1','isaIssue2','isaIssue3','isaIssue4'].map(id=>(document.getElementById(id)||{}).value||'').join('').replace(/\D/g,'');
