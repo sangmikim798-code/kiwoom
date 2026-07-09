@@ -2107,7 +2107,7 @@ function showPopup(label){
       <div class="ap-logo voice">${CS_ICON.voice}</div>
       <div class="ap-title">음성 ARS로 연결할게요</div>
       <div class="ap-desc">${msg}<span class="ap-warn">연결 번호 1544-9900 · 평일 08:00~18:00</span></div>
-      <div class="ap-btns half">
+      <div class="ap-btns">
         <div class="ap-btn cancel" data-mcancel>취소</div>
         <div class="ap-btn go" data-mok>연결하기</div>
       </div>

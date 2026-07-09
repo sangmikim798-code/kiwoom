@@ -1091,8 +1091,7 @@ body{
   background:var(--primary-soft);border-radius:12px;padding:11px 8px}
 .ap-step{font-size:calc(12px*var(--scale));font-weight:700;color:var(--primary)}
 .ap-arr{color:var(--primary);font-weight:800;opacity:.55}
-.ap-btns{display:grid;grid-template-columns:1fr 1.4fr;gap:9px}
-.ap-btns.half{grid-template-columns:1fr 1fr}   /* 취소·연결하기 반반 */
+.ap-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px}   /* 팝업 버튼(취소·액션)은 항상 반반 */
 /* Ver 4.0 · 음성 ARS 통화화면(전체화면 오버레이 · 다이얼패드) */
 .callscreen-ov{position:absolute;inset:0;z-index:90;background:radial-gradient(circle at 50% 22%,#2a3466,#0f1428 68%);color:#fff;
   display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:100px 0 32px;opacity:0;transition:opacity .25s}
@@ -2742,7 +2741,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710l"></script>
+<script src="app.js?v=20260710m"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
