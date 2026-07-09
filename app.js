@@ -3791,6 +3791,23 @@ function renderIodPurposeDone(){
 function renderVoiceConnect(){
   const label = s1state.voiceLabel || '음성 ARS';
   const acctVal = sessionAuthed ? `${(authAcct&&authAcct.no)||'인증 계좌'} 연동` : '통화 중 확인';
+  // Ver 4.0: 토스 헤더(뒤로가기만) + 중앙정렬 본문(수화기 아이콘·연결정보·연결 버튼) — renderVoiceV40/renderAgentV40와 동일 구조
+  if(isV40()){
+    return `<div class="acv-wrap">
+      <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+      <div class="agent-connect">
+        <div class="ac-ic">${I.phone}</div>
+        <div class="ac-t">음성 ARS로 연결할까요?</div>
+        <div class="ac-d">선택하신 메뉴를 음성 안내로<br>바로 도와드릴게요.</div>
+        <div class="ac-info">
+          <div class="ac-row"><span class="k">연결 메뉴</span><span class="v">${label}</span></div>
+          <div class="ac-row"><span class="k">계좌 연동</span><span class="v">${acctVal}</span></div>
+        </div>
+        <div class="primary-btn" data-voicego>음성 ARS 연결</div>
+        <div class="notice">${wipeNote('음성 ARS로 연결하면 지금 보고 계신 디지털 ARS는 종료돼요.')}</div>
+      </div>
+    </div>`;
+  }
   return pageTop(s1state.title||'음성 ARS 연결', true)
     + `<div class="auth-wrap">
         <div class="auth-head">음성 ARS로<br>바로 연결해 드릴게요</div>
