@@ -416,20 +416,20 @@ body{
 .toss-home.v40main .toss-hero{padding:8px 20px 16px 25px}
 .toss-home.v40main .th-hi{line-height:1.36}
 /* 인사글·FAQ카드·대메뉴 행 좌우 경계를 로고(좌 20px)에 맞춰 폭 통일(20..좌우20 = 폭 320) */
-/* FAQ 헤더(문구+더보기)를 회색영역 밖(인사말 아래)으로: 25px 시작라인, 폰트/색상은 기존 유지 */
-.toss-home.v40main .tf-head{padding:1px 25px 9px;gap:8px}
-/* FAQ 회색영역: 대메뉴 1행 높이(72px)만큼만 보이는 티커 창 */
-.toss-home.v40main .toss-faq{margin:0 25px 18px 25px;padding:0;height:72px;overflow:hidden}
+/* FAQ 헤더: 문구 좌측=회색카드 아이콘 시작점(39px=카드좌25+행패딩14), [V]더보기 우측=카드 [>]아이콘 우측(화면우 39px) */
+.toss-home.v40main .tf-head{padding:1px 39px 9px;gap:8px}
+/* FAQ 회색영역: 티커 창 높이(적당히 축소 60px) */
+.toss-home.v40main .toss-faq{margin:0 25px 18px 25px;padding:0;height:60px;overflow:hidden}
 .toss-home.v40main .toss-faq .tf-list{margin:0}
-.toss-home.v40main .toss-faq .tf-row{height:72px;padding:0 14px;border-radius:0}
-/* 질문이 아래→위로 자동 슬라이드(4항목 + 이음새용 첫 항목 복제1 = 5행, 72px 단위 이동) */
+.toss-home.v40main .toss-faq .tf-row{height:60px;padding:0 14px;border-radius:0}
+/* 질문이 아래→위로 자동 슬라이드(4항목 + 이음새용 첫 항목 복제1 = 5행, 60px 단위 이동) */
 .toss-home.v40main .tf-ticker{animation:faqTicker 16s infinite}
 @keyframes faqTicker{
   0%,18%{transform:translateY(0)}
-  25%,43%{transform:translateY(-72px)}
-  50%,68%{transform:translateY(-144px)}
-  75%,93%{transform:translateY(-216px)}
-  100%{transform:translateY(-288px)}
+  25%,43%{transform:translateY(-60px)}
+  50%,68%{transform:translateY(-120px)}
+  75%,93%{transform:translateY(-180px)}
+  100%{transform:translateY(-240px)}
 }
 /* 더보기 펼침: 전체 질문 목록(애니메이션 없음, 높이 자동). 행 지오메트리는 접힘과 동일(72px·padding0/14)로 유지 → '입출금이 안돼요' 위치가 토글해도 안 튐 */
 .toss-home.v40main .toss-faq.open{height:auto}
@@ -2699,7 +2699,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709p"></script>
+<script src="app.js?v=20260709q"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
