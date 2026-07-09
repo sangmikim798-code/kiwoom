@@ -4903,7 +4903,7 @@ document.addEventListener('click', (e)=>{
     if(kind==='pwapp'){ openAppLink('iodpw'); return; }          // 계좌 비밀번호 재설정 — 영웅문S# 앱 연결
     if(kind==='pwopenapp'){ openAppLink('iodpwopen'); return; }  // 계좌 비밀번호 재설정 — 키움계좌개설 앱 연결
     if(kind==='cheapp'){ openAppLink('chefilled'); return; }                                                          // 체결내역 조회 — 영웅문S# 앱 연결
-    if(kind==='chedigital'){ s1state.authNext = {go:'chefilled'}; s1state.cheAcctNo = ''; s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true}); return; }   // 체결내역 조회 — 디지털 ARS: 계좌인증 → 체결내역 화면
+    if(kind==='chedigital'){ s1state.authNext = {go:'chefilled'}; s1state.cheAcctNo = ''; if(sessionAuthed){ gotoAuthNext(); return; } s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true}); return; }   // 체결내역 조회 — 디지털 ARS: 계좌인증(이미 인증 시 생략) → 체결내역 화면
     if(kind==='chevoice'){ openMethodSheet(CHE_VOICE_SHEET); return; }                                               // 체결내역 조회 — 음성 ARS → 중메뉴 선택 플로팅
     if(kind==='chev0'){ flash('음성 ARS로 「금일 체결내역 조회」를 안내해 드릴게요. (시연용)'); return; }
     if(kind==='chev1'){ flash('음성 ARS로 「금일 미체결 내역 조회」를 안내해 드릴게요. (시연용)'); return; }
@@ -5042,6 +5042,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-iodstart]')){
     s1state.authNext = {go:'iodcheck'};
     s1state.iodAcctNo = '';   // 새 플로우 시작 → 자동입력 계좌번호 초기화
+    if(sessionAuthed){ gotoAuthNext(); return; }   // 이미 계좌인증됨 → 인증 생략, 바로 진행
     s1nav({page:'authstep', authMethod:'account', title:'계좌 인증', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
@@ -5049,6 +5050,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-isastart]')){
     s1state.authNext = {go:'iodcheck', isa:true};
     s1state.iodAcctNo = '';
+    if(sessionAuthed){ gotoAuthNext(); return; }   // 이미 계좌인증됨 → 인증 생략
     s1nav({page:'authstep', authMethod:'account', title:'ISA 가입서류 제출', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
@@ -5056,6 +5058,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-certstart]')){
     s1state.authNext = {go:'iodcheck', cert:true};
     s1state.iodAcctNo = '';
+    if(sessionAuthed){ gotoAuthNext(); return; }   // 이미 계좌인증됨 → 인증 생략
     s1nav({page:'authstep', authMethod:'account', title:'증명서 발급 현황', acctPw:'', otpSent:false, fromFav:false, noBack:false, noHome:true});
     return;
   }
