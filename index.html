@@ -1002,6 +1002,10 @@ body{
 /* Ver 4.0 · 체결·주문내역 계좌인증(che) — 토스백 헤더 아래, 좌 24px 정렬 */
 .acv-wrap .auth-wrap.cheauth{padding:0 24px 26px}   /* 상단 2px 제거 → 체결 흐름 인증 타이틀도 상세화면/드릴다운과 동일 top(58) */
 .auth-wrap .toss-dhead{padding:2px 0 12px 0}   /* 계좌인증 계열(v40) 헤더도 상세화면/드릴다운과 동일 톤(수평 0 → auth-wrap 24px 패딩 활용) */
+/* '입출금이 안돼요' 계좌인증(iodauth) — 초보자용 간결: 타이틀·카드·버튼 좌우 25px 정렬, '계좌번호를 모르겠어요' 회색 */
+.page-top.iod-top ~ .auth-wrap.iodauth{padding-left:25px;padding-right:25px}
+.auth-wrap.iodauth .iod-findlink{color:var(--sub)}
+.auth-wrap.iodauth .td-desc{word-break:keep-all}   /* 설명글 단어 단위 줄바꿈(어색한 '주세/요' 방지) */
 .auth-wrap.cheauth .auth-head{padding-left:0;padding-right:0}
 .auth-head{font-size:calc(21px*var(--scale));font-weight:800;color:var(--ink);
   line-height:1.4;letter-spacing:-.3px;padding:12px 2px 22px}
@@ -2741,7 +2745,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710m"></script>
+<script src="app.js?v=20260710o"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
