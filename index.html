@@ -296,14 +296,12 @@ body{
 .v21self .home-bottom{padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
 
 /* ===== 큰글씨 on/off 토글 스위치 (Ver 4.0 메인 우상단) ===== */
-.bigfont-toggle{display:flex;align-items:center;gap:7px;background:none;border:none;
-  padding:0;font-size:calc(12px*var(--scale));font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap}
-.bigfont-toggle:active{transform:scale(.97)}
-.bigfont-toggle .bf-sw{position:relative;width:34px;height:20px;border-radius:999px;background:#d1d5db;transition:.18s;flex:none}
-.bigfont-toggle .bf-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.18s}
+/* 큰글씨 — 아이콘 + 아래 라벨, 적용(ON) 시 강조색(마젠타) */
+.bigfont-toggle{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;
+  padding:0;font-size:calc(11px*var(--scale));font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.bigfont-toggle .bf-ic{width:calc(23px*var(--scale));height:calc(23px*var(--scale));flex:none}
+.bigfont-toggle:active{transform:scale(.95)}
 .bigfont-toggle.on{color:var(--primary)}
-.bigfont-toggle.on .bf-sw{background:var(--primary)}
-.bigfont-toggle.on .bf-knob{transform:translateX(14px)}
 /* 우상단 큰글씨 토글 + 사고신고 아이콘 묶음 */
 .th-right{display:flex;align-items:center;gap:12px;flex:none}
 .acc-report{display:flex;align-items:center;gap:4px;color:var(--primary);cursor:pointer;white-space:nowrap;font-size:calc(12px*var(--scale));font-weight:700}
@@ -2671,7 +2669,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709d"></script>
+<script src="app.js?v=20260709e"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

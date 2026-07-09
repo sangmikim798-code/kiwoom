@@ -4251,7 +4251,7 @@ function renderS1(){
       /* Ver 4.0 계열 · 토스 스타일 디지털 ARS (포인트=키움 마젠타·네이비) — 9 카테고리(ARS_CAT6). v40=토스 리스트 / v41=3×3 그리드. 드릴다운·전체메뉴없음 공통. */
       const path = s1state.sarsPath || [];
       // 우상단 큰글씨 on/off 스위치 (기존 전역 bigFont+applyScale 재사용)
-      const bf = `<div class="bigfont-toggle ${bigFont?'on':''}" data-bigfont title="큰글씨 ${bigFont?'끄기':'켜기'}"><span class="bf-t">큰글씨</span><span class="bf-sw"><span class="bf-knob"></span></span></div>`;
+      const bf = `<div class="bigfont-toggle ${bigFont?'on':''}" data-bigfont title="큰글씨 ${bigFont?'끄기':'켜기'}"><svg class="bf-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14h-5"/><path d="M16 16v-3.5a2.5 2.5 0 0 1 5 0V16"/><path d="M4.5 13h6"/><path d="m3 16 4.5-9 4.5 9"/></svg><span class="bf-t">큰글씨</span></div>`;
       // 우상단 사고신고 아이콘 → 사고등록 매체 플로팅(ACC_SHEET) 재사용
       const accReport = `<div class="acc-report" data-mediasheet="accident" title="사고신고" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span class="acc-report-t">사고신고</span></div>`;
       html = `<div class="home-wrap toss-home${bigFont?' bigfont':''}">`;
