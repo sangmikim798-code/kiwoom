@@ -2140,7 +2140,8 @@ function openVoiceCall(){
   const dialIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16.5V20"/></svg>';
   const keys = [['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']];
   const keypad = keys.map(([d,l])=>`<div class="ck"><span class="ck-d">${d}</span><span class="ck-l">${l}</span></div>`).join('');
-  el.innerHTML = `<div class="call-float" data-arsopen><span class="cf-ic">${dialIc}</span>디지털 ARS 열기</div>
+  el.innerHTML = `<div class="call-statusbar"><span>9:41</span><span class="icons">●●● 5G ▮</span></div>
+    <div class="call-float" data-arsopen><span class="cf-ic">${dialIc}</span>디지털 ARS 열기</div>
     <div class="call-info">
       <div class="call-name">키움증권 음성 ARS</div>
       <div class="call-num">1544-9900</div>
