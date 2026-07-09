@@ -2373,7 +2373,7 @@ function authStep(method){
         <div class="ir-input ir-pw" data-pwopen><span id="acctPwDisp" class="acct-dots" data-ph="비밀번호 입력 (4~8자리)">${'●'.repeat((s1state.acctPw||'').length)}</span></div></div>
     </div>
     <div class="auth-note">${note}</div>
-    <div class="primary-btn" data-authdone>${(isa||cert) ? '계좌 인증하고 조회하기' : '확인'}</div>
+    <div class="primary-btn" data-authdone>확인</div>
     ${findlink}
   </div>`;
 }
