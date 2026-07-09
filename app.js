@@ -3133,7 +3133,6 @@ const ADDR_SHEET = { title:'주소·전화번호 변경을 어떻게 할까요?'
   {kind:'addrvoice', ic:CS_ICON.voice, nm:'음성 ARS로 변경하기',   desc:'음성 안내에 따라 변경해요'},
 ]};
 const ACCTOPEN_SHEET = { title:'비대면 계좌개설을 어떻게 할까요?', sub:'편하신 방법으로 개설을 도와드려요', methods:[
-  {kind:'acctopenkiwoom', ic:KIWOOM_OPEN_IC, nm:'키움계좌개설 앱에서 개설하기', desc:'휴대폰 인증과 신분증 촬영으로 바로 개설해요', notV40:true},
   {kind:'acctopenapp',    ic:IOD_HERO_IC,    nm:'영웅문S#에서 개설하기',       desc:'앱을 열어 비대면 계좌개설을 진행해요'},
 ]};
 /* 공모주·유상청약(cat5) — 각 항목 3매체(디지털ARS 조회/영웅문S# 청약/음성ARS) 플로팅 */
@@ -3356,7 +3355,6 @@ const CHE_VOICE_SHEET = { title:'어떤 내역을 안내해 드릴까요?', sub:
 /* 계좌인증 '계좌비밀번호를 모르겠어요' → 방법 선택 플로팅(상담팝업 스타일) */
 const IOD_PW_SHEET = { title:'계좌 비밀번호를 잊으셨나요?', sub:'편하신 방법으로 재설정을 도와드려요', methods:[
   {kind:'pwapp',     ic:IOD_HERO_IC,                                                             nm:'영웅문S#에서 재설정하기',    desc:'앱을 열어 계좌 비밀번호를 다시 설정해요'},
-  {kind:'pwopenapp', ic:'<img src="assets/kiwoom-favicon.ico" alt="키움계좌개설">', nm:'키움계좌개설 앱에서 재설정하기', desc:'휴대폰 인증과 신분증 촬영으로 다시 설정할 수 있어요', notV40:true},
 ]};
 const IOD_RESULTS = {
   multi: {
@@ -3633,7 +3631,6 @@ function openMethodSheet(cfg){
   let methods = cfg.methods || [];
   if(s1Ver==='v42'){ methods = methods.filter(m => m.ic !== CS_ICON.web); }   // Ver 4.2: 매체 플로팅에서 '디지털 ARS'(CS_ICON.web) 항목 전부 숨김
   if(s1Ver!=='v40'){ methods = methods.filter(m => !m.v40only); }   // v40only 항목(예: 사고신고 시트 상담원 연결)은 Ver 4.0에서만 노출
-  if(s1Ver==='v40'){ methods = methods.filter(m => !m.notV40); }    // notV40 항목(예: 키움계좌개설 앱)은 Ver 4.0에서 숨김
   const rows = methods.map(m=>
     `<div class="cs-row${noIcon?' no-ic':''}" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
       ${noIcon ? '' : `<div class="cs-ic">${m.ic}</div>`}
