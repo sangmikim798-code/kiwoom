@@ -437,9 +437,10 @@ body{
 /* 대메뉴 항목 상하 여백 확대 + 아이콘·화살표 위치는 유지(좌우 4px)해 행 배경만 카드폭에 정렬 */
 .toss-home.v40main .toss-cat{padding:13px 4px;gap:14px}
 .toss-home.v40main .toss-cat + .toss-cat{margin-top:2px}
-/* 대메뉴 아이콘 비움 — 앱 색상 톤 미정으로 중립 회색 플레이스홀더(마젠타 톤 제거). v41/v42는 기존 아이콘 유지 */
-.toss-home.v40main .tc-ic{background:#EEF0F3}
+/* 대메뉴 아이콘 비움 — 앱 색상 톤 미정으로 중립 회색 플레이스홀더(마젠타 톤 제거) + 조금 진한 회색 테두리 + '추가예정' 의미의 + 아이콘. v41/v42는 기존 아이콘 유지 */
+.toss-home.v40main .tc-ic{background:#EEF0F3;border:1.5px solid #C4CAD4;position:relative}
 .toss-home.v40main .tc-ic svg{display:none}
+.toss-home.v40main .tc-ic::after{content:'+';color:#9AA1AC;font-size:calc(24px*var(--scale));font-weight:300;line-height:1}
 /* 폰트 일관성: FAQ 항목명 = 대메뉴명(16px). 안내글(FAQ 헤더·대메뉴 설명)은 이미 12.5px로 통일 상태 유지 */
 .toss-home.v40main .tf-t{font-size:calc(16px*var(--scale))}
 .toss-home.v40main .tc-nm{font-size:calc(16px*var(--scale))}
@@ -2702,7 +2703,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260709w"></script>
+<script src="app.js?v=20260709x"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
