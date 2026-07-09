@@ -1945,12 +1945,12 @@ const ARS_CAT6_V40 = [
     {t:'주식 · 신용 · 금융상품 잔고조회', bal:true},
     {t:'거래내역 조회', txn:true},
     {t:'미수·반대매매 조회', misu:true},
-    {t:'계좌번호·MY계좌 정보확인', myacct:true},
   ]),
   catNode('2. ID · 비밀번호 · 계좌정보', 'shield', [
     {t:'비밀번호 관리', media:'pwmgmt'},
     {t:'인증·ID 관리',  media:'authid'},
     {t:'부가서비스',    media:'etcsvc'},
+    {t:'계좌정보조회',  myacct:true},   // 예수금·잔고조회 5번에서 이동(구 '계좌번호·MY계좌 정보확인') — 2매체(디지털ARS/영S#) 플로팅
   ]),
   catNode('3. 입출금 · 뱅킹서비스', 'transfer', [
     {t:'송금', media:'song'},
