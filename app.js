@@ -1708,7 +1708,7 @@ function renderV21Menu(forceOpen){
   const cat = s1state.amCat || 'self';
   const cats = [['self','셀프서비스'],['ars','ARS'],['staff','상담원연결']];
   const left = cats.map(([k,nm])=>`<div class="am-dae ${k===cat?'on':''}" data-amcat="${k}">${nm}</div>`).join('');
-  const tree = cat==='ars' ? (isV40() ? ARS_CAT6 : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
+  const tree = cat==='ars' ? (isV40() ? catData() : IVR) : cat==='staff' ? FAV_MENU : SELF_MENU;
   const right = `<div class="amv-list">${renderAccTree(tree, '', cat, forceOpen)}</div>`;
   return `<div class="am2col v21col"><div class="am-left">${left}</div><div class="am-right">${right}</div></div>`;
 }
@@ -1935,10 +1935,72 @@ const ARS_CAT6 = [
     {t:'이벤트 안내',             media:'event'},        // 디지털ARS(이벤트 리스트)/영S#
   ]),
 ];
+/* Ver 4.0 전용 대메뉴 재편(2026-07-09): 8개 카테고리로 통합·재정렬. v41(그리드)·v42는 기존 ARS_CAT6(9개) 유지.
+   - 계좌개설·사고 + 업무신청 → '비대면 업무'로 병합 / 공지·이용안내 삭제(ARS이용안내만 시스템 및 상품문의로 이동)
+   - 신규 '시스템 및 상품문의' = 시스템·해외주식·선물옵션·금융상품·CFD(상담원 연결) + ARS 이용안내 */
+const ARS_CAT6_V40 = [
+  catNode('1. 계좌 · 잔고조회', 'wallet', [
+    {t:'예수금 · 주문가능금액 조회', dep:true},
+    {t:'주식 · 신용 · 금융상품 잔고조회', bal:true},
+    {t:'거래내역 조회', txn:true},
+    {t:'미수·반대매매 조회', misu:true},
+    {t:'계좌번호·MY계좌 정보확인', myacct:true},
+  ]),
+  catNode('2. ID · 비밀번호 · 내정보', 'shield', [
+    {t:'비밀번호 관리', media:'pwmgmt'},
+    {t:'인증·ID 관리',  media:'authid'},
+    {t:'부가서비스',    media:'etcsvc'},
+  ]),
+  catNode('3. 입출금 · 뱅킹서비스', 'transfer', [
+    {t:'송금', media:'song'},
+    {t:'계좌 간 자금이체', media:'xfer'},
+    {t:'송금결과확인 조회', media:'songres'},
+    staffLeaf('출금불가·출금제한 임시조치 해지'),
+    staffLeaf('환전'),
+  ]),
+  catNode('4. 주문 · 체결확인', 'order', [
+    {t:'주식주문', stk:true},
+    {t:'체결 · 주문내역 조회', che:true},
+    {t:'시세 조회', sise:true},
+    {t:'지수정보 · 환율 안내', idx:true},
+  ]),
+  catNode('5. 서류신청 · 제출', 'cert', [
+    {t:'증명서 발급',           media:'cert'},
+    {t:'금융거래목적확인서 제출', media:'docpurpose'},
+    {t:'고객확인(KYC/CDD) 등록', media:'dockyc'},
+    {t:'투자자정보확인서 등록',   media:'docinvestor'},
+    {t:'해외 양도소득 관련서류',  media:'docforeign'},
+  ]),
+  catNode('6. 비대면 업무', 'idcard', [
+    {t:'사고등록',          media:'accident'},
+    {t:'주소·전화번호 변경', media:'addr'},
+    {t:'비대면 계좌개설',    media:'acctopen'},
+    {t:'인증·계좌 신청',     media:'authacct'},
+    {t:'출고·이관 신청',     media:'shipping'},
+    {t:'신용·대출 만기연장', media:'credit'},
+    staffLeaf('계좌 사고등록 해지'),
+    staffLeaf('계좌폐쇄'),
+    staffLeaf('신분증 진위확인'),
+  ]),
+  catNode('7. 공모주 · 유상청약', 'ipo', [
+    {t:'유상청약',    media:'rights'},
+    {t:'공모주 청약', media:'ipo'},
+  ]),
+  catNode('8. 시스템 및 상품문의', 'bell', [
+    staffLeaf('시스템'),
+    staffLeaf('해외주식'),
+    staffLeaf('선물옵션'),
+    staffLeaf('금융상품'),
+    staffLeaf('CFD'),
+    {t:'ARS 이용안내 및 공지사항', media:'arsguide'},
+  ]),
+];
+function catData(){ return s1Ver==='v40' ? ARS_CAT6_V40 : ARS_CAT6; }   // v40=재편 8카테고리 / v41·v42=원본 9카테고리
+function catDesc(){ return s1Ver==='v40' ? V40_DESC_V40 : V40_DESC; }
 
 /* 음성 ARS 메뉴트리 (V2.0/V2.1 ARS메뉴) — Ver 4.0은 수요 9 카테고리(ARS_CAT6, 직원연결 매핑 활성), 그 외는 원본 IVR */
 function usesCat(){ return isV40(); }   // ARS_CAT6(9 카테고리) + 직원연결 매핑 사용 버전 (v40·v41 공통)
-function renderSimpleArs(){ return renderArsTree(usesCat() ? ARS_CAT6 : IVR, {guide:'원하시는 서비스를 선택하세요.', crumb:'음성 ARS · ', mapStaff:usesCat()}); }
+function renderSimpleArs(){ return renderArsTree(usesCat() ? catData() : IVR, {guide:'원하시는 서비스를 선택하세요.', crumb:'음성 ARS · ', mapStaff:usesCat()}); }
 /* 상담원 연결 메뉴트리 (V2.1 메인 · ARS메뉴와 동일 번호 드릴다운 구성) */
 function renderStaffTree(){ return renderArsTree(FAV_MENU, {guide:'상담 분야의 번호를 선택하세요.', crumb:'상담원 연결 · ', leaf:'staff'}); }
 
@@ -2130,11 +2192,22 @@ const V40_DESC = [
   'OTP 발급, 출금계좌 등록 등을 신청해요',
   '서비스 공지와 ARS 이용방법을 안내해요',
 ];
+/* Ver 4.0 재편 대메뉴(8개) 설명글 — catDesc()가 v40일 때 사용(순서 = ARS_CAT6_V40) */
+const V40_DESC_V40 = [
+  '예수금과 잔고, 거래내역을 조회해요',
+  '비밀번호·인증서·내 정보를 관리해요',
+  '입출금·이체 등 뱅킹서비스를 이용해요',
+  '주식을 사고팔고, 체결·주문 내역을 확인해요',
+  '증명서를 발급받고 필요한 서류를 제출해요',
+  '계좌개설·사고등록 등 업무를 비대면으로 신청해요',
+  '공모주와 유상증자 청약을 신청해요',
+  '시스템·상품 문의와 ARS 이용안내를 확인해요',
+];
 function tossCatList(){
-  return `<div class="toss-list">` + ARS_CAT6.map((cat,i)=>
+  return `<div class="toss-list">` + catData().map((cat,i)=>
     `<div class="toss-cat" data-sarsdown="${i}">
       <div class="tc-ic">${I[cat.ic]||I.order}</div>
-      <div class="tc-body"><div class="tc-nm">${stripNum(cat.t)}</div><div class="tc-desc">${V40_DESC[i]||''}</div></div>
+      <div class="tc-body"><div class="tc-nm">${stripNum(cat.t)}</div><div class="tc-desc">${catDesc()[i]||''}</div></div>
       <div class="tc-arw">${I.chev}</div>
     </div>`
   ).join('') + `</div>`;
@@ -2153,7 +2226,7 @@ const V41_GRID_LB = {
   8: '공지 ·<br>이용안내',          // cat9 공지·이용안내
 };
 function tossCatGrid(){
-  return `<div class="toss-grid">` + ARS_CAT6.map((cat,i)=>
+  return `<div class="toss-grid">` + catData().map((cat,i)=>
     `<div class="toss-gcell" data-sarsdown="${i}">
       <div class="tg-ic">${I[cat.ic]||I.order}</div>
       <div class="tg-nm">${V41_GRID_LB[i] || stripNum(cat.t)}</div>
@@ -4274,10 +4347,10 @@ function renderS1(){
           + ((s1Ver==='v41' && !bigFont) ? tossCatGrid() : tossCatList());   // v41: 3×3 그리드 (단 큰글씨 ON이면 v40과 동일한 리스트) / v40: 항상 리스트
       } else {
         // 드릴다운 헤더: 현재 단계 이름을 타이틀로(대메뉴 진입 시 = 대메뉴명), 대메뉴 단계면 설명글도 표기
-        const dtrail = sarsWalk(ARS_CAT6, path).trail;
+        const dtrail = sarsWalk(catData(), path).trail;
         const dcur = dtrail[dtrail.length-1] || {t:''};
         const dtitle = stripNum(dcur.t);
-        const ddesc = (path.length===1) ? (V40_DESC[path[0]] || '') : '';
+        const ddesc = (path.length===1) ? (catDesc()[path[0]] || '') : '';
         // 뒤로가기~제목·설명은 고정(sticky), 아래 중메뉴 리스트만 스크롤
         html += `<div class="toss-stick"><div class="toss-top"><div class="toss-back" data-sarsup title="이전">${I.chev}</div><div class="head-spacer"></div></div>`
           + `<div class="toss-dhead"><div class="td-title">${dtitle}</div>${ddesc?`<div class="td-desc">${ddesc}</div>`:''}</div></div>`
