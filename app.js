@@ -2170,22 +2170,31 @@ const V40_FAQ = [
 ];
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
-  const shown = open ? V40_FAQ : V40_FAQ.slice(0, 1);
-  const rows = shown.map(it=>{
+  const rowHtml = it=>{
     // '입출금이 안돼요'는 실제 업무 플로우(계좌 인증 → 상태 확인 → 결과) 진입, 나머지는 시연용 안내
     const act = it.t==='입출금이 안돼요' ? `data-iodstart`
               : it.t==='ISA 가입서류를 내고 싶어요' ? `data-isastart`
               : it.t==='증명서 발급 현황이 궁금해요' ? `data-certstart`
               : `data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"`;
     return `<div class="tf-row" ${act}><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`;
-  }).join('');
-  return `<div class="toss-faq">
-    <div class="tf-head" data-faqtoggle title="${open?'접기':'더보기'}">
+  };
+  const head = `<div class="tf-head" data-faqtoggle title="${open?'접기':'더보기'}">
       <div class="tf-title">혹시 이런 내용이 궁금하신가요?</div>
       <div class="tf-toggle ${open?'open':''}">${I.down}</div>
-    </div>
-    <div class="tf-list">${rows}</div>
-  </div>`;
+    </div>`;
+  // v41/v42: 기존 구조 유지 (헤더가 회색카드 안, 접힘 시 1개 노출)
+  if(s1Ver!=='v40'){
+    const shown = open ? V40_FAQ : V40_FAQ.slice(0, 1);
+    return `<div class="toss-faq">${head}<div class="tf-list">${shown.map(rowHtml).join('')}</div></div>`;
+  }
+  // v40: 헤더(문구+더보기)를 회색영역 밖(인사말 아래)으로 분리
+  if(open){
+    // 더보기: 전체 질문을 회색영역에 목록으로(애니메이션 없음)
+    return head + `<div class="toss-faq open"><div class="tf-list">${V40_FAQ.map(rowHtml).join('')}</div></div>`;
+  }
+  // 접힘: 회색영역=대메뉴 1행 높이, 질문이 아래→위로 자동 슬라이드(티커). 끝에 첫 항목 복제로 무한루프 이음새 제거
+  const rows = V40_FAQ.map(rowHtml).join('') + rowHtml(V40_FAQ[0]);
+  return head + `<div class="toss-faq"><div class="tf-list tf-ticker">${rows}</div></div>`;
 }
 function banner(){
   return `<div class="banner">
