@@ -1184,6 +1184,7 @@ body{
 /* ===== Ver 4.0 · 체결내역(디지털 ARS 조회) 전용 화면 (fv-*) ===== */
 .fv-wrap{height:100%;display:flex;flex-direction:column;background:#fff}
 .fv-wrap .toss-dhead{padding:0 4px 10px 24px}   /* 좌 24px → 뒤로가기 아이콘(≈25px)과 정렬 (Ver 4.0 IOD·인증 화면과 동일) */
+.fv-wrap .toss-dhead .td-desc{padding-right:20px}   /* 설명글 우측 여백(좌 24 + 우 4+20=24) → 긴 설명이 우측 끝에 붙는 현상 방지 */
 .fv-filter{flex:none;padding:0 24px 12px;display:flex;flex-direction:column;gap:8px}
 .fv-chip{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:13px;
   background:#fff;border:1.5px solid var(--line);font-size:calc(13.5px*var(--scale));font-weight:700;
