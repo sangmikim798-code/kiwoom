@@ -3425,8 +3425,10 @@ function renderIsaIssue(){
     <div class="my-body">
       <div class="fv-note">소득확인증명서(개인종합자산관리계좌 가입용)의 <b>온라인 발급번호 14자리</b>를 입력해 주세요.<br>확인되면 별도 서류 제출 없이 처리돼요.</div>
       <div class="hv-secttl">홈택스 발급번호</div>
-      <div class="isa-issue-row">${seg('isaIssue1',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue2',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue3',3)}<span class="isa-seg-dash">-</span>${seg('isaIssue4',3)}</div>
-      <div class="doc-card" style="text-align:left;padding:14px"><div class="doc-btn" data-isaissuedone>발급번호 제출하기</div></div>
+      <div class="doc-card isa-issue-card">
+        <div class="isa-issue-row">${seg('isaIssue1',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue2',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue3',3)}<span class="isa-seg-dash">-</span>${seg('isaIssue4',3)}</div>
+        <div class="doc-btn" data-isaissuedone>발급번호 제출하기</div>
+      </div>
       <div class="hv-secttl">홈택스 증빙서류 발급경로</div>
       <div class="fv-note"><b>PC</b> · 국세청 홈택스 → 민원증명 → 소득확인증명서<br><b>모바일</b> · 손택스 앱 → 국세증명·사업자등록·세금관련 신청/신고 → 즉시발급증명 → 소득확인증명서(개인종합자산관리계좌 가입용)</div>
     </div>
