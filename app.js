@@ -3664,6 +3664,16 @@ function startCertCheck(){
   }, 2500);
 }
 function renderCertChecking(){
+  // v40: 계좌조회 로딩(iodload-screen)과 동일 디자인 — 진행바 없음·설명글 16px·설명글 아래 좌측 search GIF
+  if(s1Ver==='v40'){
+    return `<div class="iodload-screen">
+      ${pageTop(s1state.title||'발급현황 조회', true)}
+      <div class="iodload-body">
+        <div class="toss-dhead"><div class="td-title">서류 신청내역을 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
+        <div class="iodload-icon"><img src="assets/free-animated-icon-search-8948330.gif" alt="조회 중"></div>
+      </div>
+    </div>`;
+  }
   return pageTop(s1state.title||'발급현황 조회', true)
     + untactSteps(CERT_STEPS, 1)
     + `<div class="iod-loading">
