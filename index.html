@@ -1007,7 +1007,7 @@ body{
 /* 계좌 정보 입력란 + '계좌번호를 모르겠어요' 폰트를 설명글과 동일하게(13px / 굵기 500) */
 .auth-wrap.iodauth .iod-findlink{color:var(--sub);font-size:calc(13px*var(--scale));font-weight:500}
 .auth-wrap.iodauth .auth-info .ir .k{font-size:calc(13px*var(--scale));font-weight:500}
-.auth-wrap.iodauth .auth-info .ir-input{font-size:calc(13px*var(--scale));font-weight:500}
+.auth-wrap.iodauth .auth-info .ir-input{font-size:calc(13px*var(--scale));font-weight:500;font-family:inherit}   /* input이 브라우저 기본(Arial) 대신 앱 폰트(Pretendard) 상속 → '숫자 8자리'가 나머지와 동일 */
 .auth-wrap.iodauth .auth-info .ir-input::placeholder{font-size:calc(13px*var(--scale));font-weight:500}
 .auth-wrap.iodauth .auth-info .ir-pw .acct-dots:empty::before{font-size:calc(13px*var(--scale));font-weight:500}   /* 특이도↑: 뒤 .auth-info .ir-pw .acct-dots 규칙(12.5px)보다 우선 → '숫자 8자리'와 동일 13px */
 .auth-wrap.iodauth .td-desc{word-break:keep-all}   /* 설명글 단어 단위 줄바꿈(어색한 '주세/요' 방지) */
@@ -2816,7 +2816,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710u"></script>
+<script src="app.js?v=20260710v"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
