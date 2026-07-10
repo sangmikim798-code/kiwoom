@@ -1006,6 +1006,10 @@ body{
 .page-top.iod-top ~ .auth-wrap.iodauth{padding-left:25px;padding-right:25px}
 .auth-wrap.iodauth .iod-findlink{color:var(--sub)}
 .auth-wrap.iodauth .td-desc{word-break:keep-all}   /* 설명글 단어 단위 줄바꿈(어색한 '주세/요' 방지) */
+/* 요소 간 세로 간격 전부 16px 균등: ①back→타이틀 ②설명→카드 ③카드→버튼 ④버튼→링크 */
+.auth-wrap.iodauth .toss-dhead{padding-top:6px;padding-bottom:16px}
+.auth-wrap.iodauth .primary-btn{margin-top:16px}
+.auth-wrap.iodauth .iod-findlink{margin-top:16px}
 .auth-wrap.cheauth .auth-head{padding-left:0;padding-right:0}
 .auth-head{font-size:calc(21px*var(--scale));font-weight:800;color:var(--ink);
   line-height:1.4;letter-spacing:-.3px;padding:12px 2px 22px}
@@ -2745,7 +2749,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710o"></script>
+<script src="app.js?v=20260710p"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
