@@ -1257,7 +1257,7 @@ body{
 .iodload-screen .page-top{flex:none}
 .iodload-body{flex:1;display:flex;flex-direction:column;padding:6px 25px 26px;min-height:0}
 .iodload-body .toss-dhead{flex:none;padding:6px 0 16px 0}
-.iodload-body .td-desc{font-size:calc(16px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:16px}   /* 결과안내 화면과 동일: 설명글 16px · 타이틀→설명 16px */
+.iodload-body .td-desc{font-size:calc(14px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:16px}   /* 결과안내 화면과 동일: 설명글 14px · 타이틀→설명 16px */
 .iodload-center{flex:1;display:flex;align-items:center;justify-content:center}
 /* 계좌조회 로딩: 설명글 아래 움직이는 search 아이콘(GIF) */
 .iodload-icon{display:flex;justify-content:flex-start;margin-top:8px}
@@ -1357,6 +1357,7 @@ body{
 .fv-wrap .usteps + .toss-dhead{padding-top:8px}   /* 진행바 있는 화면(ISA)의 타이틀을 계좌인증(auth-wrap 상단패딩 6px 포함)과 동일 위치로 */
 /* v40 서류발급 현황 결과: 재설계 흐름(계좌인증·로딩)과 통일 — 진행바 삭제 + 타이틀·계좌·목록·안내 좌우 25px 정렬 */
 .fv-wrap.certstat-v40 .toss-dhead{padding-left:25px;padding-right:25px}
+.fv-wrap.certstat-v40 .toss-dhead .td-desc{font-size:calc(14px*var(--scale))}   /* 결과안내(입출금·로딩)와 설명글 14px 통일 */
 .fv-wrap.certstat-v40 .hv-acct{margin-left:25px;margin-right:25px}
 .fv-wrap.certstat-v40 .hv-secttl{padding-left:25px;padding-right:25px}
 .fv-wrap.certstat-v40 .fv-card{margin-left:25px;margin-right:25px}
@@ -2838,7 +2839,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260711l"></script>
+<script src="app.js?v=20260711m"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
