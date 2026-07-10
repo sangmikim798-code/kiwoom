@@ -1257,7 +1257,7 @@ body{
 .iodload-screen .page-top{flex:none}
 .iodload-body{flex:1;display:flex;flex-direction:column;padding:6px 25px 26px;min-height:0}
 .iodload-body .toss-dhead{flex:none;padding:6px 0 16px 0}
-.iodload-body .td-desc{word-break:keep-all}
+.iodload-body .td-desc{font-size:calc(16px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:16px}   /* 결과안내 화면과 동일: 설명글 16px · 타이틀→설명 16px */
 .iodload-center{flex:1;display:flex;align-items:center;justify-content:center}
 /* 계좌조회 로딩: 설명글 아래 움직이는 search 아이콘(GIF) */
 .iodload-icon{display:flex;justify-content:flex-start;margin-top:8px}
@@ -2831,7 +2831,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260711e"></script>
+<script src="app.js?v=20260711f"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
