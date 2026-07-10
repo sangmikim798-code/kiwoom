@@ -2275,7 +2275,9 @@ const V40_FAQ = [
 ];
 /* v40 전용 FAQ: 4번째 항목을 '비밀번호를 재설정하고 싶어요'로 교체(자물쇠 아이콘·인라인 SVG). v41/v42는 기존 V40_FAQ 유지 */
 const PW_LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.3" width="15" height="10.4" rx="2.4" fill="#E6007F"/><path d="M8 10.3V8a4 4 0 0 1 8 0v2.3" stroke="#F7A8D3" stroke-width="2.2"/><circle cx="12" cy="14.6" r="1.55" fill="#fff"/><rect x="11.2" y="15.1" width="1.6" height="3.1" rx=".8" fill="#fff"/></svg>';
-const V40_FAQ_V40 = [ V40_FAQ[0], V40_FAQ[1], V40_FAQ[2],
+const V40_FAQ_V40 = [ V40_FAQ[0],
+  {t:'서류 발급현황이 궁금해요', svg:'<img src="assets/certificate.png" alt="서류 발급현황">'},   // v40 전용: '증명서 발급 현황이 궁금해요' → '서류 발급현황이 궁금해요' (v41/v42는 기존 유지)
+  V40_FAQ[2],
   {t:'비밀번호를 재설정하고 싶어요', svg:'<img src="assets/question.png" alt="비밀번호 재설정">'},
 ];
 /* '비밀번호를 재설정하고 싶어요' 클릭 → 어떤 비밀번호를 재설정할지 선택 시트(매체 플로팅 바텀시트 방식) */
@@ -2290,7 +2292,7 @@ function tossFaqCard(){
     // '입출금이 안돼요'는 실제 업무 플로우(계좌 인증 → 상태 확인 → 결과) 진입, 나머지는 시연용 안내
     const act = it.t==='입출금이 안돼요' ? `data-iodstart`
               : it.t==='ISA 가입서류를 내고 싶어요' ? `data-isastart`
-              : it.t==='증명서 발급 현황이 궁금해요' ? `data-certstart`
+              : (it.t==='증명서 발급 현황이 궁금해요' || it.t==='서류 발급현황이 궁금해요') ? `data-certstart`
               : it.t==='비밀번호를 재설정하고 싶어요' ? `data-pwreset`
               : `data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"`;
     return `<div class="tf-row" ${act}><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`;
@@ -2474,33 +2476,35 @@ function authStep(method){
   const v40 = isV40();
   const cert = isCertFlow();
   const iodOnly = iod && !isa && !cert;   // 순수 '입출금이 안돼요' 흐름만 초보자용 간결 재설계(진행바·note 삭제, 타이틀·플레이스홀더 정리)
+  const certV40 = cert && s1Ver==='v40';  // v40 '서류 발급현황' 흐름도 iodauth와 동일한 초보자용 간결 재설계(진행바·note 삭제, 25px 정렬, 회색 findlink)
+  const simple = iodOnly || certV40;      // 간결 UI(iodauth 클래스·플레이스홀더·note삭제·버튼폭·25px) 공통 게이트
   const ctx = cheAuthCtx();
   const head = isa ? '중개형 ISA 신청현황을<br>조회할 계좌를 인증해주세요' : (iod ? '어떤 계좌에서<br>입출금이 안되나요?' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요');
   const acctDesc = isa ? '중개형 ISA 신청현황을 확인할 계좌번호와 비밀번호를 입력해 주세요'
-                 : cert ? '증명서 발급·신청 내역을 확인할 계좌번호와 비밀번호를 입력해 주세요'
+                 : cert ? (certV40 ? '신청 내역을 확인할 계좌번호와 비밀번호를 입력해 주세요' : '증명서 발급·신청 내역을 확인할 계좌번호와 비밀번호를 입력해 주세요')
                  : iod ? '입출금 상태를 확인할 계좌번호와 비밀번호를 입력해 주세요'
                  : che ? `${ctx?ctx+'을 확인할 ':''}계좌번호와 비밀번호를 입력해 주세요`
                  : '본인 명의 계좌번호와 비밀번호를 입력해 주세요';
   const note = isa ? '인증하신 계좌의 중개형 ISA 가입·이전 신청현황을 확인해요.' : (cert ? '인증하신 계좌의 증명서 발급·신청 내역을 확인해요.' : (iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '본인 명의 계좌만 조회 가능해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.')));
   const acctVal = iod ? (s1state.iodAcctNo||'') : (che ? (s1state.cheAcctNo||'') : '');   // 계좌 선택(인증 후 계좌리스트)에서 자동 입력된 계좌번호
   // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: 기존 auth-head. ISA·증명서는 안내+인증 1페이지 통합 → 전용 타이틀
-  const acctTitle = isa ? 'ISA 가입서류 제출' : (cert ? '증명서 발급 현황' : (iodOnly ? '계좌 상태를 확인해볼게요' : '계좌 인증'));
+  const acctTitle = isa ? 'ISA 가입서류 제출' : (cert ? (certV40 ? '서류 신청내역을 확인해볼게요' : '증명서 발급 현황') : (iodOnly ? '계좌 상태를 확인해볼게요' : '계좌 인증'));
   const heading = v40
     ? `<div class="toss-dhead"><div class="td-title">${acctTitle}</div><div class="td-desc">${acctDesc}</div></div>`
     : `<div class="auth-head">${head}</div>`;
-  const findlink = iod
+  const findlink = (iod || certV40)
     ? `<div class="iod-findlink" data-iodfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>`
     : (che ? `<div class="iod-findlink" data-cheacctfind>${(acctVal && acctVal.trim()) ? '계좌비밀번호를 모르겠어요' : '계좌번호를 모르겠어요'} ›</div>` : '');
   const chealt = '';   // 체결·주문내역 흐름을 매체 플로팅 먼저로 되돌림 → 인증화면 '다른 방법' 링크 불필요(매체 시트가 이미 첫 단계)
-  return `<div class="auth-wrap${che?' cheauth':''}${iodOnly?' iodauth':''}">
+  return `<div class="auth-wrap${che?' cheauth':''}${simple?' iodauth':''}">
     ${heading}
     <div class="auth-info">
       <div class="ir"><span class="k">계좌번호</span>
-        <input class="ir-input" id="acctNo" type="text" inputmode="numeric" autocomplete="off" ${iodOnly?'maxlength="8" ':''}placeholder="${iodOnly?'숫자 8자리':'계좌번호 입력'}" value="${acctVal}"></div>
+        <input class="ir-input" id="acctNo" type="text" inputmode="numeric" autocomplete="off" ${simple?'maxlength="8" ':''}placeholder="${simple?'숫자 8자리':'계좌번호 입력'}" value="${acctVal}"></div>
       <div class="ir"><span class="k">비밀번호</span>
-        <div class="ir-input ir-pw" data-pwopen><span id="acctPwDisp" class="acct-dots" data-ph="${iodOnly?'숫자 4~8자리':'비밀번호 입력 (4~8자리)'}">${'●'.repeat((s1state.acctPw||'').length)}</span></div></div>
+        <div class="ir-input ir-pw" data-pwopen><span id="acctPwDisp" class="acct-dots" data-ph="${simple?'숫자 4~8자리':'비밀번호 입력 (4~8자리)'}">${'●'.repeat((s1state.acctPw||'').length)}</span></div></div>
     </div>
-    ${iodOnly ? '' : `<div class="auth-note">${note}</div>`}
+    ${simple ? '' : `<div class="auth-note">${note}</div>`}
     <div class="primary-btn" data-authdone>확인</div>
     ${findlink}
     ${chealt}
@@ -4594,7 +4598,7 @@ function renderS1(){
   else if(s1state.page==='authstep'){
     html = isCheAuth()
       ? `<div class="acv-wrap"><div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>` + authStep(s1state.authMethod) + `</div>`
-      : pageTop(s1state.title||'본인인증', isIodFlow()) + ((isIsaFlow()||isCertFlow())?untactSteps(iodStepsFor(),0):'') + authStep(s1state.authMethod);   // 순수 '입출금이 안돼요'는 진행바 없음(ISA/증명서만 표시)
+      : pageTop(s1state.title||'본인인증', isIodFlow() || (isCertFlow()&&s1Ver==='v40')) + ((isIsaFlow()||(isCertFlow()&&s1Ver!=='v40'))?untactSteps(iodStepsFor(),0):'') + authStep(s1state.authMethod);   // 순수 '입출금이 안돼요'·v40 서류발급현황은 진행바 없음(ISA/v41·v42 증명서만 표시), v40 cert는 iod-top(25px 정렬)
   }
   else if(s1state.page==='iodacctsel'){
     html = renderIodAcctSel();
