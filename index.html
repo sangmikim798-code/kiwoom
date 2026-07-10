@@ -1212,6 +1212,13 @@ body{
 .iod-findlink:active{opacity:.6}
 /* 상태 확인 로딩 */
 .iod-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 24px 40px;text-align:center}
+/* 계좌조회 로딩(재설계): 진행바 없음 · 타이틀=첫페이지 위치(pageTop+6+dhead6, 좌25) · 스피너 화면 세로 중앙 */
+.iodload-screen{height:100%;display:flex;flex-direction:column}
+.iodload-screen .page-top{flex:none}
+.iodload-body{flex:1;display:flex;flex-direction:column;padding:6px 25px 26px;min-height:0}
+.iodload-body .toss-dhead{flex:none;padding:6px 0 16px 0}
+.iodload-body .td-desc{word-break:keep-all}
+.iodload-center{flex:1;display:flex;align-items:center;justify-content:center}
 .iod-spinwrap{position:relative;width:64px;height:64px;display:grid;place-items:center}
 .iod-spinner{position:absolute;inset:0;border-radius:50%;border:5px solid #F0E1EC;border-top-color:var(--primary);
   animation:iodspin .9s linear infinite}
@@ -2754,7 +2761,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710q"></script>
+<script src="app.js?v=20260710r"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

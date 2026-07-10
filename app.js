@@ -3434,13 +3434,16 @@ function startIodCheck(){
   }, 5000);   // 계좌 조회 상태 5초 유지
 }
 function renderIodChecking(){
-  return pageTop(s1state.title||'계좌 조회', true)
-    + untactSteps(IOD_STEPS, 1)
-    + `<div class="iod-loading">
+  // 진행바 없음 / 타이틀·설명글은 첫페이지(계좌인증)와 동일 위치·스타일 / 스피너는 화면 세로 가운데
+  return `<div class="iodload-screen">
+    ${pageTop(s1state.title||'계좌 조회', true)}
+    <div class="iodload-body">
+      <div class="toss-dhead"><div class="td-title">계좌 상태를 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
+      <div class="iodload-center">
         <div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div>
-        <div class="iod-load-t">계좌를 조회하고 있어요</div>
-        <div class="iod-load-d">잠시만 기다려 주세요</div>
-      </div>`;
+      </div>
+    </div>
+  </div>`;
 }
 function renderIodResult(){
   const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
