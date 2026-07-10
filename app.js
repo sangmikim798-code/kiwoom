@@ -3462,16 +3462,20 @@ function renderIodResult(){
   // Ver 4.0: 진행바 없음 / 타이틀=제한사유(클릭 시 순환) / 설명글=본문+해결방법 합침 / 버튼 / 데모설명은 화면 맨 아래
   if(s1Ver==='v40'){
     const cyc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
+    const desc = `${r.body.replace(/,\s*/g, ',<br>')}<br>${r.release}`;   // 본문 쉼표에서 줄바꿈 + 해결방법은 새 줄
     return `<div class="iodresult-screen">
       ${pageTop(s1state.title||'계좌 상태', true)}
       <div class="iodresult-body">
         <div class="toss-dhead">
-          <div class="td-title iodres-title" data-iodcycle title="탭하면 다른 사유를 볼 수 있어요"><span class="iodres-txt">${r.title}</span><span class="iodres-cyc">${cyc}</span></div>
-          <div class="td-desc">${r.body} ${r.release}</div>
+          <div class="td-title">${r.title}</div>
+          <div class="td-desc">${desc}</div>
         </div>
         <div class="iodresult-btnwrap"><div class="primary-btn" data-iodmethods>${r.btn}</div></div>
       </div>
-      <div class="iodresult-note">※ 데모 화면이에요. 위 제한사유를 탭하면 다른 사유(계좌 상태)를 볼 수 있어요.</div>
+      <div class="iodresult-note">
+        <div class="iodres-cycbtn" data-iodcycle><span class="ref-ic">${cyc}</span>다른 사유 보기</div>
+        <div class="iodres-demo">※ 데모 화면이에요. 위 새로고침을 누르면 다른 사유(계좌 상태)를 볼 수 있어요.</div>
+      </div>
     </div>`;
   }
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'종합위탁'} ${authAcct.no}` : '종합위탁 123-45-678901';
