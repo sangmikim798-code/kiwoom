@@ -1355,6 +1355,12 @@ body{
 .fv-wrap .toss-dhead{padding:2px 4px 12px 24px}   /* 중메뉴 드릴다운 헤더(.toss-stick .toss-dhead)와 타이틀+설명 위치 동일하게 맞춤(2/12/24) */
 .fv-wrap .toss-dhead .td-desc{padding-right:20px}   /* 설명글 우측 여백(좌 24 + 우 4+20=24) → 긴 설명이 우측 끝에 붙는 현상 방지 */
 .fv-wrap .usteps + .toss-dhead{padding-top:8px}   /* 진행바 있는 화면(ISA)의 타이틀을 계좌인증(auth-wrap 상단패딩 6px 포함)과 동일 위치로 */
+/* v40 서류발급 현황 결과: 재설계 흐름(계좌인증·로딩)과 통일 — 진행바 삭제 + 타이틀·계좌·목록·안내 좌우 25px 정렬 */
+.fv-wrap.certstat-v40 .toss-dhead{padding-left:25px;padding-right:25px}
+.fv-wrap.certstat-v40 .hv-acct{margin-left:25px;margin-right:25px}
+.fv-wrap.certstat-v40 .hv-secttl{padding-left:25px;padding-right:25px}
+.fv-wrap.certstat-v40 .fv-card{margin-left:25px;margin-right:25px}
+.fv-wrap.certstat-v40 .fv-note{margin-left:25px;margin-right:25px}
 .fv-filter{flex:none;padding:0 24px 12px;display:flex;flex-direction:column;gap:8px}
 .fv-chip{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:13px;
   background:#fff;border:1.5px solid var(--line);font-size:calc(13.5px*var(--scale));font-weight:700;
@@ -2831,7 +2837,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260711g"></script>
+<script src="app.js?v=20260711h"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

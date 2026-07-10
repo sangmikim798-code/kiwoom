@@ -3689,14 +3689,19 @@ function renderCertStatus(){
       <div class="fv-it"><div class="fv-nm">${x.n} <span class="fv-tag ${x.stc}">${x.st}</span></div><div class="fv-sub">${x.d}</div></div>
       ${x.re ? `<div class="fv-issue" data-certreissue="${x.n}">재발급</div>` : ''}
     </div>`).join('');
-  return `<div class="fv-wrap">
+  const v40 = s1Ver==='v40';   // v40: 재설계 흐름과 통일 — 진행바 삭제·간결 타이틀·'증명서'→'서류' 용어·25px 정렬(certstat-v40 스코프)
+  const title = v40 ? '서류 신청내역이에요' : '증명서 발급 현황';
+  const desc = v40 ? '신청하신 서류의 발급 현황을 확인하고 재발급받아요' : '신청하신 증명서의 발급 현황을 확인하고 재발급받아요';
+  const note = v40 ? '발급완료 서류는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 서류는 발급 완료 후 알림톡으로 안내해 드려요.'
+                   : '발급완료 증명서는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 증명서는 발급 완료 후 알림톡으로 안내해 드려요.';
+  return `<div class="fv-wrap${v40?' certstat-v40':''}">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    ${untactSteps(CERT_STEPS, 1)}
-    <div class="toss-dhead"><div class="td-title">증명서 발급 현황</div><div class="td-desc">신청하신 증명서의 발급 현황을 확인하고 재발급받아요</div></div>
+    ${v40 ? '' : untactSteps(CERT_STEPS, 1)}
+    <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${acct}</span></div>
     <div class="hv-secttl">발급 현황 ${CERT_STATUS.length}</div>
     <div class="fv-card"><div class="fv-list">${list}</div></div>
-    <div class="fv-note">발급완료 증명서는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 증명서는 발급 완료 후 알림톡으로 안내해 드려요.</div>
+    <div class="fv-note">${note}</div>
   </div>`;
 }
 /* 증명서 재발급 상세화면 — 발급 정보 확인 + 재발급 신청 */
