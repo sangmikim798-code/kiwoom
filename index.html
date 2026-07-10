@@ -1259,6 +1259,21 @@ body{
 .iodload-body .toss-dhead{flex:none;padding:6px 0 16px 0}
 .iodload-body .td-desc{word-break:keep-all}
 .iodload-center{flex:1;display:flex;align-items:center;justify-content:center}
+/* 계좌조회 결과안내(재설계, v40): 진행바 없음 · 타이틀(제한사유,클릭순환)+설명글 첫페이지 위치 · 버튼 · 데모설명 맨 아래 */
+.iodresult-screen{height:100%;display:flex;flex-direction:column}
+.iodresult-screen .page-top{flex:none}
+.iodresult-body{flex:1;display:flex;flex-direction:column;padding:6px 25px 0;min-height:0}
+.iodresult-body .toss-dhead{flex:none;padding:6px 0 16px 0}
+.iodresult-body .td-desc{word-break:keep-all}
+.iodresult-body .td-desc b{color:#14183C;font-weight:700}
+.iodres-title{display:flex;align-items:flex-start;gap:7px;cursor:pointer}
+.iodres-title .iodres-txt{flex:1;word-break:keep-all}
+.iodres-title .iodres-cyc{flex:none;color:#E6007F;margin-top:5px}
+.iodres-title .iodres-cyc svg{width:18px;height:18px;display:block}
+.iodres-title:active{opacity:.65}
+.iodresult-btnwrap{flex:none}
+.iodresult-btnwrap .primary-btn{margin:0}
+.iodresult-note{flex:none;padding:14px 25px calc(18px + env(safe-area-inset-bottom,0px));font-size:calc(12px*var(--scale));color:#9AA1AC;text-align:center;line-height:1.55}
 .iod-spinwrap{position:relative;width:64px;height:64px;display:grid;place-items:center}
 .iod-spinner{position:absolute;inset:0;border-radius:50%;border:5px solid #F0E1EC;border-top-color:var(--primary);
   animation:iodspin .9s linear infinite}
@@ -2801,7 +2816,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710t"></script>
+<script src="app.js?v=20260710u"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

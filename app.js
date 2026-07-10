@@ -3411,13 +3411,24 @@ const IOD_RESULTS = {
   },
   limit: {
     tab:'한도 제한', badge:'한도 제한', badgeCls:'warn',
-    title:'한도제한계좌예요',
+    title:'출금한도가 제한된 계좌예요',
     body:'지금은 하루 <b>100만 원까지</b> 출금할 수 있어요.',
     release:'한도를 풀려면 추가 서류 확인이 필요해요.',
     btn:'한도 제한 해제하기',
     sheet:{ title:'어떻게 해제할까요?', sub:'편하신 방법으로 해제해 드려요', methods:[
       {kind:'app',     ic:IOD_HERO_IC,  nm:'영웅문S#에서 해제하기', desc:'앱에서 한도 제한을 해제해요'},
       {kind:'consult', ic:CS_ICON.call, nm:'상담원 연결',        desc:'담당 상담원과 연결해 드려요'},
+    ]},
+  },
+  idcard: {
+    tab:'신분증 미확인', badge:'진위확인 필요', badgeCls:'warn',
+    title:'신분증 진위확인이 되지않은 계좌예요',
+    body:'등록된 신분증의 진위확인이 완료되지 않아 거래가 제한돼 있어요.',
+    release:'<b>신분증 진위확인</b>을 완료하시면 바로 풀려요.',
+    btn:'신분증 진위확인하기',
+    sheet:{ title:'어떻게 확인할까요?', sub:'편하신 방법으로 진위확인을 도와드려요', methods:[
+      {kind:'app',      ic:IOD_HERO_IC,  nm:'영웅문S#에서 확인하기', desc:'앱을 열어 신분증 진위확인을 진행해요'},
+      {kind:'idcardcs', ic:CS_ICON.call, nm:'상담원과 통화하기',     desc:'상담원이 진위확인을 도와드려요'},
     ]},
   },
 };
@@ -3448,6 +3459,21 @@ function renderIodChecking(){
 function renderIodResult(){
   const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
   const r = IOD_RESULTS[key];
+  // Ver 4.0: 진행바 없음 / 타이틀=제한사유(클릭 시 순환) / 설명글=본문+해결방법 합침 / 버튼 / 데모설명은 화면 맨 아래
+  if(s1Ver==='v40'){
+    const cyc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
+    return `<div class="iodresult-screen">
+      ${pageTop(s1state.title||'계좌 상태', true)}
+      <div class="iodresult-body">
+        <div class="toss-dhead">
+          <div class="td-title iodres-title" data-iodcycle title="탭하면 다른 사유를 볼 수 있어요"><span class="iodres-txt">${r.title}</span><span class="iodres-cyc">${cyc}</span></div>
+          <div class="td-desc">${r.body} ${r.release}</div>
+        </div>
+        <div class="iodresult-btnwrap"><div class="primary-btn" data-iodmethods>${r.btn}</div></div>
+      </div>
+      <div class="iodresult-note">※ 데모 화면이에요. 위 제한사유를 탭하면 다른 사유(계좌 상태)를 볼 수 있어요.</div>
+    </div>`;
+  }
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'종합위탁'} ${authAcct.no}` : '종합위탁 123-45-678901';
   const actBtns = `<div class="primary-btn" data-iodmethods>${r.btn}</div>`;   // 클릭 시 방법 선택 플로팅
   // 결과 카드를 탭할 때마다 3가지 사유(계좌 상태)가 순환 — 토글 탭은 노출하지 않음
@@ -5133,6 +5159,7 @@ document.addEventListener('click', (e)=>{
     if(kind==='app'){ openAppLink('iodpurpose'); return; }
     if(kind==='purpose'){ s1nav({page:'result', resultKey:'purpose', title:'금융거래목적확인서', noHome:true}); return; }
     if(kind==='consult'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'한도제한계좌 해제', noHome:true}); return; }
+    if(kind==='idcardcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'신분증 진위확인', noHome:true}); return; }   // 신분증 진위확인 → 상담원
     if(kind==='pwapp'){ openAppLink('iodpw'); return; }          // 계좌 비밀번호 재설정 — 영웅문S# 앱 연결
     if(kind==='pwopenapp'){ openAppLink('iodpwopen'); return; }  // 계좌 비밀번호 재설정 — 키움계좌개설 앱 연결
     if(kind==='cheapp'){ openAppLink('chefilled'); return; }                                                          // 체결내역 조회 — 영웅문S# 앱 연결
