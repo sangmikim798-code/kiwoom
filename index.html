@@ -1162,6 +1162,46 @@ body{
 .cs-head{padding:0 4px 12px}
 .cs-title{font-size:calc(19px*var(--scale));font-weight:800;color:#14183C;letter-spacing:-.3px}
 .cs-sub{font-size:calc(13.5px*var(--scale));color:#7A7A8C;margin-top:5px;line-height:1.5}
+/* Ver 4.0 · 계좌찾기 플로팅(find-ov: 정보입력→인증번호→계좌리스트) */
+.find-ov .consult-sheet{max-height:90%;overflow-y:auto;scrollbar-width:none}
+.find-sheet .find-form{background:#F1F2F6;border-radius:16px;padding:2px 15px;margin:2px 0 12px}
+.find-input{width:100%;box-sizing:border-box;border:none;background:transparent;outline:none;font-family:inherit;
+  padding:15px 2px;font-size:calc(15px*var(--scale));font-weight:600;color:#14183C}
+.find-form > .find-input,.find-form > .find-row{border-bottom:1px solid #E3E5EA}
+.find-form > *:last-child{border-bottom:none}
+.find-input::placeholder{color:#9AA1AC;font-weight:500}
+.find-row{display:flex;align-items:center}
+.find-row .find-input{border-bottom:none}
+.find-rrn .find-input:first-child{flex:1}
+.find-rrn .find-rrn2{width:24px;text-align:center;flex:none}
+.find-rrn .find-dash{color:#9AA1AC;padding:0 3px}
+.find-rrn .find-mask{color:#C4CAD4;letter-spacing:3px;font-size:calc(13px*var(--scale));padding-left:3px}
+.find-selwrap{position:relative}
+.find-sel{appearance:none;-webkit-appearance:none;cursor:pointer;color:#14183C;padding-right:24px}
+.find-selchev{position:absolute;right:0;top:50%;transform:translateY(-50%);pointer-events:none;color:#9AA1AC;display:flex}
+.find-selchev svg{width:20px;height:20px}
+.find-agree{display:flex;align-items:center;gap:9px;padding:2px 4px 14px;cursor:pointer;
+  font-size:calc(13.5px*var(--scale));font-weight:600;color:#3A4360;user-select:none}
+.find-agree .fa-box{width:22px;height:22px;border-radius:7px;border:1.6px solid #CDD2D9;display:grid;place-items:center;color:transparent;flex:none;transition:.12s}
+.find-agree .fa-box svg{width:13px;height:13px}
+.find-agree.on .fa-box{background:#E6007F;border-color:#E6007F;color:#fff}
+.find-agree b{color:#E6007F}
+.find-ov .cs-cta{background:linear-gradient(135deg,#F0188E,#E6007F);color:#fff;text-align:center;padding:16px;border-radius:14px;
+  font-size:calc(16px*var(--scale));font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(230,0,127,.28)}
+.find-ov .cs-cta:active{transform:scale(.98)}
+.find-otpguide{font-size:calc(13px*var(--scale));color:#7A7A8C;line-height:1.55;padding:14px 2px 6px}
+.find-otprow{display:flex;align-items:center}
+.find-otp{flex:1}
+.find-otptimer{color:#E6007F;font-weight:800;font-size:calc(14px*var(--scale));flex:none;padding-left:8px}
+.find-acctlist{margin:2px 0 12px}
+.find-acct{display:flex;align-items:center;gap:12px;padding:15px 14px;border-radius:14px;background:#F7F8FA;cursor:pointer;margin-bottom:8px}
+.find-acct:last-child{margin-bottom:0}
+.find-acct:active{background:#EEF0F3}
+.find-acct .fa-info{flex:1;min-width:0}
+.find-acct .fa-t{font-size:calc(15px*var(--scale));font-weight:800;color:#14183C}
+.find-acct .fa-no{font-size:calc(13px*var(--scale));color:#7A7A8C;margin-top:3px}
+.find-acct .cs-arw{flex:none;color:#C4C4D2;display:flex}
+.find-acct .cs-arw svg{width:18px;height:18px}
 .cs-ctx{display:inline-block;margin-top:11px;background:#FDF1F8;border-radius:9px;padding:6px 11px;
   font-size:calc(12.5px*var(--scale));color:#B12B7E}
 .cs-ctx b{color:#E6007F;font-weight:800}
@@ -2761,7 +2801,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710s"></script>
+<script src="app.js?v=20260710t"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

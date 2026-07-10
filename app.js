@@ -3707,6 +3707,64 @@ function closeMethodSheet(){
   if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); }
 }
 
+/* Ver 4.0 전용 · '계좌번호를 모르겠어요' → 3단계 계좌찾기 플로팅 (①정보입력 ②인증번호 ③계좌리스트) */
+const FIND_ACCTS = [
+  {t:'종합위탁 계좌', no:'12345678'},
+  {t:'CMA(RP형) 계좌', no:'23456789'},
+  {t:'연금저축 계좌', no:'34567890'},
+];
+const FIND_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
+function fmtAcct(no){ return no.replace(/(\d{4})(\d{4})/, '$1-$2'); }
+function openFindAcct(){
+  const screen = document.getElementById('screen'); if(!screen) return;
+  const prev = document.getElementById('findAcctPop'); if(prev) prev.remove();
+  s1state.findAgree = false;
+  const el = document.createElement('div');
+  el.className = 'consult-ov find-ov'; el.id = 'findAcctPop';
+  el.innerHTML = findAcctSheet(1);
+  screen.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function findAcctStep(n){ const el = document.getElementById('findAcctPop'); if(el) el.innerHTML = findAcctSheet(n); }
+function closeFindAcct(){ const el = document.getElementById('findAcctPop'); if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); } }
+function findAcctSheet(step){
+  const head = `<div class="cs-grip"></div>
+    <div class="cs-head"><div class="cs-title">${step===3?'계좌조회가 완료되었어요':'계좌번호를 잊으셨나요?'}</div>
+      <div class="cs-sub">${step===3?'확인할 계좌를 선택해주세요':'본인명의 휴대폰 인증 후 계좌번호를 찾아드릴게요'}</div></div>`;
+  if(step===1){
+    return `<div class="consult-sheet find-sheet">${head}
+      <div class="find-form">
+        <input class="find-input" placeholder="이름" autocomplete="off">
+        <div class="find-row find-rrn">
+          <input class="find-input" placeholder="생년월일 6자리" inputmode="numeric" maxlength="6">
+          <span class="find-dash">–</span>
+          <input class="find-input find-rrn2" inputmode="numeric" maxlength="1">
+          <span class="find-mask">●●●●●●</span>
+        </div>
+        <div class="find-row find-selwrap"><select class="find-input find-sel"><option value="">통신사</option><option>SKT</option><option>KT</option><option>LG U+</option><option>알뜰폰</option></select><span class="find-selchev">${I.down}</span></div>
+        <input class="find-input" placeholder="휴대폰번호 ('-' 없이 입력)" inputmode="numeric" maxlength="11">
+      </div>
+      <div class="find-agree${s1state.findAgree?' on':''}" data-findagree><span class="fa-box">${FIND_CHECK}</span><span class="fa-txt">휴대폰 인증 전체 약관동의 <b>(필수)</b></span></div>
+      <div class="cs-cta" data-findotp>인증요청</div>
+    </div>`;
+  }
+  if(step===2){
+    return `<div class="consult-sheet find-sheet">${head}
+      <div class="find-form">
+        <div class="find-otpguide">입력하신 휴대폰으로 인증번호를 보냈어요.<br>3분 이내에 입력해 주세요.</div>
+        <div class="find-row find-otprow"><input class="find-input find-otp" placeholder="인증번호 6자리" inputmode="numeric" maxlength="6" autocomplete="off"><span class="find-otptimer">02:59</span></div>
+      </div>
+      <div class="cs-cta" data-finddone>인증완료</div>
+    </div>`;
+  }
+  return `<div class="consult-sheet find-sheet">${head}
+    <div class="find-acctlist">
+      ${FIND_ACCTS.map(a=>`<div class="find-acct" data-findacct="${a.no}"><div class="fa-info"><div class="fa-t">${a.t}</div><div class="fa-no">${fmtAcct(a.no)}</div></div><div class="cs-arw">${I.chev}</div></div>`).join('')}
+    </div>
+    <div class="cs-cancel" data-findclose>닫기</div>
+  </div>`;
+}
+
 /* ===== Ver 4.0 · 주식주문 계단식 선택 플로팅 (주문·체결확인 > 주식주문) =====
    방법(영S#/음성ARS) → 주식종류(현금/신용/K-OTC) → 주문유형(매도/매수/정정/취소)
    → [음성ARS+신용]이면 소메뉴 → 연결. 상담방법 플로팅(consult-sheet) 스타일 재사용. 멘트=Ver4.0 톤. */
@@ -5214,6 +5272,15 @@ document.addEventListener('click', (e)=>{
   }
   if(t.closest('[data-msclose]') || (t.classList && t.classList.contains('method-ov'))){ closeMethodSheet(); return; }
 
+  // 계좌찾기 플로팅(3단계) — consult-ov 클래스를 공유하므로 아래 일반 consult-ov 핸들러보다 먼저 처리
+  if(t.closest('[data-findagree]')){ s1state.findAgree=!s1state.findAgree; const a=document.querySelector('#findAcctPop .find-agree'); if(a) a.classList.toggle('on', s1state.findAgree); return; }
+  if(t.closest('[data-findotp]')){ if(!s1state.findAgree){ flash('휴대폰 인증 약관에 동의해 주세요. (시연용)'); return; } findAcctStep(2); return; }
+  if(t.closest('[data-finddone]')){ findAcctStep(3); return; }
+  if(t.closest('[data-findclose]')){ closeFindAcct(); return; }
+  const findAcctRow = t.closest('[data-findacct]');
+  if(findAcctRow){ const inp=document.getElementById('acctNo'); const no=findAcctRow.dataset.findacct; if(inp) inp.value=no; s1state.iodAcctNo=no; closeFindAcct(); flash('계좌번호가 입력되었어요. (시연용)'); return; }
+  if(t.classList && t.classList.contains('find-ov')){ closeFindAcct(); return; }
+
   if(t.closest('[data-csclose]') || (t.classList && t.classList.contains('consult-ov'))){ closeConsult(); return; }
 
   // 입출금 안내 플로우: 진입(계좌 인증) / 계좌번호 모름(본인인증 선택) / 결과 사유 토글
@@ -5265,6 +5332,7 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-iodfind]')){
     const acctNo = (document.getElementById('acctNo')||{}).value || '';
     if(acctNo.trim()){ openMethodSheet(IOD_PW_SHEET); return; }   // 계좌번호 입력됨 → 비밀번호 재설정 방법 선택 플로팅
+    if(s1Ver==='v40'){ openFindAcct(); return; }   // Ver 4.0: 3단계 계좌찾기 플로팅(정보입력→인증번호→계좌리스트)
     s1nav({page:'authsel', title:'계좌번호 찾기', acctPw:'', otpSent:false, noHome:true}); return;   // 계좌번호 미입력 → 계좌번호 찾기
   }
   // 체결·주문내역 계좌인증: 계좌번호 입력됨 → 비밀번호 재설정 방법 시트 / 미입력 → 휴대폰·간편 인증 방법 선택(authNext={go:chefilled} 유지)
