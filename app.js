@@ -3475,7 +3475,7 @@ function renderIodResult(){
     const release = r.releaseV40 || r.release;
     const btnTxt = r.btnV40 || r.btn;
     const desc = `${body.replace(/,\s*/g, ',<br>')}<br>${release}`;   // 본문 쉼표에서 줄바꿈 + 해결방법은 새 줄
-    const badge = r.infoBadge ? `<div class="iodres-badge" data-idbadge>왜 진위확인이 되지 않았나요?<span class="ib-q">?</span></div>` : '';
+    const badge = r.infoBadge ? `<div class="iodres-badge" data-idbadge><span class="ib-q">?</span>왜 진위확인이 되지 않았나요?</div>` : '';
     const btnAttr = r.infoBadge ? 'data-idurl' : 'data-iodmethods';   // idcard: 재요청 URL 받기(안내톡 발송) / 그 외: 방법 선택 플로팅
     return `<div class="iodresult-screen">
       ${pageTop(s1state.title||'계좌 상태', true)}
