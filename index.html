@@ -1009,7 +1009,7 @@ body{
 .auth-wrap.iodauth .auth-info .ir .k{font-size:calc(13px*var(--scale));font-weight:500}
 .auth-wrap.iodauth .auth-info .ir-input{font-size:calc(13px*var(--scale));font-weight:500}
 .auth-wrap.iodauth .auth-info .ir-input::placeholder{font-size:calc(13px*var(--scale));font-weight:500}
-.auth-wrap.iodauth .acct-dots:empty::before{font-size:calc(13px*var(--scale));font-weight:500}
+.auth-wrap.iodauth .auth-info .ir-pw .acct-dots:empty::before{font-size:calc(13px*var(--scale));font-weight:500}   /* 특이도↑: 뒤 .auth-info .ir-pw .acct-dots 규칙(12.5px)보다 우선 → '숫자 8자리'와 동일 13px */
 .auth-wrap.iodauth .td-desc{word-break:keep-all}   /* 설명글 단어 단위 줄바꿈(어색한 '주세/요' 방지) */
 /* 요소 간 세로 간격 전부 16px 균등: ①back→타이틀 ②설명→카드 ③카드→버튼 ④버튼→링크 */
 .auth-wrap.iodauth .toss-dhead{padding-top:6px;padding-bottom:16px}
@@ -2761,7 +2761,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710r"></script>
+<script src="app.js?v=20260710s"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
