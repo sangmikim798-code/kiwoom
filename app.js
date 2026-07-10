@@ -3709,14 +3709,15 @@ function renderCertReissue(){
   const nm = s1state.certName || '증명서';
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'위탁종합'} ${authAcct.no}` : '위탁종합 5257-5602';
   const D = key=>`<div class="ir"><span class="k">${CERT_OPTS[key].t}</span><span class="v sel" data-certsel="${key}">${certVal(key)} ${I.down}</span></div>`;   // 실제 선택 바텀시트(CERT_OPTS/openCertSheet 재사용)
-  return `<div class="fv-wrap">
+  const v40 = s1Ver==='v40';   // v40: 재설계 흐름과 통일 — 진행바 삭제·'증명서'→'서류' 용어·좌우 25px 정렬(certstat-v40 스코프)
+  return `<div class="fv-wrap${v40?' certstat-v40':''}">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    ${untactSteps(CERT_STEPS, 2)}
+    ${v40 ? '' : untactSteps(CERT_STEPS, 2)}
     <div class="toss-dhead"><div class="td-title">${nm} 재발급</div><div class="td-desc">발급 조건을 확인하고 재발급받아요</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${acct}</span></div>
     <div class="hv-secttl">발급 정보</div>
-    <div class="auth-info" style="margin:0 24px 14px">
-      <div class="ir"><span class="k">증명서 종류</span><span class="v">${nm}</span></div>
+    <div class="auth-info" style="margin:0 ${v40?25:24}px 14px">
+      <div class="ir"><span class="k">${v40?'서류':'증명서'} 종류</span><span class="v">${nm}</span></div>
       ${D('reDate')}
       ${D('reUse')}
       ${D('reCopies')}
