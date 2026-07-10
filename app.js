@@ -3430,6 +3430,16 @@ const IOD_RESULTS = {
       {kind:'app',      ic:IOD_HERO_IC,  nm:'영웅문S#에서 확인하기', desc:'앱을 열어 신분증 진위확인을 진행해요'},
       {kind:'idcardcs', ic:CS_ICON.call, nm:'상담원과 통화하기',     desc:'상담원이 진위확인을 도와드려요'},
     ]},
+    // Ver 4.0 전용 오버라이드 (v41/v42는 위 필드 사용)
+    titleV40:'신분증 진위확인이 필요한 계좌에요',
+    bodyV40:'등록된 신분증의 진위확인이 완료되지 않아 거래가 제한돼있어요.',
+    releaseV40:'신분증 진위확인을 위해 재요청 URL을 통해 신분증을 재접수 해주세요.',
+    btnV40:'신분증 재요청 URL 받기',
+    infoBadge:{ title:'왜 신분증 진위확인이 되지 않았나요?', points:[
+      '접수한 신분증이 흐리거나 어두워 식별이 불가할 경우 진위확인이 불가해요',
+      '신분증 재요청 안내문자가 이미 발송되었으나 놓쳤을 수 있어요',
+      '정상 처리 시 알림톡으로 안내되고 있으니 신분증 재요청 URL을 통해 접수해주세요',
+    ]},
   },
 };
 function startIodCheck(){
@@ -3462,15 +3472,22 @@ function renderIodResult(){
   // Ver 4.0: 진행바 없음 / 타이틀=제한사유(클릭 시 순환) / 설명글=본문+해결방법 합침 / 버튼 / 데모설명은 화면 맨 아래
   if(s1Ver==='v40'){
     const cyc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
-    const desc = `${r.body.replace(/,\s*/g, ',<br>')}<br>${r.release}`;   // 본문 쉼표에서 줄바꿈 + 해결방법은 새 줄
+    const title = r.titleV40 || r.title;
+    const body  = r.bodyV40 || r.body;
+    const release = r.releaseV40 || r.release;
+    const btnTxt = r.btnV40 || r.btn;
+    const desc = `${body.replace(/,\s*/g, ',<br>')}<br>${release}`;   // 본문 쉼표에서 줄바꿈 + 해결방법은 새 줄
+    const badge = r.infoBadge ? `<div class="iodres-badge" data-idbadge>왜 진위확인이 되지 않았나요?<span class="ib-q">?</span></div>` : '';
+    const btnAttr = r.infoBadge ? 'data-idurl' : 'data-iodmethods';   // idcard: 재요청 URL 받기(안내톡 발송) / 그 외: 방법 선택 플로팅
     return `<div class="iodresult-screen">
       ${pageTop(s1state.title||'계좌 상태', true)}
       <div class="iodresult-body">
         <div class="toss-dhead">
-          <div class="td-title">${r.title}</div>
+          <div class="td-title">${title}</div>
           <div class="td-desc">${desc}</div>
         </div>
-        <div class="iodresult-btnwrap"><div class="primary-btn" data-iodmethods>${r.btn}</div></div>
+        ${badge}
+        <div class="iodresult-btnwrap"><div class="primary-btn" ${btnAttr}>${btnTxt}</div></div>
       </div>
       <div class="iodresult-note">
         <div class="iodres-cycbtn" data-iodcycle><span class="ref-ic">${cyc}</span>다른 사유 보기</div>
@@ -3757,6 +3774,24 @@ function openFindAcct(){
 }
 function findAcctStep(n){ const el = document.getElementById('findAcctPop'); if(el) el.innerHTML = findAcctSheet(n); }
 function closeFindAcct(){ const el = document.getElementById('findAcctPop'); if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); } }
+/* 결과안내 '왜 진위확인이 되지 않았나요?' 배지 → 사유 안내 플로팅 */
+function openBadgeInfo(){
+  const key = IOD_RESULTS[s1state.iodResult] ? s1state.iodResult : 'multi';
+  const b = IOD_RESULTS[key].infoBadge; if(!b) return;
+  const screen = document.getElementById('screen'); if(!screen) return;
+  const prev = document.getElementById('badgePop'); if(prev) prev.remove();
+  const el = document.createElement('div');
+  el.className = 'consult-ov badge-ov'; el.id = 'badgePop';
+  el.innerHTML = `<div class="consult-sheet">
+    <div class="cs-grip"></div>
+    <div class="cs-head"><div class="cs-title">${b.title}</div></div>
+    <div class="badge-points">${b.points.map(p=>`<div class="badge-pt"><span class="bp-dot"></span><span class="bp-txt">${p}</span></div>`).join('')}</div>
+    <div class="cs-cancel" data-badgeclose>닫기</div>
+  </div>`;
+  screen.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function closeBadgeInfo(){ const el = document.getElementById('badgePop'); if(el){ el.classList.remove('on'); setTimeout(()=>{ if(el.parentNode) el.remove(); }, 240); } }
 function findAcctSheet(step){
   const head = `<div class="cs-grip"></div>
     <div class="cs-head"><div class="cs-title">${step===3?'계좌조회가 완료되었어요':'계좌번호를 잊으셨나요?'}</div>
@@ -5311,6 +5346,10 @@ document.addEventListener('click', (e)=>{
   const findAcctRow = t.closest('[data-findacct]');
   if(findAcctRow){ const inp=document.getElementById('acctNo'); const no=findAcctRow.dataset.findacct; if(inp) inp.value=no; s1state.iodAcctNo=no; closeFindAcct(); flash('계좌번호가 입력되었어요. (시연용)'); return; }
   if(t.classList && t.classList.contains('find-ov')){ closeFindAcct(); return; }
+  // 결과안내 '왜 진위확인이 되지 않았나요?' 배지 플로팅 — consult-ov 공유이므로 일반 핸들러보다 먼저
+  if(t.closest('[data-idbadge]')){ openBadgeInfo(); return; }
+  if(t.closest('[data-badgeclose]') || (t.classList && t.classList.contains('badge-ov'))){ closeBadgeInfo(); return; }
+  if(t.closest('[data-idurl]')){ flash('신분증 재요청 URL을 알림톡으로 보내드렸어요. (시연용)'); return; }   // 신분증 재요청 URL 받기
 
   if(t.closest('[data-csclose]') || (t.classList && t.classList.contains('consult-ov'))){ closeConsult(); return; }
 

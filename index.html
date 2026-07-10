@@ -1277,6 +1277,15 @@ body{
 .iodres-cycbtn .ref-ic{display:flex}
 .iodres-cycbtn .ref-ic svg{width:16px;height:16px;display:block}
 .iodres-demo{margin-top:10px;font-size:calc(12px*var(--scale));color:#9AA1AC;text-align:center;line-height:1.55}
+/* '왜 진위확인이 되지 않았나요?' 배지 + 안내 플로팅 */
+.iodres-badge{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin:0 0 16px;cursor:pointer;
+  background:#FDF1F8;color:#E6007F;font-size:calc(12.5px*var(--scale));font-weight:700;padding:8px 14px;border-radius:999px;border:1px solid #F6D2E6}
+.iodres-badge:active{background:#FBE4F1;transform:scale(.98)}
+.iodres-badge .ib-q{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;background:#E6007F;color:#fff;font-size:calc(10px*var(--scale));font-weight:800}
+.badge-ov .badge-points{padding:2px 4px 10px}
+.badge-pt{display:flex;gap:10px;padding:9px 2px;align-items:flex-start}
+.badge-pt .bp-dot{flex:none;width:6px;height:6px;border-radius:50%;background:#E6007F;margin-top:8px}
+.badge-pt .bp-txt{font-size:calc(14px*var(--scale));color:#3A4360;line-height:1.55;font-weight:500}
 .iod-spinwrap{position:relative;width:64px;height:64px;display:grid;place-items:center}
 .iod-spinner{position:absolute;inset:0;border-radius:50%;border:5px solid #F0E1EC;border-top-color:var(--primary);
   animation:iodspin .9s linear infinite}
@@ -2819,7 +2828,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260710w"></script>
+<script src="app.js?v=20260710x"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
