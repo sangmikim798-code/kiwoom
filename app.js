@@ -3727,6 +3727,18 @@ function renderCertReissue(){
     <div class="fv-foot"><div class="primary-btn accent" data-certreissuedone="${nm}">재발급 신청하기</div></div>
   </div>`;
 }
+/* 서류 재발급 신청 완료 화면 (v40) — [입출금] 완료화면(iod-done-center) 디자인 재사용: 체크 아이콘·타이틀·설명·확인 버튼 */
+function renderCertReissueDone(){
+  const nm = s1state.certName || '서류';
+  return `<div class="iod-done-center">
+      <div class="iod-done">
+        <div class="iod-done-ic">${I.check}</div>
+        <div class="iod-done-t">재발급이 완료됐어요</div>
+        <div class="iod-done-d">${nm}를 등록된 이메일로<br>보내드렸어요.<br>메일함을 확인해 주세요.</div>
+      </div>
+      <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
+    </div>`;
+}
 /* 결과 화면 버튼 → 방법 선택 플로팅(상담팝업 스타일 재사용: consult-ov/cs-*) */
 /* Ver 4.0 매체시트 간결화: 아이콘 제거 + 매체 단어 강조색 + 짧은 설명 (매체 키워드 매칭 시) */
 const CS_MEDIA_KW = ['키움계좌개설 앱','디지털 ARS','영웅문S#','AI 챗봇','음성 ARS','상담원'];   // 긴 것 우선(부분일치 방지)
@@ -4622,6 +4634,9 @@ function renderS1(){
   else if(s1state.page==='iodpurposedone'){
     html = renderIodPurposeDone();
   }
+  else if(s1state.page==='certreissuedone'){
+    html = renderCertReissueDone();
+  }
   else if(s1state.page==='voiceconnect'){
     html = renderVoiceConnect();
   }
@@ -5400,7 +5415,10 @@ document.addEventListener('click', (e)=>{
   if(creis){ s1nav({page:'certreissue', title:creis.dataset.certreissue+' 재발급', certName:creis.dataset.certreissue, noHome:true}); return; }
   // 재발급 신청 → 접수 안내
   const creisdone = t.closest('[data-certreissuedone]');
-  if(creisdone){ flash(`${creisdone.dataset.certreissuedone} 재발급이 접수되었어요. 등록된 이메일로 보내드릴게요. (시연용)`); return; }
+  if(creisdone){
+    if(s1Ver==='v40'){ s1nav({page:'certreissuedone', title:'재발급 완료', certName:creisdone.dataset.certreissuedone, noBack:true, noHome:true}); return; }
+    flash(`${creisdone.dataset.certreissuedone} 재발급이 접수되었어요. 등록된 이메일로 보내드릴게요. (시연용)`); return;
+  }
   // 신청현황 → 가입서류 제출방법 선택 플로팅
   if(t.closest('[data-isamethod]')){ openMethodSheet(ISA_METHOD_SHEET); return; }
   // 신청현황 탭 전환(신규가입/계좌이전/만기연장)
