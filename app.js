@@ -2282,9 +2282,9 @@ const V40_FAQ_V40 = [ V40_FAQ[0],
 ];
 /* '비밀번호를 재설정하고 싶어요' 클릭 → 어떤 비밀번호를 재설정할지 선택 시트(매체 플로팅 바텀시트 방식) */
 const PWRESET_SHEET = { title:'어떤 비밀번호를 재설정할까요?', sub:'재설정할 비밀번호를 선택해 주세요', noIcon:true, methods:[
-  {kind:'pwreset0', nm:'ID 비밀번호',        desc:'로그인에 쓰는 영문과 숫자를 조합한 5~8자리 비밀번호예요'},
-  {kind:'pwreset1', nm:'증권계좌 비밀번호',   desc:'증권계좌에 쓰는 숫자 4~8자리 비밀번호예요'},
-  {kind:'pwreset2', nm:'공동인증서 비밀번호', desc:'영문·숫자·특수문자를 모두 포함한 10자리 이상 비밀번호예요'},
+  {kind:'pwreset0', nm:'ID 비밀번호',        desc:'로그인에 쓰는 <b class="cs-em">영문과 숫자를 조합한 5~8자리</b> 비밀번호예요'},
+  {kind:'pwreset1', nm:'증권계좌 비밀번호',   desc:'증권계좌에 쓰는 <b class="cs-em">숫자 4~8자리</b> 비밀번호예요'},
+  {kind:'pwreset2', nm:'공동인증서 비밀번호', desc:'<b class="cs-em">영문·숫자·특수문자를 모두 포함한 10자리 이상</b> 비밀번호예요'},
 ]};
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
