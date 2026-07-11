@@ -418,7 +418,14 @@ body{
 .toss-home.v40main .th-hi{line-height:1.36}
 /* 인사글·FAQ카드·대메뉴 행 좌우 경계를 로고(좌 20px)에 맞춰 폭 통일(20..좌우20 = 폭 320) */
 /* FAQ 헤더: 문구 좌측=회색카드 아이콘 시작점(39px=카드좌25+행패딩14), [V]더보기 우측=카드 [>]아이콘 우측(화면우 39px) */
-.toss-home.v40main .tf-head{padding:1px 39px 9px;gap:8px}
+.toss-home.v40main .tf-head{padding:1px 39px 9px 25px;gap:8px;position:relative}
+/* v40: 문구는 25px에서 시작(flex:none으로 폭 고정), [+] 토글을 문구 바로 오른쪽에 붙임 */
+.toss-home.v40main .tf-title{flex:none}
+/* v40: [+] 토글을 대메뉴 아이콘처럼 마젠타 라운드 사각칩 + 흰색 아이콘 */
+.toss-home.v40main .tf-toggle{width:14px;height:14px;background:#6B6B6B;color:#fff;border-radius:4px}   /* [+] 칩 배경 회색(흰 플러스) */
+.toss-home.v40main .tf-toggle svg{width:10px;height:10px;stroke-width:3.2}
+/* FAQ 회색카드 좌상단 말풍선 꼬리표: 레퍼런스 speech-bubble 꼬리 형태를 상하 반전해 좌상단에 재현. 둥근 모서리(반경18)에서 자연스럽게 흘러나오도록 오른쪽 끝은 카드 평평한 윗변 시작점(로컬 x18=화면 x43)에, 왼쪽은 카드 좌측변(x0=화면 x25)으로 이어 틈 없이 연결. 아래로 18px(모서리 반경만큼) 겹쳐 그려 둥근 모서리 파임을 메움. 카드색 #F7F8FA SVG, 카드는 overflow:hidden(티커)이라 꼬리는 헤더의 ::after로 렌더 */
+.toss-home.v40main .tf-head::after{content:'';position:absolute;left:25px;bottom:-18px;width:22px;height:30px;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='22'%20height='30'%20viewBox='0%200%2022%2030'%3E%3Cpath%20d='M18,12%20C11,12%204,7%200,0%20C0,4%200,7%200,10%20L0,30%20Z'%20fill='%23F7F8FA'/%3E%3C/svg%3E") no-repeat}
 /* FAQ 회색영역: 티커 창 높이(적당히 축소 60px) */
 .toss-home.v40main .toss-faq{margin:0 25px 18px 25px;padding:0;height:60px;overflow:hidden}
 .toss-home.v40main .toss-faq .tf-list{margin:0}
@@ -1005,15 +1012,15 @@ body{
 /* '입출금이 안돼요' 계좌인증(iodauth) — 초보자용 간결: 타이틀·카드·버튼 좌우 25px 정렬, '계좌번호를 모르겠어요' 회색 */
 .page-top.iod-top ~ .auth-wrap.iodauth{padding-left:25px;padding-right:25px}
 /* 계좌 정보 입력란 + '계좌번호를 모르겠어요' 폰트를 설명글과 동일하게(13px / 굵기 500) */
-.auth-wrap.iodauth .iod-findlink{color:var(--sub);font-size:calc(13px*var(--scale));font-weight:500}
-.auth-wrap.iodauth .auth-info .ir .k{font-size:calc(13px*var(--scale));font-weight:500}
-.auth-wrap.iodauth .auth-info .ir-input{font-size:calc(13px*var(--scale));font-weight:500;font-family:inherit}   /* input이 브라우저 기본(Arial) 대신 앱 폰트(Pretendard) 상속 → '숫자 8자리'가 나머지와 동일 */
-.auth-wrap.iodauth .auth-info .ir-input::placeholder{font-size:calc(13px*var(--scale));font-weight:500}
-.auth-wrap.iodauth .auth-info .ir-pw .acct-dots:empty::before{font-size:calc(13px*var(--scale));font-weight:500}   /* 특이도↑: 뒤 .auth-info .ir-pw .acct-dots 규칙(12.5px)보다 우선 → '숫자 8자리'와 동일 13px */
-.auth-wrap.iodauth .td-desc{word-break:keep-all}   /* 설명글 단어 단위 줄바꿈(어색한 '주세/요' 방지) */
+.auth-wrap.iodauth .iod-findlink{color:var(--sub);font-size:calc(14px*var(--scale));font-weight:500}
+.auth-wrap.iodauth .auth-info .ir .k{font-size:calc(14px*var(--scale));font-weight:500}
+.auth-wrap.iodauth .auth-info .ir-input{font-size:calc(14px*var(--scale));font-weight:500;font-family:inherit}   /* input이 브라우저 기본(Arial) 대신 앱 폰트(Pretendard) 상속 → '숫자 8자리'가 나머지와 동일 */
+.auth-wrap.iodauth .auth-info .ir-input::placeholder{font-size:calc(14px*var(--scale));font-weight:500}
+.auth-wrap.iodauth .auth-info .ir-pw .acct-dots:empty::before{font-size:calc(14px*var(--scale));font-weight:500}   /* 특이도↑: 뒤 .auth-info .ir-pw .acct-dots 규칙(12.5px)보다 우선 → 라벨·설명글과 동일 14px */
+.auth-wrap.iodauth .td-desc{word-break:keep-all;font-size:calc(14px*var(--scale))}   /* 설명글 단어 단위 줄바꿈 + 14px(결과안내 화면과 통일) */
 /* 요소 간 세로 간격 전부 16px 균등: ①back→타이틀 ②설명→카드 ③카드→버튼 ④버튼→링크 */
-.auth-wrap.iodauth .toss-dhead{padding-top:6px;padding-bottom:16px}
-.auth-wrap.iodauth .primary-btn{margin-top:16px}
+.auth-wrap.iodauth .toss-dhead{padding-top:6px;padding-bottom:24px}   /* 설명글 → 입력카드 바깥 여백 16→24(+8) */
+.auth-wrap.iodauth .primary-btn{margin-top:24px}   /* 입력카드 → 버튼 바깥 여백 16→24(+8) */
 .auth-wrap.iodauth .iod-findlink{margin-top:16px}
 .auth-wrap.cheauth .auth-head{padding-left:0;padding-right:0}
 .auth-head{font-size:calc(21px*var(--scale));font-weight:800;color:var(--ink);
@@ -1153,13 +1160,13 @@ body{
   display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .22s}
 .consult-ov.on{opacity:1}
 .consult-ov:not(.on){pointer-events:none}
-.consult-sheet{background:#fff;border-radius:24px 24px 0 0;padding:8px 18px calc(18px + env(safe-area-inset-bottom));
+.consult-sheet{background:#fff;border-radius:24px 24px 0 0;padding:8px 25px calc(18px + env(safe-area-inset-bottom));
   transform:translateY(100%);transition:transform .28s cubic-bezier(.22,.7,.3,1);box-shadow:0 -14px 44px rgba(20,24,60,.28);
   max-height:92%;display:flex;flex-direction:column}   /* 항목 많으면 시트 최대높이 제한 + 리스트 내부 스크롤 */
 .consult-sheet .cs-grip,.consult-sheet .cs-head,.consult-sheet .cs-cancel{flex:none}
 .consult-ov.on .consult-sheet{transform:translateY(0)}
 .cs-grip{width:40px;height:4px;border-radius:2px;background:#E2E2EA;margin:6px auto 12px}
-.cs-head{padding:0 4px 12px}
+.cs-head{padding:0 0 12px}   /* 시트 좌우 25px 기준에 헤더 정렬 */
 .cs-title{font-size:calc(19px*var(--scale));font-weight:800;color:#14183C;letter-spacing:-.3px}
 .cs-sub{font-size:calc(13.5px*var(--scale));color:#7A7A8C;margin-top:5px;line-height:1.5}
 /* Ver 4.0 · 계좌찾기 플로팅(find-ov: 정보입력→인증번호→계좌리스트) */
@@ -1260,8 +1267,8 @@ body{
 .iodload-body .td-desc{font-size:calc(14px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:16px}   /* 결과안내 화면과 동일: 설명글 14px · 타이틀→설명 16px */
 .iodload-center{flex:1;display:flex;align-items:center;justify-content:center}
 /* 계좌조회 로딩: 설명글 아래 움직이는 search 아이콘(GIF) */
-.iodload-icon{display:flex;justify-content:flex-start;margin-top:8px}
-.iodload-icon img{width:calc(56px*var(--scale));height:calc(56px*var(--scale));object-fit:contain}
+.iodload-icon{display:flex;justify-content:flex-start;margin-top:0}   /* 타이틀→아이콘 간격 16px (dhead padding-bottom 16 + margin-top 0) */
+.iodload-icon img{width:calc(56px*var(--scale));height:calc(56px*var(--scale));object-fit:contain}   /* 로딩 아이콘: 민트 원본을 브랜드 마젠타(#E6007F)로 재색상한 GIF(search-magenta.gif) 사용 — 애니메이션·검정선 유지 */
 /* 계좌조회 결과안내(재설계, v40): 진행바 없음 · 타이틀(제한사유,클릭순환)+설명글 첫페이지 위치 · 버튼 · 데모설명 맨 아래 */
 .iodresult-screen{height:100%;display:flex;flex-direction:column}
 .iodresult-screen .page-top{flex:none}
@@ -1363,6 +1370,10 @@ body{
 .fv-wrap.certstat-v40 .fv-card{margin-left:25px;margin-right:25px}
 .fv-wrap.certstat-v40 .fv-note{margin-left:25px;margin-right:25px}
 .fv-wrap.certstat-v40 .fv-foot{padding-left:25px;padding-right:25px}   /* 재발급 상세: 버튼도 25px 정렬 */
+/* 서류 신청내역: 각 항목을 하나의 카드가 아닌 개별 회색테두리 카드로 표기(스크롤 영역) */
+.fv-wrap.certstat-v40 .certstat-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;margin:0 25px;padding-top:2px}
+.fv-wrap.certstat-v40 .certstat-list::-webkit-scrollbar{display:none}
+.fv-wrap.certstat-v40 .certstat-item{display:flex;align-items:center;gap:10px;padding:13px 14px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:10px}
 .fv-filter{flex:none;padding:0 24px 12px;display:flex;flex-direction:column;gap:8px}
 .fv-chip{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border-radius:13px;
   background:#fff;border:1.5px solid var(--line);font-size:calc(13.5px*var(--scale));font-weight:700;
@@ -2839,7 +2850,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260711m"></script>
+<script src="app.js?v=20260711n"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

@@ -2297,10 +2297,10 @@ function tossFaqCard(){
               : `data-flash="‘${it.t}’ 도움말 화면으로 이동합니다. (시연용)"`;
     return `<div class="tf-row" ${act}><div class="tf-ic">${it.svg}</div><div class="tf-t">${it.t}</div><div class="tf-arw">${I.chev}</div></div>`;
   };
-  const head = `<div class="tf-head" data-faqtoggle title="${open?'접기':'더보기'}">
-      <div class="tf-title">혹시 이런 내용이 궁금하신가요?</div>
-      <div class="tf-toggle ${open?'open':''}">${I.down}</div>
-    </div>`;
+  const toggleEl = `<div class="tf-toggle ${open?'open':''}">${s1Ver==='v40'?I.plus:I.down}</div>`;
+  const titleEl = `<div class="tf-title">혹시 이런 내용이 궁금하신가요?</div>`;
+  // v40: [+] 토글을 문구 바로 오른쪽에 붙임(CSS .tf-title flex:none) / v41·v42: 기존대로 [v] 화살표를 우측 끝에
+  const head = `<div class="tf-head" data-faqtoggle title="${open?'접기':'더보기'}">${titleEl+toggleEl}</div>`;
   // v41/v42: 기존 구조 유지 (헤더가 회색카드 안, 접힘 시 1개 노출)
   if(s1Ver!=='v40'){
     const shown = open ? V40_FAQ : V40_FAQ.slice(0, 1);
@@ -3463,8 +3463,8 @@ function renderIodChecking(){
   return `<div class="iodload-screen">
     ${pageTop(s1state.title||'계좌 조회', true)}
     <div class="iodload-body">
-      <div class="toss-dhead"><div class="td-title">계좌 상태를 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
-      <div class="iodload-icon"><img src="assets/free-animated-icon-search-8948330.gif" alt="조회 중"></div>
+      <div class="toss-dhead"><div class="td-title">계좌 상태를 확인하고 있어요</div>${s1Ver==='v40'?'':'<div class="td-desc">잠시만 기다려 주세요</div>'}</div>
+      <div class="iodload-icon"><img src="assets/search-magenta.gif" alt="조회 중"></div>
     </div>
   </div>`;
 }
@@ -3659,6 +3659,7 @@ function startCertCheck(){
   setTimeout(()=>{
     if(s1state.page!=='certcheck') return;
     s1state.page='certstatus'; s1state.title='증명서 발급 현황';
+    s1state.certHasRecords=true;   // 진입 시 기본 = 조회됨(신청내역 있음)
     s1state.noBack=false; s1state.noHome=true;
     renderS1();
   }, 2500);
@@ -3669,8 +3670,8 @@ function renderCertChecking(){
     return `<div class="iodload-screen">
       ${pageTop(s1state.title||'발급현황 조회', true)}
       <div class="iodload-body">
-        <div class="toss-dhead"><div class="td-title">서류 신청내역을 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
-        <div class="iodload-icon"><img src="assets/free-animated-icon-search-8948330.gif" alt="조회 중"></div>
+        <div class="toss-dhead"><div class="td-title">서류 신청내역을 확인하고 있어요</div></div>
+        <div class="iodload-icon"><img src="assets/search-magenta.gif" alt="조회 중"></div>
       </div>
     </div>`;
   }
@@ -3684,24 +3685,36 @@ function renderCertChecking(){
 }
 /* 신청내역 표기 — 발급현황 + 재발급 버튼 */
 function renderCertStatus(){
-  const acct = (authAcct && authAcct.no) ? `${authAcct.type||'위탁종합'} ${authAcct.no}` : '위탁종합 5257-5602';
-  const list = CERT_STATUS.map(x=>`<div class="fv-item">
+  const v40 = s1Ver==='v40';
+  const itemHtml = cls => CERT_STATUS.map(x=>`<div class="${cls}">
       <div class="fv-it"><div class="fv-nm">${x.n} <span class="fv-tag ${x.stc}">${x.st}</span></div><div class="fv-sub">${x.d}</div></div>
       ${x.re ? `<div class="fv-issue" data-certreissue="${x.n}">재발급</div>` : ''}
     </div>`).join('');
-  const v40 = s1Ver==='v40';   // v40: 재설계 흐름과 통일 — 진행바 삭제·간결 타이틀·'증명서'→'서류' 용어·25px 정렬(certstat-v40 스코프)
-  const title = v40 ? '서류 신청내역이에요' : '증명서 발급 현황';
-  const desc = v40 ? '신청하신 서류의 발급 현황을 확인하고 재발급받아요' : '신청하신 증명서의 발급 현황을 확인하고 재발급받아요';
-  const note = v40 ? '발급완료 서류는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 서류는 발급 완료 후 알림톡으로 안내해 드려요.'
-                   : '발급완료 증명서는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 증명서는 발급 완료 후 알림톡으로 안내해 드려요.';
-  return `<div class="fv-wrap${v40?' certstat-v40':''}">
+  if(v40){
+    // 결과 2종: 조회됨(신청내역 표기) / 없음. 데모 토글(data-certstatustoggle)로 전환. 계좌번호·'발급현황' 타이틀 없음. 각 항목은 개별 회색테두리 카드.
+    const has = s1state.certHasRecords !== false;   // 기본 = 조회됨
+    const title = has ? '서류 신청내역이 조회되었어요' : '서류 신청내역이 없어요';
+    const desc  = has ? '최근 1개월 내 신청하신 서류 내역이에요.<br>발급완료 서류는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 서류는 발급 완료 후 알림톡으로 안내해 드려요.'
+                      : '최근 1개월 내 신청하신 서류가 없어요.<br>필요한 서류는 <b>[서류 발급·신청]</b> 메뉴에서 신청할 수 있어요.';
+    const body = `<div class="certstat-list">${has ? itemHtml('certstat-item') : ''}</div>`;   // 하단 안내글은 상단 설명글로 합침
+    const cyc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
+    return `<div class="fv-wrap certstat-v40">
+      <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+      <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
+      ${body}
+      <div class="iodresult-note"><div class="iodres-cycbtn" data-certstatustoggle><span class="ref-ic">${cyc}</span>다른 결과 보기</div><div class="iodres-demo">※ 데모 화면이에요. 위 버튼으로 신청내역 있음/없음을 전환할 수 있어요.</div></div>
+    </div>`;
+  }
+  // 비-v40(v41/v42): 기존 유지
+  const acct = (authAcct && authAcct.no) ? `${authAcct.type||'위탁종합'} ${authAcct.no}` : '위탁종합 5257-5602';
+  return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    ${v40 ? '' : untactSteps(CERT_STEPS, 1)}
-    <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
+    ${untactSteps(CERT_STEPS, 1)}
+    <div class="toss-dhead"><div class="td-title">증명서 발급 현황</div><div class="td-desc">신청하신 증명서의 발급 현황을 확인하고 재발급받아요</div></div>
     <div class="fv-chip hv-acct"><span class="fv-cv">${acct}</span></div>
     <div class="hv-secttl">발급 현황 ${CERT_STATUS.length}</div>
-    <div class="fv-card"><div class="fv-list">${list}</div></div>
-    <div class="fv-note">${note}</div>
+    <div class="fv-card"><div class="fv-list">${itemHtml('fv-item')}</div></div>
+    <div class="fv-note">발급완료 증명서는 <b>재발급</b>으로 다시 받을 수 있어요.<br>처리중 증명서는 발급 완료 후 알림톡으로 안내해 드려요.</div>
   </div>`;
 }
 /* 증명서 재발급 상세화면 — 발급 정보 확인 + 재발급 신청 */
@@ -5447,6 +5460,8 @@ document.addEventListener('click', (e)=>{
     if(acctNo.trim()){ openMethodSheet(IOD_PW_SHEET); return; }   // 계좌번호 입력됨 → '계좌비밀번호를 모르겠어요' → 재설정 방법 선택
     s1nav({page:'authsel', title:'계좌 조회', acctPw:'', otpSent:false, noHome:true}); return;
   }
+  const certtog = t.closest('[data-certstatustoggle]');
+  if(certtog){ s1state.certHasRecords = (s1state.certHasRecords === false); renderS1(); return; }   // 서류 신청내역 결과 데모: 조회됨 ↔ 없음 전환
   const iodc = t.closest('[data-iodcycle]');
   if(iodc){
     const keys = Object.keys(IOD_RESULTS);
