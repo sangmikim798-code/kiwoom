@@ -3827,12 +3827,9 @@ function openMethodSheet(cfg){
   if(s1Ver==='v42'){ methods = methods.filter(m => m.ic !== CS_ICON.web); }   // Ver 4.2: 매체 플로팅에서 '디지털 ARS'(CS_ICON.web) 항목 전부 숨김
   if(s1Ver!=='v40'){ methods = methods.filter(m => !m.v40only); }   // v40only 항목(예: 사고신고 시트 상담원 연결)은 Ver 4.0에서만 노출
   const rows = methods.map(m=>{
-    if(v40lite){   // 아이콘 제거 + 매체명 강조 + (매체시트면) 짧은 설명
-      const kw = csMediaKw(m.nm);
-      const nmHtml = kw ? m.nm.replace(kw, `<b class="cs-em">${kw}</b>`) : m.nm;
-      const desc = kw ? (CS_MEDIA_SHORT[kw] || m.desc) : m.desc;
+    if(v40lite){   // 주식주문 시트와 동일한 '제목+설명' 형식(아이콘·강조색 없음·전체 설명, 문구톤 통일)
       return `<div class="cs-row no-ic" data-iodmethod="${m.kind}" data-mlabel="${m.nm}">
-        <div class="cs-body"><div class="cs-nm">${nmHtml}</div>${desc?`<div class="cs-desc">${desc}</div>`:''}</div>
+        <div class="cs-body"><div class="cs-nm">${m.nm}</div>${m.desc?`<div class="cs-desc">${m.desc}</div>`:''}</div>
         <div class="cs-arw">${I.chev}</div>
       </div>`;
     }
@@ -3977,22 +3974,37 @@ function stkSheetCfg(step){
   return null;
 }
 function openStkSheet(step){
-  const prev = document.getElementById('stkPop'); if(prev) prev.remove();   // 중복 id 방지
   const screen = document.getElementById('screen'); const cfg = stkSheetCfg(step);
   if(!screen || !cfg) return;
-  const el = document.createElement('div'); el.className = 'consult-ov stk-ov' + (bigFont?' bigfont':''); el.id = 'stkPop';
   const rows = cfg.opts.map(o=>
     `<div class="cs-row" data-stkpick="${o.v}" data-stkstep="${step}">
-      ${o.ic ? `<div class="cs-ic">${o.ic}</div>` : ''}
+      ${(o.ic && s1Ver!=='v40') ? `<div class="cs-ic">${o.ic}</div>` : ''}
       <div class="cs-body"><div class="cs-nm">${o.nm}</div>${o.desc?`<div class="cs-desc">${o.desc}</div>`:''}</div>
       <div class="cs-arw">${I.chev}</div>
     </div>`).join('');
-  el.innerHTML = `<div class="consult-sheet">
-    <div class="cs-grip"></div>
+  const inner = `<div class="cs-grip"></div>
     <div class="cs-head"><div class="cs-title">${cfg.title}</div>${(cfg.sub && !(s1Ver==='v40' && cfg.sub.indexOf('편하신 방법으로')===0))?`<div class="cs-sub">${cfg.sub}</div>`:''}</div>
     <div class="cs-list">${rows}</div>
-    <div class="cs-cancel" data-stkclose>닫기</div>
-  </div>`;
+    <div class="cs-cancel" data-stkclose>닫기</div>`;
+  const existing = document.getElementById('stkPop');
+  // v40: 이미 열린 시트면 재생성(재슬라이드) 없이 내용만 교체 + 높이만 부드럽게 커졌다/줄었다 → 튀어오름 방지
+  if(existing && s1Ver==='v40' && existing.classList.contains('on')){
+    const sheet = existing.querySelector('.consult-sheet');
+    const startH = sheet.offsetHeight;
+    sheet.innerHTML = inner;
+    const endH = sheet.offsetHeight;          // 새 내용의 자연 높이(auto)
+    sheet.style.height = startH + 'px';
+    void sheet.offsetHeight;                    // reflow → 시작 높이 확정
+    sheet.style.transition = 'height .26s cubic-bezier(.22,.7,.3,1)';
+    sheet.style.height = endH + 'px';
+    const done = ()=>{ sheet.style.height=''; sheet.style.transition=''; };
+    sheet.addEventListener('transitionend', done, {once:true});
+    setTimeout(done, 320);                       // 높이 변화 없을 때 폴백
+    return;
+  }
+  if(existing) existing.remove();               // 첫 진입/비-v40: 중복 id 방지 후 재생성(슬라이드업)
+  const el = document.createElement('div'); el.className = 'consult-ov stk-ov' + (bigFont?' bigfont':''); el.id = 'stkPop';
+  el.innerHTML = `<div class="consult-sheet">${inner}</div>`;
   screen.appendChild(el);
   requestAnimationFrame(()=>el.classList.add('on'));
 }
