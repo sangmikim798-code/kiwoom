@@ -2282,9 +2282,9 @@ const V40_FAQ_V40 = [ V40_FAQ[0],
 ];
 /* '비밀번호를 재설정하고 싶어요' 클릭 → 어떤 비밀번호를 재설정할지 선택 시트(매체 플로팅 바텀시트 방식) */
 const PWRESET_SHEET = { title:'어떤 비밀번호를 재설정할까요?', sub:'재설정할 비밀번호를 선택해 주세요', noIcon:true, methods:[
-  {kind:'pwreset0', nm:'ID 비밀번호',        desc:'로그인 ID의 비밀번호를 재설정해요'},
-  {kind:'pwreset1', nm:'증권계좌 비밀번호',   desc:'증권계좌의 비밀번호를 재설정해요'},
-  {kind:'pwreset2', nm:'공동인증서 비밀번호', desc:'공동인증서 비밀번호를 재설정해요'},
+  {kind:'pwreset0', nm:'ID 비밀번호',        desc:'로그인에 쓰는 영문과 숫자를 조합한 5~8자리 비밀번호예요'},
+  {kind:'pwreset1', nm:'증권계좌 비밀번호',   desc:'증권계좌에 쓰는 숫자 4~8자리 비밀번호예요'},
+  {kind:'pwreset2', nm:'공동인증서 비밀번호', desc:'영문·숫자·특수문자를 모두 포함한 10자리 이상 비밀번호예요'},
 ]};
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
@@ -2477,7 +2477,8 @@ function authStep(method){
   const cert = isCertFlow();
   const iodOnly = iod && !isa && !cert;   // 순수 '입출금이 안돼요' 흐름만 초보자용 간결 재설계(진행바·note 삭제, 타이틀·플레이스홀더 정리)
   const certV40 = cert && s1Ver==='v40';  // v40 '서류 발급현황' 흐름도 iodauth와 동일한 초보자용 간결 재설계(진행바·note 삭제, 25px 정렬, 회색 findlink)
-  const simple = iodOnly || certV40;      // 간결 UI(iodauth 클래스·플레이스홀더·note삭제·버튼폭·25px) 공통 게이트
+  const isaV40 = isa && s1Ver==='v40';    // v40 ISA(FAQ 3번)도 1·2번과 동일 iodauth 초보자용 스타일(진행바 삭제·14px·25px·회색 findlink). v41/v42는 기존 유지
+  const simple = iodOnly || certV40 || isaV40;   // 간결 UI(iodauth 클래스·플레이스홀더·note삭제·버튼폭·25px) 공통 게이트
   const ctx = cheAuthCtx();
   const head = isa ? '중개형 ISA 신청현황을<br>조회할 계좌를 인증해주세요' : (iod ? '어떤 계좌에서<br>입출금이 안되나요?' : '본인 명의 계좌번호와<br>비밀번호를 입력해주세요');
   const acctDesc = isa ? '중개형 ISA 신청현황을 확인할 계좌번호와 비밀번호를 입력해 주세요'
@@ -2488,7 +2489,7 @@ function authStep(method){
   const note = isa ? '인증하신 계좌의 중개형 ISA 가입·이전 신청현황을 확인해요.' : (cert ? '인증하신 계좌의 증명서 발급·신청 내역을 확인해요.' : (iod ? '인증하신 계좌의 상태를 확인해서 안내해 드려요.' : (che ? '본인 명의 계좌만 조회 가능해요.' : '계좌번호와 비밀번호로 본인인증을 진행합니다.')));
   const acctVal = iod ? (s1state.iodAcctNo||'') : (che ? (s1state.cheAcctNo||'') : '');   // 계좌 선택(인증 후 계좌리스트)에서 자동 입력된 계좌번호
   // v40 계열: Ver 4.0 토스 헤딩(타이틀+설명) / 레거시: 기존 auth-head. ISA·증명서는 안내+인증 1페이지 통합 → 전용 타이틀
-  const acctTitle = isa ? 'ISA 가입서류 제출' : (cert ? (certV40 ? '서류 신청내역을 확인해볼게요' : '증명서 발급 현황') : (iodOnly ? '계좌 상태를 확인해볼게요' : '계좌 인증'));
+  const acctTitle = isa ? (isaV40 ? 'ISA 가입 · 이전 신청내역을 확인해볼게요' : 'ISA 가입서류 제출') : (cert ? (certV40 ? '서류 신청내역을 확인해볼게요' : '증명서 발급 현황') : (iodOnly ? '계좌 상태를 확인해볼게요' : '계좌 인증'));
   const heading = v40
     ? `<div class="toss-dhead"><div class="td-title">${acctTitle}</div><div class="td-desc">${acctDesc}</div></div>`
     : `<div class="auth-head">${head}</div>`;
@@ -3463,8 +3464,8 @@ function renderIodChecking(){
   return `<div class="iodload-screen">
     ${pageTop(s1state.title||'계좌 조회', true)}
     <div class="iodload-body">
-      <div class="toss-dhead"><div class="td-title">계좌 상태를 확인하고 있어요</div>${s1Ver==='v40'?'':'<div class="td-desc">잠시만 기다려 주세요</div>'}</div>
-      <div class="iodload-icon"><img src="assets/search-magenta.gif" alt="조회 중"></div>
+      <div class="toss-dhead"><div class="td-title">계좌 상태를 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
+      <div class="iodload-icon"><img src="assets/search-magenta-thin2.gif" alt="조회 중"></div>
     </div>
   </div>`;
 }
@@ -3482,7 +3483,7 @@ function renderIodResult(){
     const badge = r.infoBadge ? `<div class="iodres-badge" data-idbadge><span class="ib-q">?</span>왜 진위확인이 되지 않았나요?</div>` : '';
     const btnAttr = r.infoBadge ? 'data-idurl' : 'data-iodmethods';   // idcard: 재요청 URL 받기(안내톡 발송) / 그 외: 방법 선택 플로팅
     return `<div class="iodresult-screen">
-      ${pageTop(s1state.title||'계좌 상태', true)}
+      ${pageTop(s1state.title||'계좌 상태', true, `<div class="isa-refresh" data-iodcycle title="다른 사유 보기">${cyc}</div>`)}
       <div class="iodresult-body">
         <div class="toss-dhead">
           <div class="td-title">${title}</div>
@@ -3490,10 +3491,6 @@ function renderIodResult(){
         </div>
         ${badge}
         <div class="iodresult-btnwrap"><div class="primary-btn" ${btnAttr}>${btnTxt}</div></div>
-      </div>
-      <div class="iodresult-note">
-        <div class="iodres-cycbtn" data-iodcycle><span class="ref-ic">${cyc}</span>다른 사유 보기</div>
-        <div class="iodres-demo">※ 데모 화면이에요. 위 새로고침을 누르면 다른 사유(계좌 상태)를 볼 수 있어요.</div>
       </div>
     </div>`;
   }
@@ -3518,6 +3515,15 @@ function renderIodResult(){
 const ISA_TABS = [['new','신규가입'],['transfer','계좌이전'],['renew','만기연장']];
 /* 1) 신청현황 조회 로딩 */
 function renderIsaChecking(){
+  if(s1Ver==='v40'){   // FAQ 로딩 스타일(iodload-screen): 진행바·스피너 없음, 타이틀+'잠시만 기다려 주세요'(6px), 마젠타 GIF
+    return `<div class="iodload-screen">
+      ${pageTop(s1state.title||'신청현황 조회', true)}
+      <div class="iodload-body">
+        <div class="toss-dhead"><div class="td-title">신청현황을 조회하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
+        <div class="iodload-icon"><img src="assets/search-magenta-thin2.gif" alt="조회 중"></div>
+      </div>
+    </div>`;
+  }
   return pageTop(s1state.title||'신청현황 조회', true)
     + untactSteps(ISA_STEPS, 1)
     + `<div class="iod-loading">
@@ -3527,52 +3533,54 @@ function renderIsaChecking(){
       </div>`;
 }
 /* 3) 신청현황 표기 (신규가입 / 계좌이전 / 만기연장) */
+const ISA_RESULT_STATES = ['new','transfer','renew','none'];   // 신규가입/계좌이전/만기연장/없음 (상단 새로고침 순환)
 function renderIsaResult(){
+  const v40 = s1Ver==='v40';
+  const kv = rows => `<div class="hv-summary">` + rows.map(r=>`<div class="hv-row"><span>${r[0]}</span><b class="${r[2]||''}">${r[1]}</b></div>`).join('') + `</div>`;
+  const newBody = kv([
+    ['상품명','중개형ISA'],['신청일자','2026.07.03'],['귀속년도','2026'],['가입유형','서민형'],
+    ['신청방법','온라인'],['소득증빙서류','발급번호 확인 필요'],['추가증빙서류','-'],['접수일자','2026.07.03'],['접수상태','적격','up'],
+  ]);
+  const xferBody = `<div class="hv-secttl">이전신청 정보</div>` + kv([
+    ['이전신청일','2026.07.01'],['이전상태','처리중','up'],['이전의사 확인방법','전화통화'],
+  ]) + `<div class="hv-secttl">기존 금융회사</div>` + kv([
+    ['회사명','기업은행'],['지점명','원동동'],['계좌번호','2581-3216-824011'],
+  ]) + `<div class="hv-secttl">당사(키움증권)</div>` + kv([
+    ['계좌번호','6320-7376 [중개형ISA]'],['가입상품명','중개형ISA'],
+  ]);
+  const renewFields = kv([
+    ['상품','중개형ISA'],['가입자 분류','서민형'],['현재 만기일자','2026.09.21'],['연장후 만기일자','2029.09.21'],['가입유형','근로소득자 (5천만원 이하)'],
+  ]);
+  const misuText = '만기연장 신청은 <b>평일 08:00~17:00</b>, <b>만기 3개월 이전~만기일 전 영업일</b>까지 가능해요.';   // 노란 박스(유의사항) 글
+  const renewBody = renewFields + `<div class="misu-note">${misuText}</div>`;   // v41/v42: 카드 아래 노란 박스 유지
+  if(v40){
+    // 4상태(신규가입/계좌이전/만기연장/없음) — 상단 새로고침 아이콘(data-isacycle)으로 순환. 계좌번호·탭 삭제, 결과만 깔끔히 표기
+    const st = ISA_RESULT_STATES.indexOf(s1state.isaTab) >= 0 ? s1state.isaTab : 'new';
+    const M = {
+      new:      {title:'ISA 신규가입 신청내역이 조회되었어요', desc:'접수상태가 <b>적격</b>이면 ISA 상품에 가입할 수 있어요.', body:newBody, cta:'가입서류 제출하기'},
+      transfer: {title:'ISA 계좌이전 신청내역이 조회되었어요', desc:'타사 → 키움 중개형ISA 계좌이전 신청내역이에요.', body:xferBody, cta:'계좌이전 서류 제출하기'},
+      renew:    {title:'ISA 만기연장 신청내역이 조회되었어요', desc:'중개형ISA 만기연장 신청내역이에요.<br>'+misuText, body:renewFields, cta:'만기연장 서류 제출하기'},
+      none:     {title:'ISA 가입 · 이전 신청내역이 없어요', desc:'ISA 가입·계좌이전은 <b>영웅문S#</b> 또는 <b>키움증권 홈페이지 > 계좌개설 > ISA</b>에서 신청할 수 있어요.', body:'', cta:''},
+    };
+    const s = M[st];
+    const rfs = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
+    return `<div class="fv-wrap certstat-v40">
+      <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div><div class="isa-refresh" data-isacycle title="다른 결과 보기">${rfs}</div></div>
+      <div class="toss-dhead"><div class="td-title">${s.title}</div><div class="td-desc">${s.desc}</div></div>
+      <div class="my-body">${s.body}</div>
+      ${s.cta?`<div class="fv-foot"><div class="primary-btn accent" data-isamethod>${s.cta}</div></div>`:''}
+    </div>`;
+  }
+  // 비-v40(v41/v42): 기존 탭 기반 유지
   const tab = s1state.isaTab || 'new';
   const acct = (authAcct && authAcct.no) ? `${authAcct.type||'중개형ISA'} ${authAcct.no}` : '중개형ISA 6320-7376';
   const tabBar = `<div class="fv-tabs bal-tabs">` + ISA_TABS.map(([k,l])=>`<div class="fv-tab ${tab===k?'on':''}" data-isatab="${k}">${l}</div>`).join('') + `</div>`;
-  const kv = rows => `<div class="hv-summary">` + rows.map(r=>`<div class="hv-row"><span>${r[0]}</span><b class="${r[2]||''}">${r[1]}</b></div>`).join('') + `</div>`;
-  let desc, body, cta;
-  if(tab==='new'){
-    desc = '접수상태가 <b>적격</b>이면 ISA 상품에 가입할 수 있어요.';
-    body = kv([
-      ['상품명','중개형ISA'],
-      ['신청일자','2026.07.03'],
-      ['귀속년도','2026'],
-      ['가입유형','서민형'],
-      ['신청방법','온라인'],
-      ['소득증빙서류','발급번호 확인 필요'],
-      ['추가증빙서류','-'],
-      ['접수일자','2026.07.03'],
-      ['접수상태','적격','up'],
-    ]);
-    cta = '가입서류 제출하기';
-  } else if(tab==='transfer'){
-    desc = '타사 → 키움 중개형ISA 계좌이전 신청내역이에요.';
-    body = `<div class="hv-secttl">이전신청 정보</div>` + kv([
-      ['이전신청일','2026.07.01'],
-      ['이전상태','처리중','up'],
-      ['이전의사 확인방법','전화통화'],
-    ]) + `<div class="hv-secttl">기존 금융회사</div>` + kv([
-      ['회사명','기업은행'],
-      ['지점명','원동동'],
-      ['계좌번호','2581-3216-824011'],
-    ]) + `<div class="hv-secttl">당사(키움증권)</div>` + kv([
-      ['계좌번호','6320-7376 [중개형ISA]'],
-      ['가입상품명','중개형ISA'],
-    ]);
-    cta = '계좌이전 서류 제출하기';
-  } else {
-    desc = '중개형ISA 만기연장 신청내역이에요.';
-    body = kv([
-      ['상품','중개형ISA'],
-      ['가입자 분류','서민형'],
-      ['현재 만기일자','2026.09.21'],
-      ['연장후 만기일자','2029.09.21'],
-      ['가입유형','근로소득자 (5천만원 이하)'],
-    ]) + `<div class="misu-note">만기연장 신청은 <b>평일 08:00~17:00</b>, <b>만기 3개월 이전~만기일 전 영업일</b>까지 가능해요.</div>`;
-    cta = '만기연장 서류 제출하기';
-  }
+  const M2 = {
+    new:      {desc:'접수상태가 <b>적격</b>이면 ISA 상품에 가입할 수 있어요.', body:newBody, cta:'가입서류 제출하기'},
+    transfer: {desc:'타사 → 키움 중개형ISA 계좌이전 신청내역이에요.', body:xferBody, cta:'계좌이전 서류 제출하기'},
+    renew:    {desc:'중개형ISA 만기연장 신청내역이에요.', body:renewBody, cta:'만기연장 서류 제출하기'},
+  };
+  const m = M2[tab] || M2.new;
   return `<div class="fv-wrap">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div><div class="toss-rlink" data-isareissue>발급번호 재등록</div></div>
     ${untactSteps(ISA_STEPS, 1)}
@@ -3580,10 +3588,10 @@ function renderIsaResult(){
     <div class="fv-chip hv-acct"><span class="fv-cv">${acct}</span></div>
     ${tabBar}
     <div class="my-body">
-      <div class="fv-note">${desc}</div>
-      ${body}
+      <div class="fv-note">${m.desc}</div>
+      ${m.body}
     </div>
-    <div class="fv-foot"><div class="primary-btn accent" data-isamethod>${cta}</div></div>
+    <div class="fv-foot"><div class="primary-btn accent" data-isamethod>${m.cta}</div></div>
   </div>`;
 }
 /* 4) 가입서류 제출방법 선택 (서류제출 / 온라인 발급번호 입력) */
@@ -3593,9 +3601,10 @@ const ISA_METHOD_SHEET = { title:'가입서류를 어떻게 제출할까요?', s
 ]};
 /* 5) 서류 제출 화면 — 업로드폼 + 심사시간 안내 + 알림톡 안내 + 신청내역 확인 */
 function renderIsaSubmit(){
-  return `<div class="fv-wrap">
+  const v40 = s1Ver==='v40';   // FAQ 결과안내 스타일: 진행바 삭제 + 타이틀/설명 result 스타일 + 25px(certstat-v40)
+  return `<div class="fv-wrap${v40?' certstat-v40':''}">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    ${untactSteps(ISA_STEPS, 2)}
+    ${v40?'':untactSteps(ISA_STEPS, 2)}
     <div class="toss-dhead"><div class="td-title">가입서류 제출</div><div class="td-desc">서민형 가입서류를 촬영하거나 파일로 제출해요</div></div>
     <div class="doc-card">
       <div class="doc-ic">${I.doc}</div>
@@ -3610,9 +3619,10 @@ function renderIsaSubmit(){
 /* 6) 온라인 발급번호 입력 화면 */
 function renderIsaIssue(){
   const seg = (id,len)=>`<input class="isa-seg" id="${id}" inputmode="numeric" maxlength="${len}" placeholder="${'0'.repeat(len)}" oninput="isaSegInput(this)">`;
-  return `<div class="fv-wrap">
+  const v40 = s1Ver==='v40';   // FAQ 결과안내 스타일: 진행바 삭제 + 타이틀/설명 result 스타일 + 25px(certstat-v40)
+  return `<div class="fv-wrap${v40?' certstat-v40':''}">
     <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
-    ${untactSteps(ISA_STEPS, 2)}
+    ${v40?'':untactSteps(ISA_STEPS, 2)}
     <div class="toss-dhead"><div class="td-title">온라인 발급번호 입력</div><div class="td-desc">홈택스에서 발급받은 소득확인증명서 번호를 입력해요</div></div>
     <div class="my-body">
       <div class="fv-note">소득확인증명서(개인종합자산관리계좌 가입용)의 <b>온라인 발급번호 14자리</b>를 입력해 주세요.<br>확인되면 별도 서류 제출 없이 처리돼요.</div>
@@ -3670,8 +3680,8 @@ function renderCertChecking(){
     return `<div class="iodload-screen">
       ${pageTop(s1state.title||'발급현황 조회', true)}
       <div class="iodload-body">
-        <div class="toss-dhead"><div class="td-title">서류 신청내역을 확인하고 있어요</div></div>
-        <div class="iodload-icon"><img src="assets/search-magenta.gif" alt="조회 중"></div>
+        <div class="toss-dhead"><div class="td-title">서류 신청내역을 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
+        <div class="iodload-icon"><img src="assets/search-magenta-thin2.gif" alt="조회 중"></div>
       </div>
     </div>`;
   }
@@ -3699,10 +3709,9 @@ function renderCertStatus(){
     const body = `<div class="certstat-list">${has ? itemHtml('certstat-item') : ''}</div>`;   // 하단 안내글은 상단 설명글로 합침
     const cyc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>';
     return `<div class="fv-wrap certstat-v40">
-      <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>
+      <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div><div class="isa-refresh" data-certstatustoggle title="다른 결과 보기">${cyc}</div></div>
       <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
       ${body}
-      <div class="iodresult-note"><div class="iodres-cycbtn" data-certstatustoggle><span class="ref-ic">${cyc}</span>다른 결과 보기</div><div class="iodres-demo">※ 데모 화면이에요. 위 버튼으로 신청내역 있음/없음을 전환할 수 있어요.</div></div>
     </div>`;
   }
   // 비-v40(v41/v42): 기존 유지
@@ -4534,9 +4543,9 @@ function gotoAuthNext(deep){
   // 홈에서 진입한 경우 뒤로가기가 인증화면이 아닌 홈으로 향하도록 히스토리 정리
   if(!deep) s1state.history = [];
 }
-function pageTop(title, hideTitle){
-  // 세부페이지는 우상단 버튼 숨김 / 그 외에는 전체메뉴 버튼만 표시
-  const right = s1state.noHome ? '' : `<div class="back" data-menu title="전체메뉴">${I.menu}</div>`;
+function pageTop(title, hideTitle, rightHtml){
+  // 세부페이지는 우상단 버튼 숨김 / 그 외에는 전체메뉴 버튼만 표시. rightHtml 지정 시 우측 슬롯에 커스텀 요소(예: 결과화면 새로고침)
+  const right = rightHtml || (s1state.noHome ? '' : `<div class="back" data-menu title="전체메뉴">${I.menu}</div>`);
   const back = s1state.noBack ? '' : `<div class="back" data-s1back>${I.back}</div>`;
   return `<div class="page-top${hideTitle ? ' iod-top' : ''}">
     ${back}
@@ -4639,7 +4648,7 @@ function renderS1(){
   else if(s1state.page==='authstep'){
     html = isCheAuth()
       ? `<div class="acv-wrap"><div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div></div>` + authStep(s1state.authMethod) + `</div>`
-      : pageTop(s1state.title||'본인인증', isIodFlow() || (isCertFlow()&&s1Ver==='v40')) + ((isIsaFlow()||(isCertFlow()&&s1Ver!=='v40'))?untactSteps(iodStepsFor(),0):'') + authStep(s1state.authMethod);   // 순수 '입출금이 안돼요'·v40 서류발급현황은 진행바 없음(ISA/v41·v42 증명서만 표시), v40 cert는 iod-top(25px 정렬)
+      : pageTop(s1state.title||'본인인증', isIodFlow() || (isCertFlow()&&s1Ver==='v40')) + (((isIsaFlow()&&s1Ver!=='v40')||(isCertFlow()&&s1Ver!=='v40'))?untactSteps(iodStepsFor(),0):'') + authStep(s1state.authMethod);   // 순수 '입출금'·v40 서류발급현황·v40 ISA는 진행바 없음(v41·v42 ISA/증명서만 표시), v40 cert/isa는 iod-top(25px 정렬)
   }
   else if(s1state.page==='iodacctsel'){
     html = renderIodAcctSel();
@@ -5434,7 +5443,13 @@ document.addEventListener('click', (e)=>{
   }
   // 신청현황 → 가입서류 제출방법 선택 플로팅
   if(t.closest('[data-isamethod]')){ openMethodSheet(ISA_METHOD_SHEET); return; }
-  // 신청현황 탭 전환(신규가입/계좌이전/만기연장)
+  // 신청현황 결과(v40) 상단 새로고침 → 4상태(신규가입/계좌이전/만기연장/없음) 순환
+  if(t.closest('[data-isacycle]')){
+    const cur = ISA_RESULT_STATES.indexOf(s1state.isaTab);
+    s1state.isaTab = ISA_RESULT_STATES[(cur+1) % ISA_RESULT_STATES.length] || 'new';
+    renderS1(); return;
+  }
+  // 신청현황 탭 전환(신규가입/계좌이전/만기연장) — v41/v42 탭
   const isatab = t.closest('[data-isatab]');
   if(isatab){ s1state.isaTab = isatab.dataset.isatab; renderS1(); return; }
   // 신청내역 확인 → 신청현황 화면

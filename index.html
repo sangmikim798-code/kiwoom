@@ -330,6 +330,9 @@ body{
 .toss-menu{width:38px;height:38px;display:grid;place-items:center;color:var(--navy);cursor:pointer}
 .toss-menu svg{width:24px;height:24px}
 .toss-rlink{flex:none;font-size:calc(13px*var(--scale));font-weight:700;color:var(--sub);cursor:pointer;padding:6px 2px}
+.isa-refresh{flex:none;display:flex;align-items:center;justify-content:center;color:var(--sub);cursor:pointer;padding:6px 2px}   /* ISA 결과 상단 새로고침(회색) — 4상태 순환 */
+.isa-refresh svg{width:calc(20px*var(--scale));height:calc(20px*var(--scale));display:block}
+.isa-refresh:active{opacity:.5}
 .toss-rlink:active{color:var(--primary)}
 .toss-back{width:38px;height:38px;display:grid;place-items:center;color:var(--navy);cursor:pointer}
 .toss-back svg{width:24px;height:24px;transform:rotate(180deg)}
@@ -1264,7 +1267,7 @@ body{
 .iodload-screen .page-top{flex:none}
 .iodload-body{flex:1;display:flex;flex-direction:column;padding:6px 25px 26px;min-height:0}
 .iodload-body .toss-dhead{flex:none;padding:6px 0 16px 0}
-.iodload-body .td-desc{font-size:calc(14px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:16px}   /* 결과안내 화면과 동일: 설명글 14px · 타이틀→설명 16px */
+.iodload-body .td-desc{font-size:calc(14px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:6px}   /* 설명글 14px · 타이틀→설명 6px(계좌인증과 동일) */
 .iodload-center{flex:1;display:flex;align-items:center;justify-content:center}
 /* 계좌조회 로딩: 설명글 아래 움직이는 search 아이콘(GIF) */
 .iodload-icon{display:flex;justify-content:flex-start;margin-top:0}   /* 타이틀→아이콘 간격 16px (dhead padding-bottom 16 + margin-top 0) */
@@ -1363,8 +1366,9 @@ body{
 .fv-wrap .toss-dhead .td-desc{padding-right:20px}   /* 설명글 우측 여백(좌 24 + 우 4+20=24) → 긴 설명이 우측 끝에 붙는 현상 방지 */
 .fv-wrap .usteps + .toss-dhead{padding-top:8px}   /* 진행바 있는 화면(ISA)의 타이틀을 계좌인증(auth-wrap 상단패딩 6px 포함)과 동일 위치로 */
 /* v40 서류발급 현황 결과: 재설계 흐름(계좌인증·로딩)과 통일 — 진행바 삭제 + 타이틀·계좌·목록·안내 좌우 25px 정렬 */
-.fv-wrap.certstat-v40 .toss-dhead{padding-left:25px;padding-right:25px}
-.fv-wrap.certstat-v40 .toss-dhead .td-desc{font-size:calc(14px*var(--scale))}   /* 결과안내(입출금·로딩)와 설명글 14px 통일 */
+.fv-wrap.certstat-v40 .toss-dhead{padding-left:25px;padding-right:25px;padding-top:12px}   /* 타이틀 top을 출금제한 결과안내(iod result)와 동일 68px로: padding-top 2→12(+10) */
+/* 결과 화면 기본 설명글 스타일 = 출금제한(iod result)과 통일: 14px · line-height 1.5 · 타이틀→설명 16px. 새 결과 화면도 이 스타일을 기본 적용(같은 값으로 맞출 것) */
+.fv-wrap.certstat-v40 .toss-dhead .td-desc{font-size:calc(14px*var(--scale));line-height:1.5;word-break:keep-all;margin-top:16px}
 .fv-wrap.certstat-v40 .hv-acct{margin-left:25px;margin-right:25px}
 .fv-wrap.certstat-v40 .hv-secttl{padding-left:25px;padding-right:25px}
 .fv-wrap.certstat-v40 .fv-card{margin-left:25px;margin-right:25px}
@@ -2850,7 +2854,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260711n"></script>
+<script src="app.js?v=20260711o"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
