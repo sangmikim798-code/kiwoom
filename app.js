@@ -2281,11 +2281,61 @@ const V40_FAQ_V40 = [ V40_FAQ[0],
   {t:'비밀번호를 재설정하고 싶어요', svg:'<img src="assets/question.png" alt="비밀번호 재설정">'},
 ];
 /* '비밀번호를 재설정하고 싶어요' 클릭 → 어떤 비밀번호를 재설정할지 선택 시트(매체 플로팅 바텀시트 방식) */
-const PWRESET_SHEET = { title:'어떤 비밀번호를 재설정할까요?', sub:'재설정할 비밀번호를 선택해 주세요', noIcon:true, methods:[
+const PWRESET_SHEET = { title:'어떤 비밀번호를 재설정할까요?', sub:'재설정할 비밀번호를 선택해 주세요', noIcon:true, cls:'pwreset-sheet', methods:[
   {kind:'pwreset0', nm:'ID 비밀번호',        desc:'로그인에 쓰는 <b class="cs-em">영문과 숫자를 조합한 5~8자리</b> 비밀번호예요'},
   {kind:'pwreset1', nm:'증권계좌 비밀번호',   desc:'증권계좌에 쓰는 <b class="cs-em">숫자 4~8자리</b> 비밀번호예요'},
   {kind:'pwreset2', nm:'공동인증서 비밀번호', desc:'<b class="cs-em">영문·숫자·특수문자를 모두 포함한 10자리 이상</b> 비밀번호예요'},
 ]};
+/* ===== FAQ 비밀번호 재설정 > ID 비밀번호 재설정 플로우 (Ver 4.0) =====
+   본인인증(정보입력 → 인증번호) → 본인확인 완료 + 계좌인증 → ID 비밀번호 재설정 */
+const IDPW_ID = 'kiwoom0728';
+const IDPW_ACCTS = ['12**-**78','63**-**76','50**-**02'];
+function renderIdpwAuth(){
+  // 1페이지: 정보입력(고객명/생년월일/휴대폰 + 필수동의 + 인증요청) → 인증번호(타이틀·설명 유지, 입력창 대신 인증번호 + 인증완료)
+  const step = s1state.idpwStep || 'info';
+  const title = '본인인증 후 ID 비밀번호 재설정이 가능해요';
+  const desc = '고객님 본인 확인을 위해 정보를 입력해 주세요.';
+  const body = step==='otp'
+    ? `<div class="auth-info">
+        <div class="ir"><span class="k">인증번호</span><input class="ir-input" id="idpwOtp" inputmode="numeric" maxlength="6" placeholder="숫자 6자리" autocomplete="off"></div>
+      </div>
+      <div class="idpw-guide">입력하신 휴대폰으로 인증번호를 보냈어요.<br>3분 이내에 입력해 주세요.</div>
+      <div class="primary-btn" data-idpwotpdone>인증완료</div>`
+    : `<div class="auth-info">
+        <div class="ir"><span class="k">고객명</span><input class="ir-input" id="idpwName" placeholder="이름 입력" autocomplete="off"></div>
+        <div class="ir"><span class="k">생년월일</span><input class="ir-input" id="idpwDob" inputmode="numeric" maxlength="6" placeholder="6자리 (YYMMDD)" autocomplete="off"></div>
+        <div class="ir"><span class="k">본인명의 휴대폰</span><input class="ir-input" id="idpwPhone" inputmode="numeric" maxlength="11" placeholder="'-' 없이 입력" autocomplete="off"></div>
+      </div>
+      <div class="find-agree idpw-agree${s1state.idpwAgree?' on':''}" data-idpwagree><span class="fa-box">${FIND_CHECK}</span><span class="fa-txt">개인(신용)정보 수집·이용 필수동의서 <b>(필수)</b></span></div>
+      <div class="primary-btn" data-idpwreq>인증요청</div>`;
+  return `<div class="auth-wrap iodauth">
+    <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
+    ${body}
+  </div>`;
+}
+function renderIdpwDone(){
+  // 본인확인 완료 → ID 표기 + 계좌 인증(콤보 마스킹 + 계좌비번) → 확인 시 같은 자리에 ID 비밀번호 재설정 입력칸
+  const reset = !!s1state.idpwReset;
+  const title = '본인 확인이 완료되었어요';
+  const desc = reset ? '새로 사용할 ID 비밀번호를 입력해 주세요.' : '계좌 정보를 인증하면 ID 비밀번호를 재설정할 수 있어요.';
+  const idCard = `<div class="idpw-idcard"><div class="idpw-idlabel">회원님의 ID</div><div class="idpw-idval">${IDPW_ID}</div></div>`;
+  const card = reset
+    ? `<div class="auth-info">
+        <div class="ir"><span class="k">새 비밀번호</span><input class="ir-input" id="idpwNew" type="password" maxlength="8" placeholder="영문+숫자 5~8자리" autocomplete="off"></div>
+        <div class="ir"><span class="k">비밀번호 확인</span><input class="ir-input" id="idpwNew2" type="password" maxlength="8" placeholder="한 번 더 입력" autocomplete="off"></div>
+      </div>
+      <div class="primary-btn" data-idpwresetdone>재설정</div>`
+    : `<div class="auth-info">
+        <div class="ir"><span class="k">증권계좌</span><div class="idpw-selwrap"><select class="idpw-sel" id="idpwAcctSel">${IDPW_ACCTS.map(a=>`<option>${a}</option>`).join('')}</select><span class="idpw-selchev">${I.down}</span></div></div>
+        <div class="ir"><span class="k">계좌 비밀번호</span><input class="ir-input" id="idpwAcctPw" type="password" inputmode="numeric" maxlength="8" placeholder="숫자 4~8자리" autocomplete="off"></div>
+      </div>
+      <div class="primary-btn" data-idpwacctdone>확인</div>`;
+  return `<div class="auth-wrap iodauth">
+    <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
+    ${idCard}
+    ${card}
+  </div>`;
+}
 function tossFaqCard(){
   const open = !!s1state.faqOpen;
   const rowHtml = it=>{
@@ -3082,7 +3132,7 @@ function openConsult(label, opts){
     <div class="cs-grip"></div>
     <div class="cs-head">
       <div class="cs-title">어떻게 도와드릴까요?</div>
-      <div class="cs-sub">편하신 방법으로 상담을 연결해 드려요</div>
+      ${s1Ver==='v40'?'':`<div class="cs-sub">편하신 방법으로 상담을 연결해 드려요</div>`}
       ${label?`<div class="cs-ctx">선택하신 업무 · <b>${label}</b></div>`:''}
     </div>
     <div class="cs-list">${rows}</div>
@@ -3771,7 +3821,7 @@ function openMethodSheet(cfg){
   const screen = document.getElementById('screen'); if(!screen || !cfg) return;
   const v40lite = (s1Ver==='v40');   // Ver 4.0: 간결 스타일(아이콘 없음·매체명 강조·짧은 설명)
   const el = document.createElement('div');
-  el.className = 'consult-ov method-ov' + (bigFont?' bigfont':'') + (v40lite?' v40lite':''); el.id = 'methodPop';
+  el.className = 'consult-ov method-ov' + (bigFont?' bigfont':'') + (v40lite?' v40lite':'') + (cfg.cls?' '+cfg.cls:''); el.id = 'methodPop';
   const noIcon = cfg.noIcon;   // 아이콘 열 없이(텍스트만) 렌더
   let methods = cfg.methods || [];
   if(s1Ver==='v42'){ methods = methods.filter(m => m.ic !== CS_ICON.web); }   // Ver 4.2: 매체 플로팅에서 '디지털 ARS'(CS_ICON.web) 항목 전부 숨김
@@ -3794,7 +3844,7 @@ function openMethodSheet(cfg){
   }).join('');
   el.innerHTML = `<div class="consult-sheet">
     <div class="cs-grip"></div>
-    <div class="cs-head"><div class="cs-title">${cfg.title}</div><div class="cs-sub">${cfg.sub}</div></div>
+    <div class="cs-head"><div class="cs-title">${cfg.title}</div>${(cfg.sub && !(s1Ver==='v40' && cfg.sub.indexOf('편하신 방법으로')===0))?`<div class="cs-sub">${cfg.sub}</div>`:''}</div>
     <div class="cs-list">${rows}</div>
     <div class="cs-cancel" data-msclose>닫기</div>
   </div>`;
@@ -3939,7 +3989,7 @@ function openStkSheet(step){
     </div>`).join('');
   el.innerHTML = `<div class="consult-sheet">
     <div class="cs-grip"></div>
-    <div class="cs-head"><div class="cs-title">${cfg.title}</div><div class="cs-sub">${cfg.sub}</div></div>
+    <div class="cs-head"><div class="cs-title">${cfg.title}</div>${(cfg.sub && !(s1Ver==='v40' && cfg.sub.indexOf('편하신 방법으로')===0))?`<div class="cs-sub">${cfg.sub}</div>`:''}</div>
     <div class="cs-list">${rows}</div>
     <div class="cs-cancel" data-stkclose>닫기</div>
   </div>`;
@@ -4653,6 +4703,12 @@ function renderS1(){
   else if(s1state.page==='iodacctsel'){
     html = renderIodAcctSel();
   }
+  else if(s1state.page==='idpwauth'){
+    html = pageTop(s1state.title||'본인인증', true) + renderIdpwAuth();
+  }
+  else if(s1state.page==='idpwdone'){
+    html = pageTop(s1state.title||'본인 확인', true) + renderIdpwDone();
+  }
   else if(s1state.page==='iodpurposedone'){
     html = renderIodPurposeDone();
   }
@@ -5227,6 +5283,12 @@ document.addEventListener('click', (e)=>{
   if(t.closest('[data-myacctsheet]')){ openMethodSheet(MYACCT_SHEET); return; }  // 계좌번호·MY계좌 정보확인 → 연결매체 선택 플로팅(2매체)
   if(t.closest('[data-chealt]')){ openMethodSheet(CHE_SHEET); return; }   // 체결·주문내역 계좌인증 화면 '다른 방법으로 조회하기' → 매체 플로팅
   if(t.closest('[data-pwreset]')){ openMethodSheet(PWRESET_SHEET); return; }   // FAQ '비밀번호를 재설정하고 싶어요' → 어떤 비밀번호 재설정할지 선택 시트
+  // ID 비밀번호 재설정 플로우
+  if(t.closest('[data-idpwagree]')){ s1state.idpwAgree=!s1state.idpwAgree; const a=document.querySelector('.idpw-agree'); if(a) a.classList.toggle('on', s1state.idpwAgree); return; }
+  if(t.closest('[data-idpwreq]')){ if(!s1state.idpwAgree){ flash('개인(신용)정보 수집·이용에 동의해 주세요.'); return; } s1state.idpwStep='otp'; renderS1(); return; }   // 인증요청 → 인증번호 단계
+  if(t.closest('[data-idpwotpdone]')){ s1state.idpwReset=false; s1nav({page:'idpwdone', title:'본인 확인', noHome:true}); return; }   // 인증완료 → 본인확인 완료 화면
+  if(t.closest('[data-idpwacctdone]')){ s1state.idpwReset=true; renderS1(); return; }   // 계좌인증 확인 → 같은 자리에 ID 비밀번호 재설정 입력칸
+  if(t.closest('[data-idpwresetdone]')){ flash('ID 비밀번호가 재설정되었어요. 새 비밀번호로 로그인해 주세요. (시연용)'); s1state.page='home'; s1state.history=[]; s1state.authNext=null; renderS1(); return; }   // 재설정 완료 → 홈
   const msh = t.closest('[data-mediasheet]');
   if(msh){ const cfg = MEDIA_SHEETS[msh.dataset.mediasheet]; if(cfg) openMethodSheet(cfg); return; }   // 입출금·이체 각 항목 → 2매체 플로팅
   const stkSel = t.closest('[data-stkpick]');
@@ -5381,7 +5443,8 @@ document.addEventListener('click', (e)=>{
     if(kind==='pwmv1'){ flash('음성 ARS 「주문비밀번호 변경」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='pwmv2'){ flash('음성 ARS 「ARS 이용신청」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='pwmv3'){ flash('음성 ARS 「ARS 이용해지」 메뉴로 연결해 드릴게요. (시연용)'); return; }
-    if(kind.indexOf('pwreset')===0){ flash(`「${mrow.dataset.mlabel}」 재설정 화면으로 이동합니다. (시연용)`); return; }   // FAQ 비밀번호 재설정 — ID/증권계좌/공동인증서 선택
+    if(kind==='pwreset0'){ s1state.idpwStep='info'; s1state.idpwAgree=false; s1state.idpwReset=false; s1nav({page:'idpwauth', title:'본인인증', noHome:true}); return; }   // ID 비밀번호 재설정 플로우
+    if(kind.indexOf('pwreset')===0){ flash(`「${mrow.dataset.mlabel}」 재설정 화면으로 이동합니다. (시연용)`); return; }   // 증권계좌/공동인증서 — 시연용
     if(kind==='authidapp'){ openAppLink('authidinfo'); return; }
     if(kind==='authidcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'인증·ID 관리', noHome:true}); return; }
     if(kind==='etcsvcdigital'){ s1nav({page:'result', resultKey:'applygroup', title:'부가서비스', applyGroup:'etcsvc', noHome:true}); return; }   // 부가서비스 — 디지털 ARS 화면

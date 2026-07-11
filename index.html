@@ -1190,6 +1190,17 @@ body{
 .find-sel{appearance:none;-webkit-appearance:none;cursor:pointer;color:#14183C;padding-right:24px}
 .find-selchev{position:absolute;right:0;top:50%;transform:translateY(-50%);pointer-events:none;color:#9AA1AC;display:flex}
 .find-selchev svg{width:20px;height:20px}
+/* ID 비밀번호 재설정 플로우: 계좌 콤보(select) · 인증번호 안내글 · 약관 정렬 */
+.idpw-agree{padding-left:0;padding-right:0;margin-top:4px}
+/* 회원님의 ID = 입력카드와 구분되는 마젠타-소프트 하이라이트 결과카드 */
+.idpw-idcard{margin:0 0 14px;padding:15px 18px;background:var(--primary-soft);border-radius:16px;text-align:center}
+.idpw-idlabel{font-size:calc(12.5px*var(--scale));color:var(--sub);font-weight:600}
+.idpw-idval{margin-top:3px;font-size:calc(19px*var(--scale));font-weight:800;color:var(--primary);letter-spacing:-.3px}
+.idpw-guide{margin-top:10px;font-size:calc(13px*var(--scale));color:var(--sub);line-height:1.5;word-break:keep-all}
+.idpw-selwrap{flex:1;min-width:0;position:relative;display:flex;align-items:center}
+.idpw-sel{width:100%;appearance:none;-webkit-appearance:none;border:none;background:transparent;outline:none;text-align:right;text-align-last:right;color:var(--ink);font-family:inherit;font-size:calc(14px*var(--scale));font-weight:500;padding-right:22px;cursor:pointer}
+.idpw-selchev{position:absolute;right:0;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--sub);display:flex}
+.idpw-selchev svg{width:18px;height:18px}
 .find-agree{display:flex;align-items:center;gap:9px;padding:2px 4px 14px;cursor:pointer;
   font-size:calc(13.5px*var(--scale));font-weight:600;color:#3A4360;user-select:none}
 .find-agree .fa-box{width:22px;height:22px;border-radius:7px;border:1.6px solid #CDD2D9;display:grid;place-items:center;color:transparent;flex:none;transition:.12s}
@@ -1243,6 +1254,7 @@ body{
 .consult-ov.v40lite .cs-row{padding:15px 16px}
 .consult-ov.v40lite .cs-nm{font-weight:600}
 .consult-ov.v40lite .cs-em{color:var(--primary);font-weight:800}
+.consult-ov.pwreset-sheet .cs-nm{font-weight:800}   /* 비밀번호 선택 시트: 비밀번호명 굵게 */
 .consult-ov.v40lite .cs-desc{margin-top:4px}
 .cs-arw{flex:none;color:#C4C4D2}
 .cs-arw svg{width:18px;height:18px}
@@ -2854,7 +2866,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260711p"></script>
+<script src="app.js?v=20260711q"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
