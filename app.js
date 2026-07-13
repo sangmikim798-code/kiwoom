@@ -3016,6 +3016,8 @@ const APP_LINK = {
   cdd: {title:'고객확인(CDD/EDD) 정보 등록·갱신'},
   iodpurpose: {title:'금융거래목적확인서 등록'},
   iodpw: {title:'계좌 비밀번호 재설정'},
+  pwresetacct: {title:'증권계좌 비밀번호 재설정', popDesc:'<b>증권계좌 비밀번호</b>는<br>영웅문S#에서 재설정할 수 있어요.'},   // 증권계좌 비밀번호 재설정 안내
+  pwresetcert: {title:'공동인증서 비밀번호 재설정', popDesc:'<b>공동인증서 비밀번호</b>는<br>영웅문S#에서 재설정할 수 있어요.'},   // 공동인증서 비밀번호 재설정 안내
   chefilled: {title:'체결내역 조회'},
   sisequote: {title:'시세 조회'},
   idxinfo: {title:'지수·환율 정보'},
@@ -3769,6 +3771,7 @@ function renderCertStatus(){
       <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div><div class="isa-refresh" data-certstatustoggle title="다른 결과 보기">${cyc}</div></div>
       <div class="toss-dhead"><div class="td-title">${title}</div><div class="td-desc">${desc}</div></div>
       ${body}
+      ${has ? '' : `<div class="fv-foot"><div class="primary-btn accent" data-certapply>서류 발급·신청</div></div>`}
     </div>`;
   }
   // 비-v40(v41/v42): 기존 유지
@@ -5478,7 +5481,9 @@ document.addEventListener('click', (e)=>{
     if(kind==='pwmv2'){ flash('음성 ARS 「ARS 이용신청」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='pwmv3'){ flash('음성 ARS 「ARS 이용해지」 메뉴로 연결해 드릴게요. (시연용)'); return; }
     if(kind==='pwreset0'){ s1state.idpwStep='info'; s1state.idpwAgree=false; s1state.idpwReset=false; s1nav({page:'idpwauth', title:'본인인증', noHome:true}); return; }   // ID 비밀번호 재설정 플로우
-    if(kind.indexOf('pwreset')===0){ flash(`「${mrow.dataset.mlabel}」 재설정 화면으로 이동합니다. (시연용)`); return; }   // 증권계좌/공동인증서 — 시연용
+    if(kind==='pwreset1'){ openAppLink('pwresetacct'); return; }   // 증권계좌 비밀번호 → 영웅문S# 재설정 안내·연결 팝업
+    if(kind==='pwreset2'){ openAppLink('pwresetcert'); return; }   // 공동인증서 비밀번호 → 영웅문S# 재설정 안내·연결 팝업
+    if(kind.indexOf('pwreset')===0){ flash(`「${mrow.dataset.mlabel}」 재설정 화면으로 이동합니다. (시연용)`); return; }   // 기타 pwreset — 시연용(폴백)
     if(kind==='authidapp'){ openAppLink('authidinfo'); return; }
     if(kind==='authidcs'){ s1nav({page:'agent', title:'상담원 연결', agentLabel:'인증·ID 관리', noHome:true}); return; }
     if(kind==='etcsvcdigital'){ s1nav({page:'result', resultKey:'applygroup', title:'부가서비스', applyGroup:'etcsvc', noHome:true}); return; }   // 부가서비스 — 디지털 ARS 화면
@@ -5589,6 +5594,10 @@ document.addEventListener('click', (e)=>{
   // 금융거래목적확인서 등록 → 완료 화면 / 완료 화면 '확인' → 메인
   if(t.closest('[data-iodpurposedone]')){ s1nav({page:'iodpurposedone', title:'등록 완료', noBack:true, noHome:true}); return; }
   if(t.closest('[data-iodhome]')){ s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }
+  if(t.closest('[data-certapply]')){   // 서류 신청내역 없음 → '서류신청·제출' 카테고리 중메뉴 리스트로 이동
+    const cats = catData(); let idx = cats.findIndex(c => /서류/.test(c.t)); if(idx < 0) idx = 4;
+    s1state.page='home'; s1state.sarsPath=[idx]; s1state.history=[]; s1state.authNext=null; renderS1(); return;
+  }
   if(t.closest('[data-agentgo]')){ flash('상담원에게 연결합니다. 잠시만 기다려 주세요. (시연용)'); s1state.page='home'; s1state.sarsPath=[]; s1state.history=[]; s1state.authNext=null; renderS1(); return; }   // 상담원 연결하기 → 연결 안내 후 홈으로
   // 음성 ARS 연결 버튼 → 연결 완료 화면
   if(t.closest('[data-voicego]')){ s1nav({page:'voicedone', title:'음성 ARS 연결', noBack:true, noHome:true}); return; }
