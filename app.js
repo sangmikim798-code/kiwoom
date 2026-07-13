@@ -2099,14 +2099,17 @@ function showPopup(label){
   const screen = document.getElementById('screen');
   const el = document.createElement('div');
   if(isV40()){   // Ver 4.0 계열: 토스 스타일 안내 팝업(app-pop 재사용 · 마젠타 스킨)
+    const v40only = (s1Ver==='v40');   // Ver 4.0: 안내 첫째줄('키움증권 음성 ARS로 연결해 드릴게요.')·연결번호/시간 삭제
     const msg = name
       ? `‘${name}’ 메뉴를<br>음성 ARS로 연결해 드릴게요.`
-      : `키움증권 음성 ARS로 연결해 드릴게요.<br>음성 안내에 따라 원하시는 메뉴를 선택하세요.`;
+      : (v40only ? `음성 안내에 따라 원하시는 메뉴를 선택하세요.`
+                 : `키움증권 음성 ARS로 연결해 드릴게요.<br>음성 안내에 따라 원하시는 메뉴를 선택하세요.`);
+    const warn = v40only ? '' : `<span class="ap-warn">연결 번호 1544-9900 · 평일 08:00~18:00</span>`;
     el.className = 'app-pop-ov v40'; el.id = 'arsModal';
     el.innerHTML = `<div class="app-pop">
       <div class="ap-logo voice">${CS_ICON.voice}</div>
       <div class="ap-title">음성 ARS로 연결할게요</div>
-      <div class="ap-desc">${msg}<span class="ap-warn">연결 번호 1544-9900 · 평일 08:00~18:00</span></div>
+      <div class="ap-desc">${msg}${warn}</div>
       <div class="ap-btns">
         <div class="ap-btn cancel" data-mcancel>취소</div>
         <div class="ap-btn go" data-mok>연결하기</div>
@@ -2161,12 +2164,13 @@ function showEndPopup(){
   const el = document.createElement('div');
   if(isV40()){
     // 일반 모드: 인증 여부와 무관하게 항상 기존 전체 문구 / 큰글씨: 짧게
+    const v40only = (s1Ver==='v40');   // Ver 4.0: 설명글(인증정보 안내) 삭제, '이용해 주셔서 감사합니다.'만 유지
     const warn = `<span class="ap-warn">${bigFont ? '입력한 정보는 저장하지 않아요.' : '입력하신 인증정보는 종료와 함께 모두 무효화돼요.<br>이용을 마치면 인증정보를 남기거나 저장하지 않아요.'}</span>`;
     el.className = 'app-pop-ov v40'; el.id = 'arsModal';
     el.innerHTML = `<div class="app-pop">
       <div class="ap-logo end">${I.power}</div>
       <div class="ap-title">서비스를 종료할게요</div>
-      <div class="ap-desc">이용해 주셔서 감사합니다.<br>${warn}</div>
+      <div class="ap-desc">이용해 주셔서 감사합니다.${v40only ? '' : '<br>'+warn}</div>
       <div class="ap-btns">
         <div class="ap-btn cancel" data-mcancel>취소</div>
         <div class="ap-btn go" data-endok>종료하기</div>
@@ -3045,13 +3049,15 @@ function openAppLink(key){
   // 앱 이름·로고·문구는 APP_LINK 항목에서 오버라이드 가능(기본=영웅문S#)
   const logoSrc = c.logo || 'assets/ys-icon.png';
   const logo  = v40 ? `<div class="ap-logo"><img src="${logoSrc}" alt="${c.app||'영웅문S#'}"></div>` : `<div class="ap-logo">S#</div>`;
+  const v40only = (s1Ver==='v40');   // Ver 4.0: 연동·종료·인증정보 안내 삭제, 선택 메뉴 강조 '바로 이동'만, 버튼 '열기'
   const title = c.popTitle || (v40 ? '영웅문S#으로 연결할게요' : '영웅문S#으로 연결');
-  const desc  = c.popDesc || (v40
-    ? (bigFont
+  const desc  = c.popDesc || (
+      v40only ? `<b>${c.title}</b> 화면으로 바로 이동해요.`
+    : v40 ? (bigFont
         ? `<b>${c.title}</b> 화면으로 이동해요.<br><span class="ap-warn">${wipeNote('')}</span>`
         : `입력하신 계좌를 영웅문S#에 연동해서<br><b>${c.title}</b> 화면으로 바로 이동해요.<br><span class="ap-warn">${wipeNote('지금 보고 계신 디지털 ARS는 종료돼요.')}</span>`)
     : `계좌정보를 안전하게 연동하고<br><b>${c.title}</b> 화면으로 바로 이동합니다.`);
-  const goTxt = c.popBtn || '영웅문S# 열기';
+  const goTxt = c.popBtn || (v40only ? '연결하기' : '영웅문S# 열기');
   // Ver 4.0은 중간 단계 플로우(앱 실행›계좌 연동›화면 이동) 미노출
   const flow = v40 ? '' : `<div class="ap-flow"><span class="ap-step">앱 실행</span><span class="ap-arr">›</span><span class="ap-step">계좌 연동</span><span class="ap-arr">›</span><span class="ap-step">화면 이동</span></div>`;
   el.innerHTML = `<div class="app-pop">

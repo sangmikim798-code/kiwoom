@@ -307,7 +307,7 @@ body{
 .acc-report{display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--primary);cursor:pointer;white-space:nowrap;font-size:calc(11px*var(--scale));font-weight:700}
 .acc-report svg{width:calc(23px*var(--scale));height:calc(23px*var(--scale));flex:none}
 .acc-report:active{transform:scale(.95)}
-.toss-home.v40main .acc-report{color:var(--busy)}   /* 사고신고 색상을 하단 서비스종료(--busy)와 통일 (v40 전용) */
+.toss-home.v40main .acc-report{color:var(--primary)}   /* 사고신고 라벨 색상 마젠타 (v40 전용) */
 
 /* ===== Ver 4.0 · 토스 스타일 스킨 (포인트=키움 마젠타 #E6007F · 네이비 #14183C) ===== */
 /* 디자인 토큰 오버라이드 → s1 전 컴포넌트(var() 기반) 자동 재도색 */
@@ -453,6 +453,13 @@ body{
 .toss-home.v40main .tc-ic svg{display:none}
 /* 빈 아이콘 placeholder: [+] 대신 흑백(그레이스케일) K 파비콘을 작게 */
 .toss-home.v40main .tc-ic::after{content:'';width:calc(20px*var(--scale));height:calc(20px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
+/* FAQ·큰글씨·사고신고 아이콘도 우선 흑백 파비콘 placeholder(대메뉴 tc-ic와 동일 톤). v40 전용 — 원본 아이콘 숨기고 파비콘 표시 */
+.toss-home.v40main .tf-ic img,.toss-home.v40main .tf-ic svg{display:none}
+.toss-home.v40main .tf-ic::after{content:'';display:block;width:calc(26px*var(--scale));height:calc(26px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
+.toss-home.v40main .bf-ic{display:none}
+.toss-home.v40main .bigfont-toggle::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
+.toss-home.v40main .acc-report svg{display:none}
+.toss-home.v40main .acc-report::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
 /* 폰트 일관성: FAQ 항목명 = 대메뉴명(16px). 안내글(FAQ 헤더·대메뉴 설명)은 이미 12.5px로 통일 상태 유지 */
 .toss-home.v40main .tf-t{font-size:calc(16px*var(--scale))}
 .toss-home.v40main .tc-nm{font-size:calc(16px*var(--scale))}
