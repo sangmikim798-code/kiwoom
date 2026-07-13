@@ -3521,7 +3521,7 @@ function renderIodChecking(){
     ${pageTop(s1state.title||'계좌 조회', true)}
     <div class="iodload-body">
       <div class="toss-dhead"><div class="td-title">계좌 상태를 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
-      <div class="iodload-icon"><img src="assets/search-magenta-thin2.gif" alt="조회 중"></div>
+      <div class="iodload-icon"><div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div></div>
     </div>
   </div>`;
 }
@@ -3576,7 +3576,7 @@ function renderIsaChecking(){
       ${pageTop(s1state.title||'신청현황 조회', true)}
       <div class="iodload-body">
         <div class="toss-dhead"><div class="td-title">신청현황을 조회하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
-        <div class="iodload-icon"><img src="assets/search-magenta-thin2.gif" alt="조회 중"></div>
+        <div class="iodload-icon"><div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div></div>
       </div>
     </div>`;
   }
@@ -3737,7 +3737,7 @@ function renderCertChecking(){
       ${pageTop(s1state.title||'발급현황 조회', true)}
       <div class="iodload-body">
         <div class="toss-dhead"><div class="td-title">서류 신청내역을 확인하고 있어요</div><div class="td-desc">잠시만 기다려 주세요</div></div>
-        <div class="iodload-icon"><img src="assets/search-magenta-thin2.gif" alt="조회 중"></div>
+        <div class="iodload-icon"><div class="iod-spinwrap"><div class="iod-spinner"></div><div class="iod-scan">${I.search||''}</div></div></div>
       </div>
     </div>`;
   }
