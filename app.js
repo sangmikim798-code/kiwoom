@@ -3505,7 +3505,7 @@ const IOD_RESULTS = {
 };
 function startIodCheck(){
   // 인증 완료 → 상태 확인(로딩) → 1.8초 후 결과. 로딩/결과에서 뒤로가기는 홈으로.
-  s1state.iodResult = 'multi';
+  s1state.iodResult = 'idcard';   // 결과안내 첫 화면 = 신분증 진위확인(새로고침 시 다른 사유로 순환)
   s1nav({page:'iodcheck', title:'계좌 조회', noBack:true, noHome:true, fromFav:false});
   s1state.history = [];
   setTimeout(()=>{
@@ -3624,7 +3624,8 @@ function renderIsaResult(){
       <div class="toss-top"><div class="toss-back" data-s1back title="이전">${I.chev}</div><div class="head-spacer"></div><div class="isa-refresh" data-isacycle title="다른 결과 보기">${rfs}</div></div>
       <div class="toss-dhead"><div class="td-title">${s.title}</div><div class="td-desc">${s.desc}</div></div>
       <div class="my-body">${s.body}</div>
-      ${s.cta?`<div class="fv-foot"><div class="primary-btn accent" data-isamethod>${s.cta}</div></div>`:''}
+      ${s.cta?`<div class="fv-foot"><div class="primary-btn accent" data-isamethod>${s.cta}</div></div>`
+             :(st==='none'?`<div class="fv-foot"><div class="primary-btn" data-staffconnect="ISA 가입·계좌이전">상담원 연결</div></div>`:'')}
     </div>`;
   }
   // 비-v40(v41/v42): 기존 탭 기반 유지
@@ -3684,7 +3685,7 @@ function renderIsaIssue(){
       <div class="fv-note">소득확인증명서(개인종합자산관리계좌 가입용)의 <b>온라인 발급번호 14자리</b>를 입력해 주세요.<br>확인되면 별도 서류 제출 없이 처리돼요.</div>
       <div class="hv-secttl">홈택스 발급번호</div>
       <div class="isa-issue-row">${seg('isaIssue1',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue2',4)}<span class="isa-seg-dash">-</span>${seg('isaIssue3',3)}<span class="isa-seg-dash">-</span>${seg('isaIssue4',3)}</div>
-      <div class="doc-card" style="text-align:left;padding:14px"><div class="doc-btn" data-isaissuedone>발급번호 제출하기</div></div>
+      <div class="primary-btn" data-isaissuedone style="margin:2px 25px 14px">발급번호 제출하기</div>
       <div class="hv-secttl">홈택스 증빙서류 발급경로</div>
       <div class="fv-note"><b>PC</b> · 국세청 홈택스 → 민원증명 → 소득확인증명서<br><b>모바일</b> · 손택스 앱 → 국세증명·사업자등록·세금관련 신청/신고 → 즉시발급증명 → 소득확인증명서(개인종합자산관리계좌 가입용)</div>
     </div>
@@ -4137,6 +4138,18 @@ function renderHeroDone(){
         <div class="iod-done-d">${acctLine}<b>${title}</b> 화면으로 이동했어요.</div>
       </div>
       <div class="iod-done-note">${wipeNote('이 디지털 ARS 화면은 종료돼요.')}</div>
+      <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
+    </div>`;
+}
+/* 신분증 재요청 URL 발송 완료 화면 (입출금 안내 · 신분증 진위확인 결과에서 진입) */
+function renderIdDone(){
+  return `<div class="iod-done-center">
+      <div class="iod-done">
+        <div class="iod-done-ic">${I.check}</div>
+        <div class="iod-done-t">재요청 URL을 보내드렸어요</div>
+        <div class="iod-done-d"><b>신분증 재요청 URL</b>을 알림톡으로 발송했어요.<br>링크에서 신분증을 재접수하시면,<br>진위확인 후 거래 제한이 풀려요.</div>
+      </div>
+      <div class="iod-done-note">※ 알림톡이 오지 않으면 잠시 후 다시 시도해 주세요.</div>
       <div class="iod-done-btnwrap"><div class="primary-btn" data-iodhome>확인</div></div>
     </div>`;
 }
@@ -4741,6 +4754,9 @@ function renderS1(){
   }
   else if(s1state.page==='herodone'){
     html = renderHeroDone();
+  }
+  else if(s1state.page==='iddone'){
+    html = renderIdDone();
   }
   else if(s1state.page==='isacheck'){
     html = renderIsaChecking();
@@ -5485,7 +5501,7 @@ document.addEventListener('click', (e)=>{
   // 결과안내 '왜 진위확인이 되지 않았나요?' 배지 플로팅 — consult-ov 공유이므로 일반 핸들러보다 먼저
   if(t.closest('[data-idbadge]')){ openBadgeInfo(); return; }
   if(t.closest('[data-badgeclose]') || (t.classList && t.classList.contains('badge-ov'))){ closeBadgeInfo(); return; }
-  if(t.closest('[data-idurl]')){ flash('신분증 재요청 URL을 알림톡으로 보내드렸어요. (시연용)'); return; }   // 신분증 재요청 URL 받기
+  if(t.closest('[data-idurl]')){ s1nav({page:'iddone', title:'재요청 URL 발송', noBack:true, noHome:true}); return; }   // 신분증 재요청 URL 받기 → 발송 완료 화면
 
   if(t.closest('[data-csclose]') || (t.classList && t.classList.contains('consult-ov'))){ closeConsult(); return; }
 
