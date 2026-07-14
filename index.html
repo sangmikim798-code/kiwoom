@@ -429,18 +429,19 @@ body{
 .toss-home.v40main .tf-toggle svg{width:10px;height:10px;stroke-width:3.2}
 /* FAQ 회색카드 좌상단 말풍선 꼬리표: 레퍼런스 speech-bubble 꼬리 형태를 상하 반전해 좌상단에 재현. 둥근 모서리(반경18)에서 자연스럽게 흘러나오도록 오른쪽 끝은 카드 평평한 윗변 시작점(로컬 x18=화면 x43)에, 왼쪽은 카드 좌측변(x0=화면 x25)으로 이어 틈 없이 연결. 아래로 18px(모서리 반경만큼) 겹쳐 그려 둥근 모서리 파임을 메움. 카드색 #F7F8FA SVG, 카드는 overflow:hidden(티커)이라 꼬리는 헤더의 ::after로 렌더 */
 .toss-home.v40main .tf-head::after{content:'';position:absolute;left:25px;bottom:-18px;width:22px;height:30px;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='22'%20height='30'%20viewBox='0%200%2022%2030'%3E%3Cpath%20d='M18,12%20C11,12%204,7%200,0%20C0,4%200,7%200,10%20L0,30%20Z'%20fill='%23F7F8FA'/%3E%3C/svg%3E") no-repeat}
+.toss-home.v40main .tf-head::after{display:none}   /* 말풍선 꼬리 숨김 → 좌상단 모서리를 다른 모서리와 동일한 둥근 모서리(18px)로. 복구: 이 줄만 삭제(위 꼬리 소스는 유지) */
 /* FAQ 회색영역: 티커 창 높이(적당히 축소 60px) */
-.toss-home.v40main .toss-faq{margin:0 25px 18px 25px;padding:0;height:60px;overflow:hidden}
+.toss-home.v40main .toss-faq{margin:0 25px 18px 25px;padding:0;height:46px;overflow:hidden}
 .toss-home.v40main .toss-faq .tf-list{margin:0}
-.toss-home.v40main .toss-faq .tf-row{height:60px;padding:0 14px;border-radius:0}
+.toss-home.v40main .toss-faq .tf-row{height:46px;padding:0 14px;border-radius:0}
 /* 질문이 아래→위로 자동 슬라이드(4항목 + 이음새용 첫 항목 복제1 = 5행, 60px 단위 이동) */
 .toss-home.v40main .tf-ticker{animation:faqTicker 16s infinite}
-@keyframes faqTicker{
+@keyframes faqTicker{   /* translateY = N × .tf-row 높이(46px) — 행 높이 바꾸면 이 값도 함께 맞출 것 */
   0%,18%{transform:translateY(0)}
-  25%,43%{transform:translateY(-60px)}
-  50%,68%{transform:translateY(-120px)}
-  75%,93%{transform:translateY(-180px)}
-  100%{transform:translateY(-240px)}
+  25%,43%{transform:translateY(-46px)}
+  50%,68%{transform:translateY(-92px)}
+  75%,93%{transform:translateY(-138px)}
+  100%{transform:translateY(-184px)}
 }
 /* 더보기 펼침: 전체 질문 목록(애니메이션 없음, 높이 자동). 행 지오메트리는 접힘과 동일(72px·padding0/14)로 유지 → '입출금이 안돼요' 위치가 토글해도 안 튐 */
 .toss-home.v40main .toss-faq.open{height:auto}
@@ -455,14 +456,14 @@ body{
 .toss-home.v40main .tc-ic::after{content:'';width:calc(20px*var(--scale));height:calc(20px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
 /* FAQ·큰글씨·사고신고 아이콘도 우선 흑백 파비콘 placeholder(대메뉴 tc-ic와 동일 톤). v40 전용 — 원본 아이콘 숨기고 파비콘 표시 */
 .toss-home.v40main .tf-ic img,.toss-home.v40main .tf-ic svg{display:none}
-.toss-home.v40main .tf-ic::after{content:'';display:block;width:calc(26px*var(--scale));height:calc(26px*var(--scale));background:url('assets/free-icon-font-comment-question-8034101.png') center/contain no-repeat}
+.toss-home.v40main .tf-ic::after{content:'';display:block;width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/free-icon-font-comment-question-8034101.png') center/contain no-repeat}
 .toss-home.v40main .bf-ic{display:none}
 .toss-home.v40main .bigfont-toggle::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/free-icon-font-comment-text-8034113.png') center/contain no-repeat}
 .toss-home.v40main .bigfont-toggle.on::before{background-image:url('assets/comment-text-magenta.png')}   /* 큰글씨 ON 시 아이콘도 강조색(마젠타)로 — 라벨색과 통일 */
 .toss-home.v40main .acc-report svg{display:none}
 .toss-home.v40main .acc-report::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/triangle-warning-magenta.png') center/contain no-repeat}   /* 사고신고 아이콘: 마젠타 재색상 PNG(라벨색과 통일). mask방식은 luminance로 처리돼 미표시라 재색상 이미지 사용 */
 /* 폰트 일관성: FAQ 항목명 = 대메뉴명(16px). 안내글(FAQ 헤더·대메뉴 설명)은 이미 12.5px로 통일 상태 유지 */
-.toss-home.v40main .tf-t{font-size:calc(16px*var(--scale));font-weight:500}
+.toss-home.v40main .tf-t{font-size:calc(14px*var(--scale));font-weight:500}   /* FAQ 메뉴명 축소(16→14) */
 .toss-home.v40main .tc-nm{font-size:calc(16px*var(--scale))}
 .toss-home.v40main .tc-desc{margin-top:4px}
 
