@@ -6092,6 +6092,10 @@ const SCHEME_META = {
       kpi:[['3단계','ARS메뉴→계좌조회→확인'],['단일','캡쳐 크롭'],['참고','NH투자증권 레퍼런스']]},
   hk:{cap:'한국투자증권 · 보이는 ARS (참고)', label:'한국투자증권 보이는 ARS · 주문·청약·펀드매매 → 현금매도',
       kpi:[['2단계','주문메뉴→현금매도'],['메인·메뉴','캡쳐'],['참고','한국투자증권 레퍼런스']]},
+  dform:{cap:'Digital Form · 로고만 있는 빈 화면', label:'Digital Form · 키움증권 로고만 있는 빈 화면 (작업용 템플릿)',
+      kpi:[['빈 화면','작업용 템플릿'],['로고','좌상단 배치'],['Digital Form','신규 목업']]},
+  dform2:{cap:'Ver 4.3 · Digital Form 복사본', label:'Ver 4.3 · 서류 제출 폼 (Digital Form 복사본 · 독립 편집용)',
+      kpi:[['서류제출','업무별 첨부 폼'],['복사본','Digital Form 기반'],['Ver 4.3','독립 편집용']]},
 };
 
 let refFirm = 'kiwoom';   // 참고 탭에서 현재 선택된 증권사 (기본: 키움증권 현행)
@@ -6111,7 +6115,7 @@ function switchScheme(s){
   document.querySelectorAll('#schemeTabs .tab').forEach(t=>t.classList.toggle('active', t.dataset.scheme===s));
   document.querySelectorAll('.flow').forEach(f=>f.classList.toggle('active', f.dataset.scheme===activeFlow));
   // 폰 스테이지(시안1·참고) ↔ 시안2/3 덱 전환
-  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2');
+  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2');
   const mainStage = document.getElementById('mainStage');
   if(mainStage) mainStage.style.display = isDarsView ? 'none' : '';
   document.querySelectorAll('.dars-deck').forEach(d=>d.classList.toggle('active', d.dataset.scheme===activeFlow));
@@ -6129,6 +6133,9 @@ function switchScheme(s){
       const on = it.dataset.sian===sianScheme && (!it.dataset.ver || it.dataset.ver===s1Ver);
       it.classList.toggle('on', on);
     });
+    // 활성 탭이 '이전버전' 접이식 그룹 안에 있으면 자동 펼침(예: URL ?v=v41 진입)
+    const onItem = snl.querySelector('.ref-item[data-sian].on');
+    if(onItem && onItem.classList.contains('prev-item')) snl.classList.add('prev-open');
   }
   const meta = SCHEME_META[activeFlow] || SCHEME_META[s];
   updateSceneLabel();   // 씬 라벨은 사이드바 탭(편집 가능한 rf-nm/rf-tel)에서 동기화
@@ -6230,6 +6237,8 @@ function selectSian(v, ver){
     renderS1();
   } else if(v==='dars1'){ if(window.__darsHome1) window.__darsHome1(); }
   else if(v==='dars2'){ if(window.__darsHome2) window.__darsHome2(); }
+  else if(v==='dform'){ if(window.__dformHome) window.__dformHome(); }
+  else if(v==='dform2'){ if(window.__dform2Home) window.__dform2Home(); }
   switchScheme('sian');
 }
 (function(){
@@ -6242,11 +6251,12 @@ function selectSian(v, ver){
   const snl = document.getElementById('sianList');
   if(snl) snl.addEventListener('click', e=>{
     if(e.target.isContentEditable) return;
+    if(e.target.closest('[data-prevtoggle]')){ snl.classList.toggle('prev-open'); return; }   // '이전버전' 섹션 [+] 접기/펼치기
     const it = e.target.closest('[data-sian]');
     if(it) selectSian(it.dataset.sian, it.dataset.ver);
   });
-  // 좌측 패널 탭 드래그로 순서 변경 (HTML5 DnD) + 새로고침 후 순서 유지(localStorage)
-  enableDragSort(snl, 'darsSianTabOrder_v2');
+  // ※ #sianList 드래그 순서변경은 제거 — '이전버전' 섹션(중간 타이틀) 구조를 restoreTabOrder가 평탄화해 깨뜨리므로.
+  //    (refList는 단일 섹션이라 드래그 유지) 필요 시 섹션 인지형 정렬로 재도입 가능.
   enableDragSort(rl, 'darsRefTabOrder');
   // 더블클릭 시 탭명/설명 인라인 편집 + 저장
   applyDefaultTabLabels(snl);   // 소스 기본 라벨(편집 확정본) 적용 후 저장값 복원
