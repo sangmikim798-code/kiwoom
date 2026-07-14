@@ -455,13 +455,14 @@ body{
 .toss-home.v40main .tc-ic::after{content:'';width:calc(20px*var(--scale));height:calc(20px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
 /* FAQ·큰글씨·사고신고 아이콘도 우선 흑백 파비콘 placeholder(대메뉴 tc-ic와 동일 톤). v40 전용 — 원본 아이콘 숨기고 파비콘 표시 */
 .toss-home.v40main .tf-ic img,.toss-home.v40main .tf-ic svg{display:none}
-.toss-home.v40main .tf-ic::after{content:'';display:block;width:calc(26px*var(--scale));height:calc(26px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
+.toss-home.v40main .tf-ic::after{content:'';display:block;width:calc(26px*var(--scale));height:calc(26px*var(--scale));background:url('assets/free-icon-font-comment-question-8034101.png') center/contain no-repeat}
 .toss-home.v40main .bf-ic{display:none}
-.toss-home.v40main .bigfont-toggle::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
+.toss-home.v40main .bigfont-toggle::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/free-icon-font-comment-text-8034113.png') center/contain no-repeat}
+.toss-home.v40main .bigfont-toggle.on::before{background-image:url('assets/comment-text-magenta.png')}   /* 큰글씨 ON 시 아이콘도 강조색(마젠타)로 — 라벨색과 통일 */
 .toss-home.v40main .acc-report svg{display:none}
-.toss-home.v40main .acc-report::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/kiwoom-favicon.ico') center/contain no-repeat;filter:grayscale(1) opacity(.5)}
+.toss-home.v40main .acc-report::before{content:'';width:calc(22px*var(--scale));height:calc(22px*var(--scale));background:url('assets/triangle-warning-magenta.png') center/contain no-repeat}   /* 사고신고 아이콘: 마젠타 재색상 PNG(라벨색과 통일). mask방식은 luminance로 처리돼 미표시라 재색상 이미지 사용 */
 /* 폰트 일관성: FAQ 항목명 = 대메뉴명(16px). 안내글(FAQ 헤더·대메뉴 설명)은 이미 12.5px로 통일 상태 유지 */
-.toss-home.v40main .tf-t{font-size:calc(16px*var(--scale))}
+.toss-home.v40main .tf-t{font-size:calc(16px*var(--scale));font-weight:500}
 .toss-home.v40main .tc-nm{font-size:calc(16px*var(--scale))}
 .toss-home.v40main .tc-desc{margin-top:4px}
 
