@@ -6094,8 +6094,8 @@ const SCHEME_META = {
       kpi:[['2단계','주문메뉴→현금매도'],['메인·메뉴','캡쳐'],['참고','한국투자증권 레퍼런스']]},
   dform:{cap:'Digital Form · 로고만 있는 빈 화면', label:'Digital Form · 키움증권 로고만 있는 빈 화면 (작업용 템플릿)',
       kpi:[['빈 화면','작업용 템플릿'],['로고','좌상단 배치'],['Digital Form','신규 목업']]},
-  dform2:{cap:'Ver 4.3 · Digital Form 복사본', label:'Ver 4.3 · 서류 제출 폼 (Digital Form 복사본 · 독립 편집용)',
-      kpi:[['서류제출','업무별 첨부 폼'],['복사본','Digital Form 기반'],['Ver 4.3','독립 편집용']]},
+  dform2:{cap:'Ver 4.3 · 음성ARS 메뉴 네비게이터', label:'Ver 4.3 · 음성ARS 메뉴 네비게이터 (대→중→소 번호 트리 · 음성ARS/상담원 연결)',
+      kpi:[['넘버 인덱스','대→중→소 3단 트리'],['최종메뉴','음성ARS 연결 안내'],['0.직원연결','상담원 연결 안내']]},
   dform3:{cap:'Digital Form_v0.1 · 서류제출 엔진 흐름 재현', label:'Digital Form_v0.1 · 서류제출 엔진 흐름 재현 (5단계 상태머신 · 업무 11종)',
       kpi:[['5단계','인증→준비→첨부→제출→완료'],['상태머신','업로드→확인중→확인/보완'],['업무 11종','접수번호 발급']]},
 };
@@ -6211,6 +6211,8 @@ function updateSceneLabel(){
     v1:['kiwoom-qr-ver1.0.png','Ver 1.0'], v11:['kiwoom-qr-ver1.1.png','Ver 1.1'],
     v2:['kiwoom-qr-ver2.0.png','Ver 2.0'], v21:['kiwoom-qr-ver2.1.png','Ver 2.1'],
     v40:['kiwoom-qr-v40.png','Ver 4.0'],
+    v41:['kiwoom-qr-v41.png','Ver 4.1'], v42:['kiwoom-qr-v42.png','Ver 4.2'],
+    dform:['kiwoom-qr-dform.png','Digital Form'], dform2:['kiwoom-qr-dform2.png','Ver 4.3'], dform3:['kiwoom-qr-dform3.png','Digital Form_v0.1'],
     dars1:['kiwoom-qr-ver3.0.png','Ver 3.0'], dars2:['kiwoom-qr-ver1.2.1.png','Ver 1.2.1']
   };
   const qrKey = (scheme!=='ref') ? ((sianScheme==='s1') ? s1Ver : sianScheme) : null;
@@ -6446,7 +6448,8 @@ switchScheme('sian');
       'v41':['s1','v41'],'4.1':['s1','v41'],'v4.1':['s1','v41'],
       'v42':['s1','v42'],'4.2':['s1','v42'],'v4.2':['s1','v42'],
       'dars1':['dars1'],'3.0':['dars1'],'v3':['dars1'],'v30':['dars1'],
-      'dars2':['dars2'],'1.2.1':['dars2'],'s3':['dars2']
+      'dars2':['dars2'],'1.2.1':['dars2'],'s3':['dars2'],
+      'dform':['dform'],'dform2':['dform2'],'4.3':['dform2'],'v4.3':['dform2'],'dform3':['dform3']
     };
     var sel = MAP[raw];
     if(sel) selectSian(sel[0], sel[1]);

@@ -2347,6 +2347,106 @@ body{
 .df3-notice svg{flex:0 0 auto;width:17px;height:17px;margin-top:1px;color:var(--df3-primary-ink)}
 .df3-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 @media (prefers-reduced-motion:reduce){#dform3-phone *,#dform3-phone *::before,#dform3-phone *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ====== Ver 4.3 (dform2) · 음성ARS 메뉴 네비게이터 — '라이트 넘버 인덱스' 고유 디자인, av- 프리픽스로 격리 ====== */
+#dform2-phone .screen{background:#fff}
+#dform2-phone .statusbar{background:#fff;color:#14162A}
+.av-root{--av-ink:#14162A;--av-sub:#8990A2;--av-line:#ECEDF2;--av-line2:#F5F6F9;--av-accent:#22347A;--av-accent-soft:#EEF1FA;
+  height:100%;display:flex;flex-direction:column;background:#fff;position:relative;overflow:hidden;
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;color:var(--av-ink)}
+.av-top{flex:none;display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
+.av-logo{height:38px;display:block}
+.av-ham{width:40px;height:40px;flex:none;border:0;background:transparent;color:var(--av-ink);display:grid;place-items:center;cursor:pointer;border-radius:11px;padding:0}
+.av-ham:active{background:var(--av-line2)}
+.av-ham svg{width:25px;height:25px}
+.av-scroll{flex:1;min-height:0;overflow-y:auto}
+.av-scroll>.av-list,.av-scroll>.av-done{animation:avIn .28s cubic-bezier(.22,1,.36,1) both}
+@keyframes avIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* 헤드(인사말 / 브레드크럼) */
+.av-head{padding:16px 22px 10px}
+.av-greet{font-size:28px;font-weight:800;line-height:1.28;letter-spacing:-.7px;color:var(--av-ink)}
+.av-desc{margin-top:11px;font-size:14px;color:var(--av-sub);font-weight:500;letter-spacing:-.2px}
+.av-crumbrow{display:flex;align-items:center;gap:11px;padding:15px 22px 7px}
+.av-back{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:11px;border:1px solid var(--av-line);color:var(--av-ink);cursor:pointer;background:#fff}
+.av-back:active{background:var(--av-line2)}
+.av-back svg{width:18px;height:18px}
+.av-crumb{font-size:13px;font-weight:600;color:var(--av-sub);letter-spacing:-.2px;line-height:1.4;min-width:0}
+.av-crumb b{color:var(--av-ink);font-weight:800}
+/* 넘버 인덱스 리스트 */
+.av-list{padding:4px 0 28px}
+.av-row{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;padding:19px 22px;cursor:pointer;border-top:1px solid var(--av-line)}
+.av-list>.av-row:first-child{border-top:0}
+.av-row:active{background:var(--av-line2)}
+.av-num{font-size:23px;font-weight:600;color:var(--av-accent);font-variant-numeric:tabular-nums;letter-spacing:.6px;line-height:1}
+.av-nm{font-size:16.5px;font-weight:700;color:var(--av-ink);letter-spacing:-.35px;line-height:1.35}
+.av-chev{width:20px;height:20px;color:#C4C8D6}
+.av-tag{font-size:11px;font-weight:800;letter-spacing:-.2px;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.av-tag.voice{color:var(--av-accent);background:var(--av-accent-soft)}
+.av-tag.staff{color:#8A5A00;background:#FAF0D9}
+.av-row.staff .av-num{color:#B7801F}
+/* 완료화면 */
+.av-done{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:38px 30px}
+.av-done-ic{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;margin-bottom:22px;color:#fff;box-shadow:0 10px 26px rgba(20,22,42,.18)}
+.av-done-ic.voice{background:var(--av-accent)}
+.av-done-ic.staff{background:#1A2542}
+.av-done-ic svg{width:38px;height:38px}
+.av-done-t{font-size:21px;font-weight:800;color:var(--av-ink);letter-spacing:-.4px}
+.av-done-d{margin-top:12px;font-size:14px;color:var(--av-sub);line-height:1.6;font-weight:500}
+.av-done-no{margin-top:16px;font-size:12.5px;font-weight:700;color:var(--av-accent);background:var(--av-accent-soft);padding:7px 14px;border-radius:999px;font-variant-numeric:tabular-nums}
+.av-done-btn{margin-top:28px;width:100%;max-width:280px;padding:15px;border-radius:14px;background:var(--av-accent);color:#fff;font-size:15.5px;font-weight:800;text-align:center;cursor:pointer;letter-spacing:-.2px}
+.av-done-btn:active{filter:brightness(.93)}
+/* 안내 팝업(바텀시트) */
+.av-ov{position:absolute;inset:0;z-index:40;display:none}
+.av-ov.on{display:block}
+.av-ov-bg{position:absolute;inset:0;background:rgba(15,18,40,.42)}
+.av-sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;padding:26px 24px calc(22px + env(safe-area-inset-bottom,0px));box-shadow:0 -14px 40px rgba(15,18,40,.24);animation:avSheetUp .26s cubic-bezier(.2,.7,.2,1) both}
+@keyframes avSheetUp{from{transform:translateY(100%)}to{transform:none}}
+.av-sheet-ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;margin-bottom:16px;color:#fff}
+.av-sheet-ic.voice{background:var(--av-accent)}
+.av-sheet-ic.staff{background:#1A2542}
+.av-sheet-ic svg{width:26px;height:26px}
+.av-sheet-t{font-size:19px;font-weight:800;color:var(--av-ink);letter-spacing:-.4px;line-height:1.36}
+.av-sheet-d{margin-top:10px;font-size:13.5px;color:var(--av-sub);line-height:1.55;font-weight:500}
+.av-sheet-btns{display:grid;grid-template-columns:1fr 1.6fr;gap:9px;margin-top:22px}
+.av-btn{padding:15px;border-radius:13px;font-size:15px;font-weight:800;text-align:center;cursor:pointer;letter-spacing:-.2px}
+.av-btn.cancel{background:#F1F2F6;color:#6B7180}
+.av-btn.go{background:var(--av-accent);color:#fff}
+.av-btn:active{filter:brightness(.94)}
+/* 전체메뉴 드로어 (Ver 4.3 고유 · 넘버 인덱스 중첩 아코디언) — 상태바(42px) 아래=로고/햄버거 라인부터 표시 */
+.avm-ov{position:absolute;top:42px;left:0;right:0;bottom:0;z-index:50;display:none}
+.avm-ov.on{display:block}
+.avm-bg{position:absolute;inset:0;background:rgba(15,18,40,.4)}
+.avm-panel{position:absolute;top:0;right:0;bottom:0;width:100%;background:#fff;display:flex;flex-direction:column;
+  transform:translateX(100%);animation:avmIn .3s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes avmIn{to{transform:none}}
+.avm-head{flex:none;display:flex;align-items:center;justify-content:space-between;padding:15px 12px 15px 22px;border-bottom:1px solid var(--av-line)}
+.avm-title{font-size:18px;font-weight:800;color:var(--av-ink);letter-spacing:-.4px}
+.avm-x{width:40px;height:40px;display:grid;place-items:center;cursor:pointer;color:var(--av-ink);border-radius:11px}
+.avm-x:active{background:var(--av-line2)}
+.avm-x svg{width:23px;height:23px}
+.avm-list{flex:1;min-height:0;overflow-y:auto;padding:0 0 28px}
+.avm-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:11px;padding:15px 22px;cursor:pointer;border-top:1px solid var(--av-line2)}
+.avm-row.d0{border-top:1px solid var(--av-line)}
+.avm-list>.avm-row:first-child{border-top:0}
+.avm-row:active{filter:brightness(.98)}
+.avm-num{font-size:16px;font-weight:700;color:var(--av-accent);font-variant-numeric:tabular-nums;line-height:1}
+.avm-nm{font-size:15px;font-weight:700;color:var(--av-ink);letter-spacing:-.35px;line-height:1.32}
+.avm-caret{width:19px;height:19px;color:#B4B9C8;transition:transform .22s cubic-bezier(.2,.7,.2,1)}
+.avm-row.exp .avm-caret{transform:rotate(180deg)}
+.avm-tag{font-size:10.5px;font-weight:800;letter-spacing:-.2px;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.avm-tag.voice{color:var(--av-accent);background:var(--av-accent-soft)}
+.avm-tag.staff{color:#8A5A00;background:#FAF0D9}
+/* 대메뉴(d0) 강조 */
+.avm-row.d0{padding-top:17px;padding-bottom:17px}
+.avm-row.d0 .avm-num{font-size:19px}
+.avm-row.d0 .avm-nm{font-size:16.5px;font-weight:800;letter-spacing:-.4px}
+/* 중메뉴(d1)·소메뉴(d2) 들여쓰기 + 연한 배경 + 좌측 강조바 */
+.avm-row.d1{padding-left:30px;background:#FBFCFE;box-shadow:inset 3px 0 0 var(--av-accent-soft)}
+.avm-row.d2{padding-left:48px;background:#F8FAFC;box-shadow:inset 3px 0 0 var(--av-line)}
+.avm-row.d1 .avm-num,.avm-row.d2 .avm-num{font-size:13.5px;color:#7A8091}
+.avm-row.d1 .avm-nm,.avm-row.d2 .avm-nm{font-size:14px;font-weight:600}
+.avm-row.d2 .avm-nm{color:var(--av-sub)}
+@media (prefers-reduced-motion:reduce){#dform2-phone *,#dform2-phone *::before,#dform2-phone *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 /* 단일 폰 내 뷰 전환 (시안2/시안3) */
 .dars.dars1-view{display:none}
 .dars.dars1-view.active{display:flex}
@@ -3150,102 +3250,16 @@ body{
       </div></div>
     </div>
   </div>
-  <!-- ====== Ver 4.3 · Digital Form 복사본 (독립 편집용) ====== -->
+  <!-- ====== Ver 4.3 (dform2) · 음성ARS 메뉴 네비게이터 (라이트 넘버 인덱스) ====== -->
   <div class="dars-deck" data-scheme="dform2">
     <div class="phone-wrap" id="dform2-phone">
       <div class="phone"><div class="notch"></div><div class="screen">
-        <div class="dform-flow">
+        <div class="av-root">
           <div class="statusbar"><span>9:41</span><span class="icons">●●● 5G ▮</span></div>
-          <div class="dform-top"><img class="logo-img" src="assets/kiwoom-logo.png" alt="키움증권"></div>
-          <div class="dform-body">
-            <!-- 뷰: 업무 선택(리스트) -->
-            <div class="dform-view" data-dfview="list">
-              <div class="df-head">
-                <div class="df-title">어떤 업무로<br>서류를 제출하시나요?</div>
-                <div class="df-desc">선택하신 업무에 따라 제출할 서류가 달라져요.</div>
-              </div>
-              <div class="df-list">
-                <div class="df-row" data-dfgo="isa"><span class="df-nm">ISA 서민형 증빙서류 제출</span><svg class="df-arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
-                <div class="df-row" data-dfgo="rename"><span class="df-nm">개명</span><svg class="df-arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
-                <div class="df-row" data-dfgo="agent"><span class="df-nm">대리인 본인확인 (미성년자)</span><svg class="df-arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
-                <div class="df-row" data-dfgo="otherfirm"><span class="df-nm">타사 거래확인서 등록</span><svg class="df-arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
-              </div>
-            </div>
-            <!-- 뷰: ISA 서민형 증빙서류 제출(상세 · 첨부) -->
-            <div class="dform-view" data-dfview="isa" hidden>
-              <div class="df-head">
-                <div class="df-back" data-dfback><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>목록</div>
-                <div class="df-dtitle">ISA 서민형 증빙서류 제출</div>
-                <div class="df-desc">서민형 가입 자격(총급여 5,000만원 또는 종합소득 3,800만원 이하) 확인을 위해 아래 서류가 필요해요.<br>각 항목에 파일을 첨부해 주세요.</div>
-              </div>
-              <div class="df-attach-list">
-                <div class="df-attach">
-                  <div class="df-attach-info"><div class="df-attach-nm">소득확인증명서</div><div class="df-attach-sub">개인종합자산관리계좌 가입용 · 홈택스 발급</div></div>
-                  <span class="df-attach-btn" data-dfattach>+ 첨부</span>
-                </div>
-                <div class="df-attach">
-                  <div class="df-attach-info"><div class="df-attach-nm">근로소득 원천징수영수증</div><div class="df-attach-sub">직전 과세기간 발급분</div></div>
-                  <span class="df-attach-btn" data-dfattach>+ 첨부</span>
-                </div>
-                <div class="df-attach">
-                  <div class="df-attach-info"><div class="df-attach-nm">신분증 사본</div><div class="df-attach-sub">주민등록증 · 운전면허증 등</div></div>
-                  <span class="df-attach-btn" data-dfattach>+ 첨부</span>
-                </div>
-              </div>
-              <div class="df-foot"><div class="df-submit" data-dfsubmit>제출할게요</div></div>
-            </div>
-            <!-- 뷰: 개명(상세 · 첨부) -->
-            <div class="dform-view" data-dfview="rename" hidden>
-              <div class="df-head">
-                <div class="df-back" data-dfback><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>목록</div>
-                <div class="df-dtitle">개명</div>
-                <div class="df-desc">개명 사실 확인과 계좌 명의 변경을 위해 아래 서류가 필요해요.<br>각 항목에 파일을 첨부해 주세요.</div>
-              </div>
-              <div class="df-attach-list">
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">기본증명서 (상세)</div><div class="df-attach-sub">개명 이력 확인용</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">주민등록초본</div><div class="df-attach-sub">개명 사실 기재분</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">신분증 사본</div><div class="df-attach-sub">개명 후 재발급분</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-              </div>
-              <div class="df-foot"><div class="df-submit" data-dfsubmit>제출할게요</div></div>
-            </div>
-            <!-- 뷰: 대리인 본인확인 (미성년자)(상세 · 첨부) -->
-            <div class="dform-view" data-dfview="agent" hidden>
-              <div class="df-head">
-                <div class="df-back" data-dfback><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>목록</div>
-                <div class="df-dtitle">대리인 본인확인 (미성년자)</div>
-                <div class="df-desc">미성년자 계좌의 법정대리인 확인을 위해 아래 서류가 필요해요.<br>각 항목에 파일을 첨부해 주세요.</div>
-              </div>
-              <div class="df-attach-list">
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">가족관계증명서 (상세)</div><div class="df-attach-sub">미성년자 기준 · 법정대리인 관계 확인</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">기본증명서 (상세)</div><div class="df-attach-sub">미성년자 기준 · 친권자 확인</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">법정대리인 신분증 사본</div><div class="df-attach-sub">부모 등 법정대리인</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-              </div>
-              <div class="df-foot"><div class="df-submit" data-dfsubmit>제출할게요</div></div>
-            </div>
-            <!-- 뷰: 타사 거래확인서 등록(상세 · 첨부) -->
-            <div class="dform-view" data-dfview="otherfirm" hidden>
-              <div class="df-head">
-                <div class="df-back" data-dfback><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>목록</div>
-                <div class="df-dtitle">타사 거래확인서 등록</div>
-                <div class="df-desc">타 증권사 거래내역 확인을 위해 아래 서류가 필요해요.<br>각 항목에 파일을 첨부해 주세요.</div>
-              </div>
-              <div class="df-attach-list">
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">타사 거래확인서</div><div class="df-attach-sub">타 증권사 발급 · 원본</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">타사 잔고증명서</div><div class="df-attach-sub">기준일 명시분</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-                <div class="df-attach"><div class="df-attach-info"><div class="df-attach-nm">신분증 사본</div><div class="df-attach-sub">주민등록증 · 운전면허증 등</div></div><span class="df-attach-btn" data-dfattach>+ 첨부</span></div>
-              </div>
-              <div class="df-foot"><div class="df-submit" data-dfsubmit>제출할게요</div></div>
-            </div>
-            <!-- 뷰: 제출 완료 -->
-            <div class="dform-view" data-dfview="done" hidden>
-              <div class="df-done">
-                <div class="df-done-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-                <div class="df-done-t">서류를 제출했어요</div>
-                <div class="df-done-d">제출하신 서류를 확인한 뒤<br>결과를 알림톡으로 안내해 드릴게요.</div>
-              </div>
-              <div class="df-foot"><div class="df-submit" data-dfhome>확인</div></div>
-            </div>
-          </div>
+          <header class="av-top"><img class="av-logo" src="assets/kiwoom-logo.png" alt="키움증권"><button class="av-ham" data-avmenu aria-label="전체메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></header>
+          <div class="av-scroll" id="dform2-app"><!-- renderList()/renderDone() 주입 --></div>
+          <div class="av-ov" id="dform2-ov"><!-- 안내 팝업(음성ARS/상담원) 주입 --></div>
+          <div class="avm-ov" id="dform2-menu"><!-- 전체메뉴 드로어 주입 --></div>
         </div>
       </div></div>
     </div>
@@ -3507,9 +3521,9 @@ body{
   })();
   </script>
   <script>
-  /* Digital Form(dform) · Ver 4.3(dform2) · 뷰 전환(업무선택 → 상세/첨부 → 제출 완료) — 정적 목업 전용 */
+  /* Digital Form(dform) · 뷰 전환(업무선택 → 상세/첨부 → 제출 완료) — 정적 목업 전용 (Ver 4.3=dform2는 별도 네비게이터 스크립트) */
   (function(){
-    [['dform-phone','__dformHome'], ['dform2-phone','__dform2Home']].forEach(function(pair){
+    [['dform-phone','__dformHome']].forEach(function(pair){
       var phone = document.getElementById(pair[0]);
       if(!phone) return;
       function show(view){
@@ -3532,6 +3546,138 @@ body{
     });
   })();
   </script>
+  <script>
+  /* ====== Ver 4.3 (dform2) · 음성ARS 메뉴 네비게이터 ======
+     데이터 = window.IVR(음성ARS 메뉴구조도.jpg 그대로의 대→중→소 트리). #dform2-phone 스코프 독립 IIFE.
+     라우팅: 하위있음→드릴다운 / 최종리프→음성ARS 안내팝업→완료 / 0.직원연결→상담원 안내팝업(상위 메뉴명)→완료. */
+  (function(){
+    var scroll = document.getElementById('dform2-app');
+    var ov = document.getElementById('dform2-ov');
+    var menuEl = document.getElementById('dform2-menu');
+    var phone = document.getElementById('dform2-phone');
+    if(!scroll || !ov || !menuEl || !phone) return;
+    /* window.IVR는 app.js(인라인 스크립트보다 뒤 로드)에서 정의 → 실행 시점에 지연 참조 */
+
+    function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function stripNum(t){return t.replace(/^[0-9#]+\.\s*/,'');}
+    function isAgent(t){return /직원연결/.test(t);}
+    function pad2(s){s=String(s);return s.length<2?('0'+s):s;}
+    function numOf(t){return pad2((t.match(/^([0-9#]+)\./)||[])[1]||'');}
+
+    var ICON={
+      back:'<path d="M15 6l-6 6 6 6"/>',
+      chev:'<path d="M9 6l6 6-6 6"/>',
+      voice:'<path d="M12 11.5v.01"/><path d="M8.8 8.3a5 5 0 0 0 0 7.4"/><path d="M15.2 8.3a5 5 0 0 1 0 7.4"/><path d="M5.8 5.3a9 9 0 0 0 0 13.4"/><path d="M18.2 5.3a9 9 0 0 1 0 13.4"/>',
+      staff:'<path d="M4.5 13.5v-1a7.5 7.5 0 0 1 15 0v1"/><rect x="2.5" y="13" width="4" height="6.5" rx="1.6"/><rect x="17.5" y="13" width="4" height="6.5" rx="1.6"/><path d="M19.5 19.5a4 4 0 0 1-4 4h-2.5"/>',
+      x:'<path d="M6 6l12 12M18 6L6 18"/>',
+      caret:'<path d="M6 9l6 6 6-6"/>'
+    };
+    function svg(n,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICON[n]+'</svg>';}
+
+    var av={path:[],view:'list',pop:null,leaf:'',menuOpen:false,open:{}};
+
+    function nodeAt(path){
+      var items=window.IVR||[], trail=[], node=null;
+      for(var k=0;k<path.length;k++){ node=items[path[k]]; if(!node) break; trail.push(stripNum(node.t)); items=node.subs||[]; }
+      return {items:items, trail:trail, node:node};
+    }
+
+    function renderList(){
+      var at=nodeAt(av.path);
+      var head = av.path.length===0
+        ? '<div class="av-head"><div class="av-greet">안녕하세요<br>무엇을 도와드릴까요?</div><div class="av-desc">원하시는 서비스를 선택하세요.</div></div>'
+        : '<div class="av-crumbrow"><div class="av-back" data-avback>'+svg('back')+'</div><div class="av-crumb">'
+          + at.trail.map(function(n,i){ return i===at.trail.length-1 ? '<b>'+esc(n)+'</b>' : esc(n); }).join(' › ') + '</div></div>';
+      var rows = at.items.map(function(it,i){
+        var num=numOf(it.t), nm=esc(stripNum(it.t));
+        if(it.subs && it.subs.length){
+          return '<div class="av-row" data-avdrill="'+i+'"><span class="av-num">'+num+'</span><span class="av-nm">'+nm+'</span>'+svg('chev','av-chev')+'</div>';
+        }
+        if(isAgent(it.t)){
+          var field = at.node ? esc(stripNum(at.node.t)) : '';
+          return '<div class="av-row staff" data-avstaff="'+field+'"><span class="av-num">'+num+'</span><span class="av-nm">'+nm+'</span><span class="av-tag staff">상담원</span></div>';
+        }
+        return '<div class="av-row" data-avvoice="'+esc(stripNum(it.t))+'"><span class="av-num">'+num+'</span><span class="av-nm">'+nm+'</span><span class="av-tag voice">음성 ARS</span></div>';
+      }).join('');
+      return head + '<div class="av-list">'+rows+'</div>';
+    }
+
+    function renderDone(){
+      var voice = av.view==='done-voice';
+      return '<div class="av-done"><div class="av-done-ic '+(voice?'voice':'staff')+'">'+svg(voice?'voice':'staff')+'</div>'
+        +'<div class="av-done-t">'+(voice?'음성 ARS로 연결하고 있어요':'상담원에게 연결하고 있어요')+'</div>'
+        +'<div class="av-done-d">'+(voice
+            ? '‘'+esc(av.leaf)+'’ 안내를 들려드려요.<br>잠시만 기다려 주세요.'
+            : '‘'+esc(av.leaf)+'’ 관련 상담부서로<br>연결해 드려요. 잠시만 기다려 주세요.')+'</div>'
+        +'<div class="av-done-no">'+(voice?'음성 ARS · 1544-9900':'상담원 연결 · 1544-9000')+'</div>'
+        +'<div class="av-done-btn" data-avhome>확인</div></div>';
+    }
+
+    function renderOverlay(){
+      if(!av.pop) return '';
+      var voice = av.pop.type==='voice';
+      var t = voice
+        ? '‘'+esc(av.pop.name)+'’ 서비스는<br>음성 ARS로 안내해 드려요'
+        : '‘'+esc(av.pop.name)+'’ 관련<br>상담원에게 연결할까요?';
+      var d = voice ? '연결하면 음성 안내가 바로 시작돼요.' : '해당 상담 분야로 바로 연결해 드려요.';
+      return '<div class="av-ov-bg" data-avcancel></div><div class="av-sheet">'
+        +'<div class="av-sheet-ic '+(voice?'voice':'staff')+'">'+svg(voice?'voice':'staff')+'</div>'
+        +'<div class="av-sheet-t">'+t+'</div><div class="av-sheet-d">'+d+'</div>'
+        +'<div class="av-sheet-btns"><div class="av-btn cancel" data-avcancel>취소</div><div class="av-btn go" data-avconnect>연결하기</div></div></div>';
+    }
+
+    /* 전체메뉴: 대→중→소 중첩 아코디언 (전 트리 인라인 펼침) */
+    function menuNode(item, path, depth, parentName){
+      var key=path.join('_'), num=numOf(item.t), nm=esc(stripNum(item.t));
+      var hasSubs=item.subs && item.subs.length;
+      if(hasSubs){
+        var exp=!!av.open[key];
+        var kids = exp ? item.subs.map(function(s,i){ return menuNode(s, path.concat(i), depth+1, stripNum(item.t)); }).join('') : '';
+        return '<div class="avm-row branch d'+depth+(exp?' exp':'')+'" data-avmexp="'+key+'"><span class="avm-num">'+num+'</span><span class="avm-nm">'+nm+'</span>'+svg('caret','avm-caret')+'</div>'+kids;
+      }
+      if(isAgent(item.t)){
+        return '<div class="avm-row leaf staff d'+depth+'" data-avmstaff="'+esc(parentName||'')+'"><span class="avm-num">'+num+'</span><span class="avm-nm">'+nm+'</span><span class="avm-tag staff">상담원</span></div>';
+      }
+      return '<div class="avm-row leaf d'+depth+'" data-avmvoice="'+esc(stripNum(item.t))+'"><span class="avm-num">'+num+'</span><span class="avm-nm">'+nm+'</span><span class="avm-tag voice">음성 ARS</span></div>';
+    }
+    function renderMenuRows(){ return (window.IVR||[]).map(function(d,i){ return menuNode(d,[i],0,''); }).join(''); }
+    function renderMenu(){
+      return '<div class="avm-bg" data-avmclose></div><div class="avm-panel">'
+        +'<div class="avm-head"><span class="avm-title">전체메뉴</span><div class="avm-x" data-avmclose>'+svg('x')+'</div></div>'
+        +'<div class="avm-list">'+renderMenuRows()+'</div></div>';
+    }
+    function drawMenu(){ menuEl.innerHTML = av.menuOpen ? renderMenu() : ''; menuEl.classList.toggle('on', av.menuOpen); }
+
+    function paint(){
+      scroll.innerHTML = (av.view==='list') ? renderList() : renderDone();
+      ov.innerHTML = renderOverlay();
+      ov.classList.toggle('on', !!av.pop);
+      drawMenu();
+    }
+
+    phone.addEventListener('click', function(e){
+      var el = e.target.closest('[data-avdrill],[data-avvoice],[data-avstaff],[data-avback],[data-avcancel],[data-avconnect],[data-avhome],[data-avmenu],[data-avmclose],[data-avmexp],[data-avmvoice],[data-avmstaff]');
+      if(!el) return;
+      if(el.hasAttribute('data-avdrill')){ av.path=av.path.concat(+el.getAttribute('data-avdrill')); paint(); return; }
+      if(el.hasAttribute('data-avback')){ av.path=av.path.slice(0,-1); paint(); return; }
+      if(el.hasAttribute('data-avvoice')){ av.pop={type:'voice',name:el.getAttribute('data-avvoice')}; paint(); return; }
+      if(el.hasAttribute('data-avstaff')){ av.pop={type:'staff',name:el.getAttribute('data-avstaff')}; paint(); return; }
+      if(el.hasAttribute('data-avcancel')){ av.pop=null; paint(); return; }
+      if(el.hasAttribute('data-avconnect')){ av.leaf=av.pop.name; av.view=(av.pop.type==='voice')?'done-voice':'done-staff'; av.pop=null; paint(); return; }
+      if(el.hasAttribute('data-avhome')){ av.view='list'; av.path=[]; av.leaf=''; paint(); return; }
+      if(el.hasAttribute('data-avmenu')){ av.menuOpen=true; paint(); return; }
+      if(el.hasAttribute('data-avmclose')){ av.menuOpen=false; paint(); return; }
+      if(el.hasAttribute('data-avmexp')){ var k=el.getAttribute('data-avmexp'); av.open[k]=!av.open[k];
+        var l=menuEl.querySelector('.avm-list'); if(l){ var sc=l.scrollTop; l.innerHTML=renderMenuRows(); l.scrollTop=sc; } return; }
+        // ↑ 아코디언 토글: 리스트 내부만 교체(패널 유지) → 드로어 재슬라이드 없음 + 스크롤 보존. 연결 안내창은 최종메뉴(data-avmvoice/avmstaff)에서만.
+      if(el.hasAttribute('data-avmvoice')){ av.menuOpen=false; av.pop={type:'voice',name:el.getAttribute('data-avmvoice')}; paint(); return; }
+      if(el.hasAttribute('data-avmstaff')){ av.menuOpen=false; av.pop={type:'staff',name:el.getAttribute('data-avmstaff')}; paint(); return; }
+    });
+
+    window.__dform2Home=function(){ av.path=[]; av.view='list'; av.pop=null; av.leaf=''; av.menuOpen=false; av.open={}; paint(); };   // 탭 재진입 시 루트 리셋(selectSian에서 호출)
+    paint();
+  })();
+  </script>
   <!-- 우측 영역: 탭명/탭설명(2줄) + 시나리오(더블클릭 편집) -->
   <div class="stage-spacer">
     <div class="scene-panel" id="scenePanel">
@@ -3543,7 +3689,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260722a"></script>
+<script src="app.js?v=20260722c"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){
