@@ -2216,6 +2216,137 @@ body{
 .df-done-ic svg{width:36px;height:36px}
 .df-done-t{font-size:calc(21px*var(--scale));font-weight:800;color:var(--navy);letter-spacing:-.4px}
 .df-done-d{margin-top:12px;font-size:calc(13.5px*var(--scale));color:var(--sub);line-height:1.6}
+
+/* ====== Digital Form_v0.1 (dform3) · 서류제출 엔진 흐름 재현 — 서류제출엔진/styles.css 이식, df3- 프리픽스로 목업 전역 CSS와 격리 ====== */
+#dform3-phone{
+  --df3-bg:oklch(0.975 0.003 265); --df3-surface:oklch(1 0 0);
+  --df3-ink:oklch(0.27 0.012 265); --df3-ink-muted:oklch(0.44 0.012 265);
+  --df3-primary:oklch(0.38 0.17 264); --df3-primary-ink:oklch(0.36 0.16 264); --df3-on-primary:oklch(0.99 0 0);
+  --df3-primary-hover:oklch(0.33 0.16 264); --df3-primary-press:oklch(0.29 0.15 264);
+  --df3-primary-soft:oklch(0.95 0.032 264); --df3-primary-softer:oklch(0.975 0.016 264);
+  --df3-accent:oklch(0.56 0.25 356); --df3-accent-ink:oklch(0.47 0.225 356);
+  --df3-accent-soft:oklch(0.96 0.045 356); --df3-accent-softer:oklch(0.98 0.022 356);
+  --df3-line:oklch(0.90 0.005 265); --df3-line-soft:oklch(0.94 0.004 265); --df3-field:oklch(0.985 0.003 265);
+  --df3-radius:16px; --df3-radius-sm:12px; --df3-tap:46px;
+  --df3-shadow-sm:0 1px 2px oklch(0.30 0.06 265 / 0.05),0 1px 3px oklch(0.30 0.06 265 / 0.05);
+  --df3-shadow-md:0 2px 6px oklch(0.30 0.06 265 / 0.06),0 10px 24px oklch(0.30 0.06 265 / 0.07);
+  --df3-shadow-primary:0 1px 2px oklch(0.36 0.16 264 / 0.34),0 6px 16px oklch(0.36 0.16 264 / 0.26);
+  --df3-ease:cubic-bezier(0.22,1,0.36,1); --df3-ease-expo:cubic-bezier(0.16,1,0.3,1); --df3-dur:0.17s;
+}
+#dform3-phone .screen{background:var(--df3-bg)}
+#dform3-phone .statusbar{background:var(--df3-surface);color:oklch(0.27 0.012 265)}
+.dform3-root{height:100%;display:flex;flex-direction:column;background:var(--df3-bg);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif}
+.df3-topbar{flex:none;padding:13px 20px;background:var(--df3-surface);border-bottom:1px solid var(--df3-line);display:flex;align-items:center;gap:8px}
+.df3-brand{font-weight:800;font-size:14px;color:var(--df3-primary-ink);letter-spacing:-.01em;display:inline-flex;align-items:center}
+.df3-brand::before{content:"";display:inline-block;width:9px;height:9px;margin-right:8px;border-radius:3px;background:var(--df3-accent);box-shadow:0 0 0 3px var(--df3-accent-soft)}
+.df3-app{flex:1;min-height:0;overflow-y:auto}
+/* 스텝바 */
+.df3-stepbar{padding:15px 12px 13px;background:var(--df3-surface);border-bottom:1px solid var(--df3-line)}
+.df3-stepbar__list{display:flex;list-style:none;margin:0;padding:0}
+.df3-step{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0}
+.df3-step::before{content:"";position:absolute;top:14px;left:-50%;width:100%;height:2px;background:var(--df3-line);z-index:0;transition:background-color .4s var(--df3-ease)}
+.df3-step:first-child::before{display:none}
+.df3-step--current::before,.df3-step--done::before{background:var(--df3-primary)}
+.df3-step__dot{position:relative;z-index:1;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--df3-surface);color:var(--df3-ink-muted);box-shadow:inset 0 0 0 2px var(--df3-line);transition:background-color var(--df3-dur) var(--df3-ease),box-shadow var(--df3-dur) var(--df3-ease),color var(--df3-dur) var(--df3-ease)}
+.df3-step--current .df3-step__dot{background:var(--df3-primary);color:var(--df3-on-primary);box-shadow:inset 0 0 0 2px var(--df3-primary),0 0 0 4px var(--df3-accent-soft)}
+.df3-step--done .df3-step__dot{background:var(--df3-primary);color:var(--df3-on-primary);box-shadow:inset 0 0 0 2px var(--df3-primary)}
+.df3-step__label{font-size:11px;color:var(--df3-ink-muted);letter-spacing:-.01em;transition:color var(--df3-dur) var(--df3-ease)}
+.df3-step--current .df3-step__label{color:var(--df3-ink);font-weight:700}
+/* 화면 공통 */
+.df3-appbody{padding:24px 20px;animation:df3AppIn .3s var(--df3-ease) both}
+@keyframes df3AppIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes df3ItemIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes df3PopIn{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+@keyframes df3BannerIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes df3Spin{to{transform:rotate(360deg)}}
+@keyframes df3MarkIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+.df3-scr__title{font-size:26px;line-height:1.24;letter-spacing:-.025em;font-weight:800;margin:0 0 10px;color:var(--df3-ink);text-wrap:balance}
+.df3-scr__lead{font-size:15.5px;color:var(--df3-ink-muted);margin:0 0 22px;line-height:1.6;max-width:32ch}
+.df3-scr__lead--center{text-align:center;margin-left:auto;margin-right:auto;margin-bottom:20px}
+.df3-panel{background:var(--df3-surface);border:1px solid var(--df3-line);border-radius:var(--df3-radius);padding:18px;margin-bottom:18px;box-shadow:var(--df3-shadow-sm)}
+.df3-panel__h{font-size:12.5px;margin:0 0 12px;color:var(--df3-ink-muted);font-weight:700;letter-spacing:.01em}
+.df3-doclist{list-style:none;margin:0 0 14px;padding:0}
+.df3-doclist li{display:flex;align-items:center;gap:10px;padding:11px 0;font-size:15.5px;color:var(--df3-ink);border-bottom:1px solid var(--df3-line-soft);animation:df3ItemIn .4s var(--df3-ease) both;animation-delay:calc(var(--i,0)*55ms)}
+.df3-doclist li:first-child{padding-top:2px}
+.df3-doclist li:last-child{border-bottom:0;padding-bottom:2px}
+.df3-doclist__ico{flex:0 0 auto;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--df3-primary-softer);color:var(--df3-primary-ink)}
+.df3-doclist__ico svg{width:17px;height:17px}
+.df3-meta{display:grid;grid-template-columns:auto 1fr;gap:9px 16px;margin:14px 0 0;padding-top:14px;border-top:1px solid var(--df3-line-soft);font-size:14.5px}
+.df3-meta dt{color:var(--df3-ink-muted)} .df3-meta dd{margin:0;font-weight:700;text-align:right;color:var(--df3-ink)}
+.df3-muted{color:var(--df3-ink-muted)}
+/* 버튼 */
+.df3-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:var(--df3-tap);border-radius:14px;border:0;font-size:15.5px;font-weight:700;letter-spacing:-.01em;cursor:pointer;margin-top:12px;font-family:inherit;transition:background-color var(--df3-dur) var(--df3-ease),box-shadow var(--df3-dur) var(--df3-ease),transform .12s var(--df3-ease),border-color var(--df3-dur) var(--df3-ease),color var(--df3-dur) var(--df3-ease)}
+.df3-btn--primary{background:var(--df3-primary);color:var(--df3-on-primary);box-shadow:var(--df3-shadow-primary)}
+.df3-btn--primary:active{background:var(--df3-primary-press);transform:translateY(1px) scale(.995)}
+.df3-btn--ghost{background:var(--df3-surface);color:var(--df3-primary-ink);border:1px solid var(--df3-line);box-shadow:var(--df3-shadow-sm)}
+.df3-btn--ghost:active{background:var(--df3-primary-soft);transform:translateY(1px)}
+.df3-btn--sm{display:inline-flex;width:auto;min-height:42px;padding:0 17px;margin:0;font-size:13.5px;font-weight:700;border-radius:var(--df3-radius-sm);background:var(--df3-primary);color:var(--df3-on-primary);box-shadow:var(--df3-shadow-primary)}
+.df3-btn--sm:active{background:var(--df3-primary-press);transform:translateY(1px) scale(.97)}
+.df3-btn:disabled,.df3-btn[aria-disabled="true"]{background:var(--df3-line-soft);color:var(--df3-ink-muted);box-shadow:none;cursor:not-allowed;transform:none;animation:none}
+.df3-btn:focus-visible,.df3-chip:focus-visible,.df3-search:focus-within{outline:3px solid var(--df3-accent);outline-offset:2px}
+/* 검색·칩 */
+.df3-search{display:flex;align-items:center;gap:10px;background:var(--df3-field);border:1px solid var(--df3-line);border-radius:14px;padding:0 15px;min-height:var(--df3-tap);margin-bottom:22px;box-shadow:var(--df3-shadow-sm);transition:border-color var(--df3-dur) var(--df3-ease)}
+.df3-search:focus-within{border-color:var(--df3-accent)}
+.df3-search__ico{flex:0 0 auto;display:grid;place-items:center;color:var(--df3-ink-muted)}
+.df3-search__ico svg{width:19px;height:19px}
+.df3-search__input{border:0;outline:0;flex:1;min-width:0;font-size:15.5px;background:transparent;font-family:inherit;color:var(--df3-ink)}
+.df3-search__input::placeholder{color:var(--df3-ink-muted)}
+.df3-chips{display:flex;flex-wrap:wrap;gap:10px}
+.df3-chip{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--df3-line);background:var(--df3-surface);font-size:14.5px;font-weight:600;color:var(--df3-ink);cursor:pointer;font-family:inherit;box-shadow:var(--df3-shadow-sm);animation:df3ItemIn .42s var(--df3-ease) both;animation-delay:calc(var(--i,0)*45ms);transition:background-color var(--df3-dur) var(--df3-ease),border-color var(--df3-dur) var(--df3-ease),color var(--df3-dur) var(--df3-ease),transform .12s var(--df3-ease)}
+.df3-chip:active{transform:translateY(1px) scale(.98);background:var(--df3-accent-softer);border-color:var(--df3-accent-soft);color:var(--df3-accent-ink)}
+/* 인증 카드 */
+.df3-authcard{display:flex;align-items:center;gap:13px;background:var(--df3-surface);border:1px solid var(--df3-line);border-radius:var(--df3-radius);padding:16px;margin-bottom:12px;box-shadow:var(--df3-shadow-sm);transition:border-color var(--df3-dur) var(--df3-ease)}
+.df3-authcard.is-done{border-color:color-mix(in oklch,var(--df3-primary) 35%,var(--df3-line))}
+.df3-authcard__n{width:34px;height:34px;border-radius:50%;background:var(--df3-primary-soft);color:var(--df3-primary-ink);display:grid;place-items:center;font-weight:800;font-size:15px;flex:0 0 auto;transition:background-color var(--df3-dur) var(--df3-ease),color var(--df3-dur) var(--df3-ease)}
+.df3-authcard.is-done .df3-authcard__n{background:var(--df3-primary);color:var(--df3-on-primary)}
+.df3-authcard__body{flex:1;min-width:0}
+.df3-authcard__title{font-size:15.5px;font-weight:700;margin:0 0 3px;letter-spacing:-.01em;color:var(--df3-ink)}
+.df3-authcard__desc{font-size:13px;color:var(--df3-ink-muted);margin:0;line-height:1.5}
+/* 슬롯 */
+.df3-counter{font-size:14.5px;color:var(--df3-ink-muted);margin:0 0 18px}
+.df3-counter strong{color:var(--df3-accent-ink);font-weight:800}
+.df3-slots{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:12px}
+.df3-slot{background:var(--df3-surface);border:1px solid var(--df3-line);border-radius:var(--df3-radius);padding:16px;box-shadow:var(--df3-shadow-sm);transition:border-color .25s var(--df3-ease)}
+.df3-slot--ok{border-color:color-mix(in oklch,var(--df3-primary) 40%,var(--df3-line))}
+.df3-slot--needFix{border-color:color-mix(in oklch,var(--df3-accent) 42%,var(--df3-line))}
+.df3-slot__head{display:flex;align-items:center;gap:10px}
+.df3-slot__state{flex:0 0 auto;display:grid;place-items:center;width:26px;height:26px;border-radius:8px;color:var(--df3-ink-muted);background:var(--df3-line-soft);transition:background-color .25s var(--df3-ease),color .25s var(--df3-ease)}
+.df3-slot__state svg{width:16px;height:16px}
+.df3-slot--checking .df3-slot__state{color:var(--df3-primary-ink);background:var(--df3-primary-soft)}
+.df3-slot--checking .df3-slot__state svg{animation:df3Spin .9s linear infinite}
+.df3-slot--ok .df3-slot__state{color:var(--df3-on-primary);background:var(--df3-primary);animation:df3PopIn .4s var(--df3-ease-expo) both}
+.df3-slot--needFix .df3-slot__state{color:var(--df3-on-primary);background:var(--df3-accent);animation:df3PopIn .4s var(--df3-ease-expo) both}
+.df3-slot__name{font-weight:700;font-size:15.5px;flex:1;letter-spacing:-.01em;color:var(--df3-ink)}
+.df3-slot__badge{font-size:12px;font-weight:700;color:var(--df3-ink-muted);padding:3px 9px;border-radius:999px;background:var(--df3-line-soft)}
+.df3-slot--checking .df3-slot__badge{color:var(--df3-primary-ink);background:var(--df3-primary-soft)}
+.df3-slot--ok .df3-slot__badge{color:var(--df3-primary-ink);background:var(--df3-primary-soft)}
+.df3-slot--needFix .df3-slot__badge{color:var(--df3-accent-ink);background:var(--df3-accent-soft)}
+.df3-slot__coach{display:flex;gap:8px;font-size:13.5px;color:var(--df3-ink-muted);margin:12px 0 0;line-height:1.55;padding:11px 12px;background:var(--df3-primary-softer);border-radius:var(--df3-radius-sm)}
+.df3-slot__coach svg{flex:0 0 auto;width:16px;height:16px;margin-top:1px;color:var(--df3-primary-ink)}
+.df3-slot__acquire{margin-top:12px;background:transparent;border:0;color:var(--df3-primary-ink);font-weight:700;font-size:13.5px;cursor:pointer;padding:4px 0;font-family:inherit;display:inline-flex;align-items:center;gap:6px;border-bottom:1.5px solid currentColor}
+.df3-slot__fix{display:flex;gap:8px;margin:12px 0 0;padding:11px 12px;background:var(--df3-accent-soft);color:var(--df3-accent-ink);border-radius:var(--df3-radius-sm);font-size:13.5px;line-height:1.5;animation:df3BannerIn .32s var(--df3-ease) both}
+.df3-slot__fix svg{flex:0 0 auto;width:16px;height:16px;margin-top:1px}
+/* 완료 */
+.df3-done__mark{display:grid;place-items:center;width:64px;height:64px;margin:6px auto 14px;border-radius:50%;background:var(--df3-primary);color:var(--df3-on-primary);box-shadow:0 0 0 8px var(--df3-primary-soft),var(--df3-shadow-md);animation:df3MarkIn .5s var(--df3-ease-expo) both}
+.df3-done__mark svg{width:32px;height:32px;animation:df3PopIn .42s var(--df3-ease-expo) .12s both}
+.df3-done__mark.is-spin svg{animation:df3Spin 1s linear infinite}
+.df3-receipt{background:var(--df3-surface);border:1px solid var(--df3-line);border-radius:var(--df3-radius);padding:18px;display:grid;grid-template-columns:auto 1fr;gap:11px 16px;margin-bottom:20px;box-shadow:var(--df3-shadow-sm)}
+.df3-receipt dt{color:var(--df3-ink-muted);font-size:13.5px;align-self:center}
+.df3-receipt dd{margin:0;font-weight:700;text-align:right;font-size:14.5px;align-self:center;color:var(--df3-ink)}
+.df3-receipt__no{font-variant-numeric:tabular-nums;letter-spacing:.02em;font-size:16px!important;color:var(--df3-accent-ink)}
+.df3-track{list-style:none;display:flex;padding:0;margin:0 0 20px}
+.df3-track__item{position:relative;flex:1;text-align:center;font-size:12px;color:var(--df3-ink-muted)}
+.df3-track__item::before{content:"";position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--df3-line)}
+.df3-track__item:first-child::before{display:none}
+.df3-track__item--done::before,.df3-track__item--current::before{background:var(--df3-primary)}
+.df3-track__item--current{color:var(--df3-ink);font-weight:700}
+.df3-track__dot{position:relative;display:block;width:14px;height:14px;border-radius:50%;background:var(--df3-surface);box-shadow:inset 0 0 0 2px var(--df3-line);margin:0 auto 7px}
+.df3-track__item--done .df3-track__dot{background:var(--df3-primary);box-shadow:inset 0 0 0 2px var(--df3-primary)}
+.df3-track__item--current .df3-track__dot{background:var(--df3-primary);box-shadow:inset 0 0 0 2px var(--df3-primary),0 0 0 4px var(--df3-accent-soft)}
+.df3-notice{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--df3-ink-muted);margin:10px 0;line-height:1.55}
+.df3-notice svg{flex:0 0 auto;width:17px;height:17px;margin-top:1px;color:var(--df3-primary-ink)}
+.df3-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){#dform3-phone *,#dform3-phone *::before,#dform3-phone *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 /* 단일 폰 내 뷰 전환 (시안2/시안3) */
 .dars.dars1-view{display:none}
 .dars.dars1-view.active{display:flex}
@@ -2432,8 +2563,9 @@ body{
   <div class="ref-list sian-list" id="sianList">
     <div class="ref-title">시안 · 디지털 ARS</div>
     <div class="ref-item" data-sian="s1" data-ver="v40"><span class="rf-nm">Ver 4.0</span><span class="rf-tel">디지털 ARS · 토스 스타일 디자인 (9카테고리 / 포인트 마젠타·네이비)</span></div>
-    <div class="ref-item" data-sian="dform"><span class="rf-nm">Digital Form</span><span class="rf-tel">키움증권 로고만 있는 빈 화면 (작업용 템플릿)</span></div>
     <div class="ref-item" data-sian="dform2"><span class="rf-nm">Ver 4.3</span><span class="rf-tel">Digital Form 복사본 · 서류 제출 폼 (독립 편집용)</span></div>
+    <div class="ref-item" data-sian="dform"><span class="rf-nm">Digital Form</span><span class="rf-tel">키움증권 로고만 있는 빈 화면 (작업용 템플릿)</span></div>
+    <div class="ref-item" data-sian="dform3"><span class="rf-nm">Digital Form_v0.1</span><span class="rf-tel">서류제출 엔진 흐름 재현 · 5단계(인증→서류준비→첨부→제출→완료) · 업무 11종·상태머신</span></div>
     <!-- 시안 · 이전버전 (접이식 · 우측 [+] 토글) -->
     <div class="ref-title prev-title" data-prevtoggle>시안 · 이전버전<span class="prev-plus" aria-hidden="true">+</span></div>
     <div class="ref-item prev-item" data-sian="s1" data-ver="v1"><span class="rf-nm">Ver 1.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (화면구현)</span></div>
@@ -3118,6 +3250,262 @@ body{
       </div></div>
     </div>
   </div>
+  <!-- ====== Digital Form_v0.1 (dform3) · 서류제출 엔진 흐름 재현 (5단계 상태머신) ====== -->
+  <div class="dars-deck" data-scheme="dform3">
+    <div class="phone-wrap" id="dform3-phone">
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="dform3-root">
+          <div class="statusbar"><span>9:41</span><span class="icons">●●● 5G ▮</span></div>
+          <header class="df3-topbar"><span class="df3-brand">키움증권 디지털ARS · 서류제출</span></header>
+          <div class="df3-app" id="dform3-app"><!-- renderApp() 주입 --></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <script>
+  /* ====== Digital Form_v0.1 (dform3) · 서류제출 엔진(서류제출엔진/) 흐름 재현 ======
+     원본: src/render/screen1~4.js + engine.js + steps.js + labels/icons/catalog/tasks. ESM→인라인 IIFE 정적 포팅.
+     화면 흐름·상태머신·문구는 1:1 재현. 유일한 차이: 검색이 실제 동작(업무 11종 이름 필터) — 원본은 장식용. */
+  (function(){
+    var root = document.getElementById('dform3-app');
+    if(!root) return;
+    var phone = document.getElementById('dform3-phone');
+
+    /* ---- 데이터 (data/catalog.js · data/tasks.js) ---- */
+    var CATALOG = [
+      {id:'idCard',name:'신분증',slotType:'photo',coaching:'네 모서리가 다 보이게 밝은 곳에서 찍어 주세요.',constraints:{maxMB:10,accept:['image/jpeg','image/png']}},
+      {id:'fundPurpose',name:'금융거래목적확인서',slotType:'eform',coaching:'화면에서 항목을 고르고 서명하면 끝나요. 서류를 따로 구할 필요가 없어요.'},
+      {id:'incomeProof',name:'소득·자격 증빙',slotType:'file',coaching:'발급일 90일 이내 서류를 올려 주세요. 정부24에서 바로 발급할 수 있어요.',acquireHelp:'정부24 발급 안내',constraints:{maxMB:20,accept:['application/pdf','image/*']}},
+      {id:'inquiryCapture',name:'문의 화면·영상',slotType:'photo',coaching:'문의하실 화면을 캡처하거나 짧은 영상으로 올려 주세요.',constraints:{maxMB:50,maxSec:30}},
+      {id:'familyCert',name:'가족관계증명서',slotType:'file',coaching:'대리인과의 관계를 확인하는 서류예요. 정부24에서 발급할 수 있어요.',acquireHelp:'정부24 발급 안내',constraints:{maxMB:20,accept:['application/pdf','image/*']}},
+      {id:'basicCert',name:'기본증명서',slotType:'file',coaching:'개명 사실을 확인하는 서류예요. 정부24에서 발급할 수 있어요.',acquireHelp:'정부24 발급 안내',constraints:{maxMB:20,accept:['application/pdf','image/*']}},
+      {id:'finTxInfoForm',name:'금융거래정보신청서',slotType:'provided',coaching:'아래에서 양식을 받아 작성해 올려 주세요.',acquireHelp:'신청서 양식 받기',constraints:{maxMB:20,accept:['application/pdf','image/*']}}
+    ];
+    var TASKS = [
+      {id:'pwReset',name:'비밀번호 재설정',authLevel:'L2',requiredDocs:[{docId:'idCard',order:1}],sla:'즉시~영업일 1일',copy:{intro:'신분증만 확인되면 비밀번호를 바로 재설정할 수 있어요.'}},
+      {id:'acctOpenConfirm',name:'비대면 계좌개설 확인',authLevel:'L2',requiredDocs:[{docId:'idCard',order:1}],sla:'영업일 1일',copy:{intro:'신분증으로 계좌개설 본인확인을 마무리해요.'}},
+      {id:'kyc',name:'고객확인 KYC(CDD/EDD)',authLevel:'L2',requiredDocs:[{docId:'idCard',order:1}],sla:'즉시',copy:{intro:'신분증 확인과 몇 가지 항목 입력으로 고객확인을 끝내요.'}},
+      {id:'fundPurposeTask',name:'금융거래목적확인서',authLevel:'L2',requiredDocs:[{docId:'fundPurpose',order:1}],sla:'즉시',copy:{intro:'화면에서 목적을 선택하고 서명하면 끝나요.'}},
+      {id:'certIssue',name:'제증명 발급',authLevel:'L2',requiredDocs:[],sla:'즉시',copy:{intro:'따로 낼 서류 없이 바로 발급해 드려요.'}},
+      {id:'isaEligibility',name:'ISA 자격 서류(서민형)',authLevel:'L2',requiredDocs:[{docId:'incomeProof',order:1}],sla:'영업일 1~2일',copy:{intro:'소득·자격 증빙 1건이면 서민형 자격 확인이 끝나요.'}},
+      {id:'rightsTask',name:'권리업무(유상청약 등)',authLevel:'L2',requiredDocs:[{docId:'finTxInfoForm',order:1}],sla:'건별 안내',copy:{intro:'신청서를 받아 작성해 올리면 접수돼요.'}},
+      {id:'minorProxy',name:'미성년자 대리인 본인확인',authLevel:'L2',requiredDocs:[{docId:'familyCert',order:1},{docId:'idCard',order:2}],sla:'영업일 1일',copy:{intro:'가족관계증명서와 대리인 신분증으로 본인확인을 해요.'}},
+      {id:'nameChange',name:'개명 정보변경',authLevel:'L2',requiredDocs:[{docId:'basicCert',order:1},{docId:'idCard',order:2}],sla:'즉시~영업일 1일',copy:{intro:'기본증명서와 신분증으로 개명 정보를 바꿔요.'}},
+      {id:'recordRequest',name:'녹취·로그 확인 신청',authLevel:'L2',requiredDocs:[{docId:'finTxInfoForm',order:1}],sla:'건별 안내',copy:{intro:'금융거래정보신청서 양식을 받아 작성해 올려 주세요.'}},
+      {id:'inquiryTask',name:'화면 문의 접수',authLevel:'L2',requiredDocs:[{docId:'inquiryCapture',order:1}],sla:'건별 안내',copy:{intro:'문의하실 화면을 첨부하면 담당자가 확인해요.'}}
+    ];
+    var POPULAR = ['pwReset','certIssue','fundPurposeTask','kyc','inquiryTask'];
+
+    function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function getTask(id){return TASKS.find(function(t){return t.id===id;});}
+    function getDoc(id){return CATALOG.find(function(d){return d.id===id;});}
+    function resolveDocs(taskId){var t=getTask(taskId);if(!t)return [];return t.requiredDocs.slice().sort(function(a,b){return a.order-b.order;}).map(function(r){return getDoc(r.docId);}).filter(Boolean);}
+    function authPlan(lv){ if(lv==='L0')return {needIdentity:false,needAccount:false}; if(lv==='L1')return {needIdentity:true,needAccount:false}; return {needIdentity:true,needAccount:true}; }
+
+    /* ---- 아이콘 (src/icons.js) ---- */
+    var PATHS={
+      doc:'<path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/>',
+      search:'<circle cx="11" cy="11" r="7"/><path d="M20.5 20.5l-4.2-4.2"/>',
+      check:'<path d="M4.5 12.5l5 5 10-11"/>',
+      alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01"/>',
+      chat:'<path d="M20 14.5a2 2 0 0 1-2 2H9l-4 3.5v-13a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2z"/>',
+      clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
+      circle:'<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.6 3.2"/>',
+      upload:'<path d="M12 16V5"/><path d="M7 9.5l5-5 5 5"/><path d="M5 19.5h14"/>',
+      bell:'<path d="M18 8.5a6 6 0 1 0-12 0c0 6.5-2.5 8.5-2.5 8.5h17S18 15 18 8.5z"/><path d="M13.5 20.5a2 2 0 0 1-3 0"/>',
+      link:'<path d="M9.5 14.5l5-5"/><path d="M11.5 6.5l1-1a3.7 3.7 0 0 1 5.2 5.2l-1 1"/><path d="M12.5 17.5l-1 1a3.7 3.7 0 0 1-5.2-5.2l1-1"/>'
+    };
+    function icon(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(PATHS[n]||PATHS.circle)+'</svg>';}
+    var SLOT_STATE_LABEL={empty:{icon:icon('circle'),text:'대기'},uploaded:{icon:icon('upload'),text:'올림'},checking:{icon:icon('clock'),text:'확인중'},ok:{icon:icon('check'),text:'확인됨'},needFix:{icon:icon('alert'),text:'보완요청'}};
+    var SESSION_STATE_LABEL={draft:'작성중',received:'접수됨',checking:'확인중',done:'처리완료',needFix:'보완요청'};
+
+    /* ---- 엔진 (src/engine.js) ---- */
+    var SLOT={EMPTY:'empty',UPLOADED:'uploaded',CHECKING:'checking',OK:'ok',NEEDFIX:'needFix'};
+    var SESS={DRAFT:'draft',RECEIVED:'received',CHECKING:'checking',DONE:'done',NEEDFIX:'needFix'};
+    function makeSlot(docId){return {docId:docId,state:SLOT.EMPTY,files:[],reason:null};}
+    function createSubmission(taskId){var t=getTask(taskId);return {taskId:taskId,authState:{identity:false,account:false},slots:resolveDocs(taskId).map(function(d){return makeSlot(d.id);}),status:SESS.DRAFT,receiptNo:null,sla:t?t.sla:''};}
+    function acceptMatch(type,accept){return accept.some(function(a){return a.slice(-2)==='/*'?type.indexOf(a.slice(0,-1))===0:a===type;});}
+    function acceptHint(accept){var L={'image/*':'사진','application/pdf':'PDF','image/jpeg':'JPG','image/png':'PNG'};return accept.map(function(a){return L[a]||a;}).filter(function(v,i,arr){return arr.indexOf(v)===i;}).join('·');}
+    function runValidation(doc,files){
+      var c=doc.constraints||{};
+      for(var i=0;i<files.length;i++){var f=files[i];
+        if(typeof c.maxMB==='number'&&f.sizeMB>c.maxMB)return {ok:false,reason:'파일 용량이 커요. '+c.maxMB+'MB 이하로 다시 올려 주세요.'};
+        if(Array.isArray(c.accept)&&!acceptMatch(f.type,c.accept))return {ok:false,reason:'지원하는 형식으로 다시 올려 주세요. ('+acceptHint(c.accept)+')'};
+        if(typeof c.maxSec==='number'&&typeof f.sec==='number'&&f.sec>c.maxSec)return {ok:false,reason:'영상은 '+c.maxSec+'초 이하로 올려 주세요.'};
+      }
+      if(files.length===0)return {ok:false,reason:'파일을 올려 주세요.'};
+      return {ok:true,reason:null};
+    }
+    function canSubmit(sub){return sub.slots.every(function(s){return s.state===SLOT.OK;});}
+    function genReceipt(seq,dateStr){return 'DR-'+dateStr+'-'+String(seq).padStart(6,'0');}
+    function ymd(){var d=new Date();return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');}
+
+    /* ---- 상태 (src/app.js) ---- */
+    var STEP_OF={screen1:'auth',screen2:'auth',screen3:'attach',screen4:'done'};
+    var STEP_MODEL=[{id:'auth',label:'인증'},{id:'prepare',label:'서류준비'},{id:'attach',label:'첨부'},{id:'submit',label:'제출'},{id:'done',label:'완료'}];
+    var FLOW=[SESS.RECEIVED,SESS.CHECKING,SESS.DONE];
+    var state, seq=4820, query='';
+    /* 진입: 원본 기본은 task고정(ch=a)이나, 데모는 전체 흐름 노출 위해 업무 미선택(explore=원본 '다른 업무 찾기' 화면)으로 시작 */
+    function reset(){ state={screen:'screen1',task:null,submission:createSubmission('pwReset')}; query=''; }
+    function setTask(taskId){ state={screen:'screen1',task:getTask(taskId),submission:createSubmission(taskId)}; query=''; }
+
+    /* ---- 렌더 (src/render/*) ---- */
+    function renderStepbar(activeId){
+      var ai=STEP_MODEL.map(function(s){return s.id;}).indexOf(activeId);
+      var items=STEP_MODEL.map(function(s,i){
+        var st=i<ai?'done':i===ai?'current':'todo';
+        return '<li class="df3-step df3-step--'+st+'"'+(st==='current'?' aria-current="step"':'')+'><span class="df3-step__dot" aria-hidden="true">'+(i<ai?'✓':i+1)+'</span><span class="df3-step__label">'+esc(s.label)+'</span></li>';
+      }).join('');
+      return '<nav class="df3-stepbar" aria-label="진행 단계"><ol class="df3-stepbar__list">'+items+'</ol></nav>';
+    }
+    function renderScreen1(){ return state.task ? renderConfirm(state.task, resolveDocs(state.task.id)) : renderExplore(); }
+    function renderConfirm(task,docs){
+      var plan=authPlan(task.authLevel);
+      var authLabel=plan.needAccount?'본인 + 계좌':plan.needIdentity?'본인':'인증 불필요';
+      var docList=docs.length
+        ? '<ul class="df3-doclist">'+docs.map(function(d,i){return '<li style="--i:'+i+'"><span class="df3-doclist__ico">'+icon('doc')+'</span>'+esc(d.name)+'</li>';}).join('')+'</ul>'
+        : '<p class="df3-muted">따로 준비할 서류가 없어요.</p>';
+      return '<section class="df3-scr df3-scr--confirm">'
+        +'<h1 class="df3-scr__title">'+esc(task.name)+'<br>도와드릴까요?</h1>'
+        +'<p class="df3-scr__lead">'+esc(task.copy.intro)+'</p>'
+        +'<div class="df3-panel"><h2 class="df3-panel__h">필요한 서류</h2>'+docList
+        +'<dl class="df3-meta"><dt>예상 소요</dt><dd>'+esc(task.sla)+'</dd><dt>필요 인증</dt><dd>'+esc(authLabel)+'</dd></dl></div>'
+        +'<button class="df3-btn df3-btn--primary" data-df3go="screen2">네, 시작할게요</button>'
+        +'<button class="df3-btn df3-btn--ghost" data-df3go="explore">다른 업무를 찾을게요</button>'
+        +'</section>';
+    }
+    function exploreDyn(){
+      var q=query.trim();
+      var matches=q?TASKS.filter(function(t){return t.name.indexOf(q)>=0;}):POPULAR.map(getTask);
+      var body=matches.length
+        ? '<div class="df3-chips">'+matches.map(function(t,i){return '<button class="df3-chip" style="--i:'+i+'" data-df3pick="'+esc(t.id)+'">'+esc(t.name)+'</button>';}).join('')+'</div>'
+        : '<p class="df3-muted" style="margin:6px 2px 0">검색 결과가 없어요. 다른 이름으로 찾아 주세요.</p>';
+      return '<h2 class="df3-panel__h">'+(q?'검색 결과':'자주 찾는 서비스')+'</h2>'+body;
+    }
+    function renderExplore(){
+      return '<section class="df3-scr df3-scr--explore">'
+        +'<h1 class="df3-scr__title">무엇을 도와드릴까요?</h1>'
+        +'<p class="df3-scr__lead">필요하신 일을 검색하거나 아래에서 골라 주세요.</p>'
+        +'<label class="df3-search"><span class="df3-search__ico">'+icon('search')+'</span>'
+        +'<input class="df3-search__input" type="text" placeholder="예: 비밀번호, 개명, 서류 발급" aria-label="업무 검색" data-df3query value="'+esc(query)+'"></label>'
+        +'<div id="df3-explore-dyn">'+exploreDyn()+'</div>'
+        +'</section>';
+    }
+    function renderScreen2(){
+      var task=state.task||getTask(state.submission.taskId);
+      var plan=authPlan(task?task.authLevel:'L2');
+      var a=state.submission.authState;
+      var identity=plan.needIdentity?authCard(1,'본인인증','휴대폰 또는 간편인증(카카오·네이버·PASS)',a.identity,'auth-identity'):'';
+      var account=plan.needAccount?authCard(2,'계좌인증','계좌번호와 계좌비밀번호를 확인해요.',a.account,'auth-account'):'';
+      var bothDone=(!plan.needIdentity||a.identity)&&(!plan.needAccount||a.account);
+      return '<section class="df3-scr df3-scr--auth">'
+        +'<h1 class="df3-scr__title">인증하고<br>시작할게요</h1>'
+        +'<p class="df3-scr__lead">본인과 계좌만 확인하면 서류를 올릴 수 있어요.</p>'
+        +identity+account
+        +'<button class="df3-btn df3-btn--primary" data-df3go="screen3"'+(bothDone?'':' disabled aria-disabled="true"')+'>서류 준비로 이동</button>'
+        +'</section>';
+    }
+    function authCard(n,title,desc,done,action){
+      return '<div class="df3-authcard'+(done?' is-done':'')+'"><div class="df3-authcard__n" aria-hidden="true">'+(done?'✓':n)+'</div>'
+        +'<div class="df3-authcard__body"><h2 class="df3-authcard__title">'+esc(title)+'</h2><p class="df3-authcard__desc">'+esc(desc)+'</p>'+(done?'<span class="df3-sr-only">완료됨</span>':'')+'</div>'
+        +'<button class="df3-btn df3-btn--sm" data-df3auth="'+action+'">'+(done?'완료':'인증하기')+'</button></div>';
+    }
+    function renderScreen3(){
+      var sub=state.submission, docDefs=resolveDocs(sub.taskId);
+      var total=sub.slots.length, done=sub.slots.filter(function(s){return s.state===SLOT.OK;}).length;
+      var ready=canSubmit(sub);
+      var slotHtml=sub.slots.map(function(slot){var doc=docDefs.find(function(d){return d.id===slot.docId;})||{name:slot.docId,coaching:'',slotType:'file'};return renderSlot(slot,doc);}).join('');
+      var counter=total?'<p class="df3-counter" role="status">서류 준비 <strong>'+done+'/'+total+'</strong> 완료</p>':'<p class="df3-counter">따로 올릴 서류가 없어요. 바로 제출할 수 있어요.</p>';
+      return '<section class="df3-scr df3-scr--attach">'
+        +'<h1 class="df3-scr__title">서류를<br>올려 주세요</h1>'+counter
+        +'<ul class="df3-slots">'+slotHtml+'</ul>'
+        +'<button class="df3-btn df3-btn--primary" data-df3submit'+(ready?'':' disabled aria-disabled="true"')+'>제출하기</button>'
+        +'</section>';
+    }
+    function renderSlot(slot,doc){
+      var st=SLOT_STATE_LABEL[slot.state];
+      var actionLabel=doc.slotType==='photo'?'촬영':doc.slotType==='eform'?'작성':'첨부';
+      var fix=(slot.state===SLOT.NEEDFIX&&slot.reason)?'<p class="df3-slot__fix" role="alert">'+icon('alert')+'<span>'+esc(slot.reason)+'</span></p>':'';
+      var acquire=doc.acquireHelp?'<button class="df3-slot__acquire" data-df3acquire="'+esc(doc.id)+'">'+esc(doc.acquireHelp)+'</button>':'';
+      return '<li class="df3-slot df3-slot--'+esc(slot.state)+'"><div class="df3-slot__head">'
+        +'<span class="df3-slot__state" aria-hidden="true">'+st.icon+'</span>'
+        +'<span class="df3-slot__name">'+esc(doc.name)+'</span>'
+        +'<span class="df3-slot__badge">'+esc(st.text)+'</span>'
+        +'<button class="df3-btn df3-btn--sm" data-df3upload="'+esc(doc.id)+'">'+actionLabel+'</button></div>'
+        +(doc.coaching?'<p class="df3-slot__coach">'+icon('chat')+'<span>'+esc(doc.coaching)+'</span></p>':'')
+        +acquire+fix+'</li>';
+    }
+    function renderScreen4(){
+      var sub=state.submission;
+      var raw=FLOW.indexOf(sub.status), cur=raw>=0?raw:0;
+      var track=FLOW.map(function(stt,i){var cls=i<cur?'done':i===cur?'current':'todo';return '<li class="df3-track__item df3-track__item--'+cls+'"'+(i===cur?' aria-current="step"':'')+'><span class="df3-track__dot" aria-hidden="true"></span>'+esc(SESSION_STATE_LABEL[stt])+'</li>';}).join('');
+      var TITLE={received:'접수 완료',checking:'확인 중이에요',done:'처리 완료'};
+      var LEAD={received:'서류가 잘 접수됐어요. 진행되면 알려드릴게요.',checking:'담당자가 서류를 확인하고 있어요.',done:'처리가 모두 완료됐어요.'};
+      var isChecking=sub.status===SESS.CHECKING;
+      var advance=sub.status!==SESS.DONE?'<button class="df3-btn df3-btn--primary" data-df3advance>처리 진행 보기</button>':'';
+      return '<section class="df3-scr df3-scr--done">'
+        +'<div class="df3-done__mark'+(isChecking?' is-spin':'')+'" aria-hidden="true">'+(isChecking?icon('clock'):icon('check'))+'</div>'
+        +'<h1 class="df3-scr__title">'+esc(TITLE[sub.status]||'접수 완료')+'</h1>'
+        +'<p class="df3-scr__lead df3-scr__lead--center">'+esc(LEAD[sub.status]||LEAD.received)+'</p>'
+        +'<dl class="df3-receipt"><dt>접수번호</dt><dd class="df3-receipt__no">'+esc(sub.receiptNo||'')+'</dd><dt>처리 예정</dt><dd>'+esc(sub.sla)+'</dd></dl>'
+        +'<ol class="df3-track" aria-label="진행 상태">'+track+'</ol>'
+        +'<p class="df3-notice">'+icon('bell')+'<span>진행 상황은 알림톡으로 보내드려요.</span></p>'
+        +'<p class="df3-notice">'+icon('link')+'<span>이 화면은 같은 링크로 다시 열 수 있어요.</span></p>'
+        +advance
+        +'<button class="df3-btn df3-btn--ghost" data-df3go="screen1">다른 업무 하기</button>'
+        +'</section>';
+    }
+    var SCREENS={screen1:renderScreen1,screen2:renderScreen2,screen3:renderScreen3,screen4:renderScreen4};
+    function paint(){ root.innerHTML = renderStepbar(STEP_OF[state.screen]) + '<main class="df3-appbody">' + (SCREENS[state.screen]||renderScreen1)() + '</main>'; }
+
+    /* ---- 이벤트 위임 (src/app.js 글루) — #dform3-phone 스코프 ---- */
+    phone.addEventListener('input',function(e){
+      if(!e.target.closest('[data-df3query]'))return;
+      query=e.target.value;
+      var d=document.getElementById('df3-explore-dyn'); if(d) d.innerHTML=exploreDyn();
+    });
+    phone.addEventListener('click',function(e){
+      var el=e.target.closest('[data-df3go],[data-df3pick],[data-df3auth],[data-df3upload],[data-df3submit],[data-df3advance],[data-df3acquire]');
+      if(!el)return;
+      if(el.hasAttribute('data-df3go')){
+        var go=el.getAttribute('data-df3go');
+        if(go==='explore'){ state.task=null; state.screen='screen1'; query=''; return paint(); }
+        state.screen=go; return paint();   // screen1(다른 업무 하기)=완료업무 confirm 재노출, 원본 동일
+      }
+      if(el.hasAttribute('data-df3pick')){ setTask(el.getAttribute('data-df3pick')); return paint(); }
+      if(el.hasAttribute('data-df3auth')){
+        var key=el.getAttribute('data-df3auth')==='auth-identity'?'identity':'account';
+        state.submission.authState[key]=true; state.screen='screen2'; return paint();
+      }
+      if(el.hasAttribute('data-df3upload')){
+        var docId=el.getAttribute('data-df3upload');
+        var doc=resolveDocs(state.submission.taskId).find(function(d){return d.id===docId;});
+        var file=e.shiftKey?{name:'big.jpg',sizeMB:25,type:'image/jpeg'}:{name:'id.jpg',sizeMB:2,type:'image/jpeg'};   // 시연: 클릭=정상 / Shift+클릭=과대→보완요청
+        var slot=state.submission.slots.find(function(s){return s.docId===docId;});
+        slot.state=SLOT.CHECKING; slot.files=[file]; slot.reason=null; paint();   // 1) 확인중(스피너) 즉시 피드백
+        window.setTimeout(function(){                                              // 2) 720ms 뒤 1차검증 결과 해소
+          var r=runValidation(doc,[file]);
+          slot.state=r.ok?SLOT.OK:SLOT.NEEDFIX; slot.reason=r.reason;
+          if(state.screen==='screen3') paint();
+        },720);
+        return;
+      }
+      if(el.hasAttribute('data-df3submit')){
+        if(!canSubmit(state.submission))return;
+        state.submission.status=SESS.RECEIVED; state.submission.receiptNo=genReceipt(++seq,ymd());
+        state.screen='screen4'; return paint();
+      }
+      if(el.hasAttribute('data-df3advance')){
+        var order=['received','checking','done']; var i=order.indexOf(state.submission.status);
+        state.submission.status=order[Math.min(i+1,order.length-1)]; return paint();
+      }
+      if(el.hasAttribute('data-df3acquire')){ alert('양식/발급 안내는 실제 서비스에서 연결됩니다. (목업)'); return; }
+    });
+
+    window.__dform3Home=function(){ reset(); paint(); };   // 탭 재진입 시 explore로 리셋(selectSian에서 호출)
+    reset(); paint();
+  })();
+  </script>
   <script>
   /* Digital Form(dform) · Ver 4.3(dform2) · 뷰 전환(업무선택 → 상세/첨부 → 제출 완료) — 정적 목업 전용 */
   (function(){
@@ -3155,7 +3543,7 @@ body{
   </div>
 </div>
 
-<script src="app.js?v=20260714a"></script>
+<script src="app.js?v=20260722a"></script>
 <script>
 /* 디지털ARS 시안 탭 · 인터랙션 (app.js와 독립) */
 (function(){

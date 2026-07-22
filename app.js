@@ -6096,6 +6096,8 @@ const SCHEME_META = {
       kpi:[['빈 화면','작업용 템플릿'],['로고','좌상단 배치'],['Digital Form','신규 목업']]},
   dform2:{cap:'Ver 4.3 · Digital Form 복사본', label:'Ver 4.3 · 서류 제출 폼 (Digital Form 복사본 · 독립 편집용)',
       kpi:[['서류제출','업무별 첨부 폼'],['복사본','Digital Form 기반'],['Ver 4.3','독립 편집용']]},
+  dform3:{cap:'Digital Form_v0.1 · 서류제출 엔진 흐름 재현', label:'Digital Form_v0.1 · 서류제출 엔진 흐름 재현 (5단계 상태머신 · 업무 11종)',
+      kpi:[['5단계','인증→준비→첨부→제출→완료'],['상태머신','업로드→확인중→확인/보완'],['업무 11종','접수번호 발급']]},
 };
 
 let refFirm = 'kiwoom';   // 참고 탭에서 현재 선택된 증권사 (기본: 키움증권 현행)
@@ -6115,7 +6117,7 @@ function switchScheme(s){
   document.querySelectorAll('#schemeTabs .tab').forEach(t=>t.classList.toggle('active', t.dataset.scheme===s));
   document.querySelectorAll('.flow').forEach(f=>f.classList.toggle('active', f.dataset.scheme===activeFlow));
   // 폰 스테이지(시안1·참고) ↔ 시안2/3 덱 전환
-  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2');
+  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2' || activeFlow==='dform3');
   const mainStage = document.getElementById('mainStage');
   if(mainStage) mainStage.style.display = isDarsView ? 'none' : '';
   document.querySelectorAll('.dars-deck').forEach(d=>d.classList.toggle('active', d.dataset.scheme===activeFlow));
@@ -6239,6 +6241,7 @@ function selectSian(v, ver){
   else if(v==='dars2'){ if(window.__darsHome2) window.__darsHome2(); }
   else if(v==='dform'){ if(window.__dformHome) window.__dformHome(); }
   else if(v==='dform2'){ if(window.__dform2Home) window.__dform2Home(); }
+  else if(v==='dform3'){ if(window.__dform3Home) window.__dform3Home(); }
   switchScheme('sian');
 }
 (function(){
