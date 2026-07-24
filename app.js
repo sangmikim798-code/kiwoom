@@ -2880,7 +2880,7 @@ function openCertSheet(key){
   const o = CERT_OPTS[key]; if(!o) return;
   const screen=document.getElementById('screen'); if(!screen) return;
   const cur = certVal(key);
-  const el=document.createElement('div'); el.className='tx-ov' + (isV40()?' v40':''); el.id='certSheet'; el.dataset.certkey=key;   // v40: 마젠타 강조
+  const el=document.createElement('div'); el.className='tx-ov' + (isV45()?' v45':isV40()?' v40':''); el.id='certSheet'; el.dataset.certkey=key;   // v40: 마젠타 / v45: 인디고
   el.innerHTML=`<div class="ps-sheet">
     <div class="ps-top"><div class="ps-title">${o.t}</div><div class="ps-x" data-certclose>✕</div></div>
     <div class="acct-list">` + o.opts.map(v=>`
@@ -2985,7 +2985,7 @@ function openPwKeypad(showAcct, ctx){
   if(!screen) return;
   const digits = ['1','2','3','4','5','6','7','8','9'];
   const el = document.createElement('div');
-  el.className = 'kp-ov' + (isV40() ? ' v40' : '');   // Ver 4.0 계열: 토스(마젠타·네이비) 토큰으로 재도색
+  el.className = 'kp-ov' + (isV45() ? ' v45' : isV40() ? ' v40' : '');   // Ver 4.0: 마젠타 / Ver 4.5: 인디고
   el.id = 'pwKeypad';
   el.innerHTML = `<div class="kp-sheet">
     <div class="kp-grab"></div>
@@ -3045,9 +3045,9 @@ function openAppLink(key){
   closeAppLink();
   const screen = document.getElementById('screen'); if(!screen) return;
   const c = APP_LINK[key] || {title:'요청하신 업무'};
-  const v40 = isV40();   // Ver 4.0 계열: 토스(마젠타·네이비) 스킨 + 앱 아이콘 + 톤 맞춤 문구
+  const v40 = isV40(); const v45 = isV45();   // Ver 4.0: 마젠타 / Ver 4.5: 인디고 스킨
   const el = document.createElement('div');
-  el.className = 'app-pop-ov' + (v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title; el.dataset.linkApp = c.app || '영웅문S#';
+  el.className = 'app-pop-ov' + (v45 ? ' v45' : v40 ? ' v40' : ''); el.id = 'appPop'; el.dataset.linkTitle = c.title; el.dataset.linkApp = c.app || '영웅문S#';
   // 앱 이름·로고·문구는 APP_LINK 항목에서 오버라이드 가능(기본=영웅문S#)
   const logoSrc = c.logo || 'assets/ys-icon.png';
   const logo  = v40 ? `<div class="ap-logo"><img src="${logoSrc}" alt="${c.app||'영웅문S#'}"></div>` : `<div class="ap-logo">S#</div>`;
@@ -4642,6 +4642,7 @@ function pageTop(title, hideTitle, rightHtml){
 function renderS1(){
   const v = document.getElementById('s1view');
   const flowEl = v && v.closest('.flow'); if(flowEl) flowEl.classList.toggle('toss', isV40());   // Ver 4.0 계열 토스 스킨 (전 화면 var() 토큰 오버라이드)
+  if(flowEl){ flowEl.classList.toggle('v45', isV45()); }   // Ver 4.5 인디고 팔레트 오버라이드
   let html = '';
   if(s1state.page==='home'){
     /* 자주 찾는 서비스 9개로 한눈에 구성 */
@@ -5212,14 +5213,15 @@ function openAiChat(){
   if(!screen || document.getElementById('aiChatOv')) return;
   const el = document.createElement('div');
   el.id = 'aiChatOv';
-  const v40 = isV40();   // Ver 4.0 계열: 문구 '디지털 ARS 열기' + 마젠타 토스 스킨 + 디지털ARS(모니터) 아이콘
+  const v40 = isV40(); const v45_ = isV45();   // Ver 4.0 계열: 문구 '디지털 ARS 열기' + 디지털ARS(모니터) 아이콘
   el.className = 'aichat-ov' + (v40 ? ' v40' : '');
   const floatIc = v40
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16.5V20"/></svg>'
     : I.headset;
   const floatTxt = v40 ? '디지털 ARS 열기' : '보이는 ARS 열기';
+  const floatCls = v45_ ? ' v45' : v40 ? ' v40' : '';   // v45: 인디고 / v40: 마젠타
   el.innerHTML = `<img class="aichat-img" src="영웅문/AI업무챗봇.png" alt="AI 업무챗봇">
-    <div class="ars-float${v40?' v40':''}" data-arsopen><span class="af-ic">${floatIc}</span> ${floatTxt}</div>`;
+    <div class="ars-float${floatCls}" data-arsopen><span class="af-ic">${floatIc}</span> ${floatTxt}</div>`;
   screen.appendChild(el);
 }
 function closeAiChat(){ const e=document.getElementById('aiChatOv'); if(e) e.remove(); }
@@ -6108,7 +6110,9 @@ let s1Ver = 'v40';        // 시안1 기본 버전 = Ver 4.0(v40). 맨 URL(파�
 /* Ver 2.1 — 메인 3탭(셀프서비스/ARS메뉴/상담원연결)·드로어·favSrc 등 v21 전용 동작 게이트 */
 function isV21Ver(){ return s1Ver==='v21'; }
 /* Ver 4.0 계열 — 토스 스킨·9 카테고리(ARS_CAT6)·상담연결 팝업 등 공통 동작 게이트 (v40=리스트 메인 / v41=3×3 그리드 메인, 로직 동일) */
-function isV40(){ return s1Ver==='v40' || s1Ver==='v41' || s1Ver==='v42'; }
+function isV40(){ return s1Ver==='v40' || s1Ver==='v41' || s1Ver==='v42' || s1Ver==='v45'; }
+/* Ver 4.5 — 인디고 팔레트 게이트 (isV40 포함이지만 색상 오버라이드를 위해 별도 식별) */
+function isV45(){ return s1Ver==='v45'; }
 function switchScheme(s){
   closeMenuDrawer();   // 탭/버전 전환 시 열려있던 전체메뉴 드로어 닫기
   scheme = s;
@@ -6172,6 +6176,7 @@ const DEFAULT_SCENARIO = {
   dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n이용하실 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
   dars1v44: '[Ver 4.4 · 인디고 디자인]\n안녕하세요, 키움증권입니다.\n원하시는 서비스를 선택해 주세요.',
+  v45: '[Ver 4.5 · 인디고 디자인 · s1 기반]\n안녕하세요, 키움증권입니다.\n원하시는 서비스를 선택해 주세요.',
 };
 /* 버전 탭 설명(rf-tel) 소스 기본값 — 사이드바에서 편집한 멀티라인 설명을 소스에 고정(모든 접속자 동일 표시) */
 const DEFAULT_TAB_LABELS = {
