@@ -2533,9 +2533,17 @@ body{
   border-radius: 14px;
 }
 /* ─ 전체메뉴 드로어 ─ */
-#darsv44-phone .d1v44menu-ov { background: oklch(0 0 0 / 0.45); }
+/* 전체메뉴 드로어 오버레이 — 포지셔닝·트랜지션 (dars1의 .d1menu-ov 상당) */
+#darsv44-phone .d1v44menu-ov {
+  position: absolute; top: 36px; left: 0; right: 0; bottom: 0; z-index: 70;
+  background: oklch(0 0 0 / 0.42);
+  opacity: 0; transition: opacity 0.25s; overflow: hidden;
+}
+#darsv44-phone .d1v44menu-ov.on { opacity: 1; }
+#darsv44-phone .d1v44menu-ov.on .d1menu-panel { transform: translateX(0); }
 #darsv44-phone .d1menu-panel {
-  border-radius: 20px 20px 0 0;
+  border-radius: 0 0 20px 20px;
+  transform: translateX(-100%); transition: transform 0.25s cubic-bezier(.2,.7,.2,1);
   box-shadow: none;
 }
 #darsv44-phone .d1menu-head { border-bottom: 1px solid var(--v44-line); }
@@ -2555,8 +2563,18 @@ body{
 #darsv44-phone .d1m-row.leaf:hover { background: var(--v44-primary-soft); }
 #darsv44-phone .d1m-arw svg { stroke: var(--v44-ink-muted); }
 /* ─ 계좌 키패드 ─ */
-#darsv44-phone .d1v44kp-ov { background: oklch(0 0 0 / 0.45); }
-#darsv44-phone .d1kp-sheet { border-radius: 24px 24px 0 0; }
+#darsv44-phone .d1v44kp-ov {
+  position: absolute; inset: 0; z-index: 60;
+  background: oklch(0 0 0 / 0.45);
+  display: flex; align-items: flex-end;
+  opacity: 0; transition: opacity 0.22s;
+}
+#darsv44-phone .d1v44kp-ov.on { opacity: 1; }
+#darsv44-phone .d1kp-sheet {
+  border-radius: 24px 24px 0 0;
+  transform: translateY(100%); transition: transform 0.24s cubic-bezier(.2,.7,.2,1);
+}
+#darsv44-phone .d1v44kp-ov.on .d1kp-sheet { transform: translateY(0); }
 #darsv44-phone .d1kp-title { color: var(--v44-ink); font-weight: 800; }
 #darsv44-phone .d1kp-acct { background: var(--v44-primary-soft); border-radius: 12px; }
 #darsv44-phone .ka-nm { color: var(--v44-primary); font-weight: 700; }
@@ -5952,7 +5970,7 @@ body{
       }
       return '<div class="d1a-head">계좌번호로<br>인증을 진행해주세요</div>'
         + '<div class="d1a-field"><label>계좌번호</label><input class="d1a-input" type="text" inputmode="numeric" placeholder="계좌번호 입력"></div>'
-        + '<div class="d1a-field"><label>계좌 비밀번호</label><div class="d1pw-card" data-d1pwopen="field"><span id="d1pwDisp" class="d1pw-dots" data-ph="숫자 4~8자리 입력"></span></div></div>'
+        + '<div class="d1a-field"><label>계좌 비밀번호</label><div class="d1pw-card" data-d1pwopen="field"><span id="d1v44pwDisp" class="d1pw-dots" data-ph="숫자 4~8자리 입력"></span></div></div>'
         + '<div class="d1a-note">본인 명의 계좌번호와 비밀번호로 인증합니다.</div>'
         + '<div class="vc-btn" data-d1acctdone>인증 완료</div>';
     }
@@ -6384,7 +6402,7 @@ body{
     }
     // ── 계좌 비밀번호 플로팅 키패드 (Ver 1.2 디자인) ──
     function d1pwStr(){ return '●'.repeat((d1authPw || '').length); }
-    function d1pwRefresh(){ var s = d1pwStr(); ['d1pwDisp','d1v44kpDots'].forEach(function(id){ var d = document.getElementById(id); if(d) d.textContent = s; }); }
+    function d1pwRefresh(){ var s = d1pwStr(); ['d1v44pwDisp','d1v44kpDots'].forEach(function(id){ var d = document.getElementById(id); if(d) d.textContent = s; }); }
     function d1closeKeypad(){ var el = document.getElementById('d1v44keypad'); if(el){ el.classList.remove('on'); setTimeout(function(){ if(el.parentNode) el.remove(); }, 220); } }
     function d1openKeypad(ctx){
       d1kpCtx = ctx || 'auth';
