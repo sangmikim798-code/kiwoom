@@ -2348,6 +2348,131 @@ body{
 .df3-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 @media (prefers-reduced-motion:reduce){#dform3-phone *,#dform3-phone *::before,#dform3-phone *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+/* ====== Digital Form_v0.2 (dform4) · 서류제출엔진 디자인 시스템 이식 · df4- 프리픽스 ====== */
+#dform4-phone .screen{background:var(--df4-bg)}
+#dform4-phone .statusbar{background:var(--df4-surface);color:oklch(0.27 0.012 265)}
+.dform4-root{
+  --df4-bg:oklch(0.975 0.003 265);--df4-surface:oklch(1 0 0);
+  --df4-ink:oklch(0.27 0.012 265);--df4-ink-muted:oklch(0.44 0.012 265);
+  --df4-primary:oklch(0.38 0.17 264);--df4-primary-ink:oklch(0.36 0.16 264);--df4-on-primary:oklch(0.99 0 0);
+  --df4-primary-hover:oklch(0.33 0.16 264);--df4-primary-press:oklch(0.29 0.15 264);
+  --df4-primary-soft:oklch(0.95 0.032 264);--df4-primary-softer:oklch(0.975 0.016 264);
+  --df4-accent:oklch(0.56 0.25 356);--df4-accent-ink:oklch(0.47 0.225 356);
+  --df4-accent-soft:oklch(0.96 0.045 356);--df4-accent-softer:oklch(0.98 0.022 356);
+  --df4-line:oklch(0.90 0.005 265);--df4-line-soft:oklch(0.94 0.004 265);--df4-field:oklch(0.985 0.003 265);
+  --df4-radius:14px;--df4-radius-sm:10px;--df4-tap:48px;
+  --df4-ease:cubic-bezier(0.22,1,0.36,1);--df4-dur:0.15s;
+  height:100%;display:flex;flex-direction:column;background:var(--df4-bg);color:var(--df4-ink);
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;-webkit-font-smoothing:antialiased;
+}
+/* 상단 바 */
+.df4-topbar{flex:none;padding:13px 20px;background:var(--df4-surface);border-bottom:1px solid var(--df4-line);display:flex;align-items:center}
+.df4-topbar span{font-weight:800;font-size:14px;color:var(--df4-primary-ink);letter-spacing:-0.02em}
+/* 스크롤 영역 */
+.df4-app{flex:1;min-height:0;overflow-y:auto}
+/* 화면 래퍼 */
+.df4-appbody{animation:df4FadeIn 0.18s ease both}
+@keyframes df4FadeIn{from{opacity:0}to{opacity:1}}
+@keyframes df4PopIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes df4MarkIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+@keyframes df4Spin{to{transform:rotate(360deg)}}
+/* 스텝바 — dot 스타일 (df3와 동일) */
+.df4-stepbar{display:flex;padding:14px 14px 12px;background:var(--df4-surface);border-bottom:1px solid var(--df4-line)}
+.df4-step{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0}
+.df4-step::before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:1px;background:var(--df4-line);z-index:0}
+.df4-step:first-child::before{display:none}
+.df4-step--done::before,.df4-step--current::before{background:var(--df4-accent)}
+/* df4-step__line → dot 원으로 전용 */
+.df4-step__line{position:relative;z-index:1;width:26px;height:26px;border-radius:50%;background:var(--df4-surface);box-shadow:inset 0 0 0 1.5px var(--df4-line);transition:background-color var(--df4-dur),box-shadow var(--df4-dur)}
+.df4-step--done .df4-step__line{background:var(--df4-accent-soft);box-shadow:inset 0 0 0 1.5px var(--df4-accent)}
+.df4-step--current .df4-step__line{background:var(--df4-accent-soft);box-shadow:inset 0 0 0 2px var(--df4-accent)}
+.df4-step__label{font-size:11.5px;color:var(--df4-ink-muted);text-align:center}
+.df4-step--current .df4-step__label{color:var(--df4-accent-ink);font-weight:700}
+/* 홈/탐색 화면 */
+.df4-home{padding:0 0 32px}
+.df4-hero{padding:24px 20px 4px}
+.df4-hero__title{font-size:26px;font-weight:900;letter-spacing:-0.03em;line-height:1.25;color:var(--df4-ink);margin:0 0 8px}
+.df4-hero__title::first-line{color:var(--df4-accent-ink)}
+.df4-hero__sub{font-size:15px;color:var(--df4-ink-muted);line-height:1.6;margin:0}
+/* 검색 */
+.df4-search-wrap{padding:12px 20px 4px}
+.df4-search{display:flex;align-items:center;gap:10px;background:var(--df4-surface);border:1px solid var(--df4-line);border-radius:var(--df4-radius);padding:0 14px;min-height:var(--df4-tap);transition:border-color var(--df4-dur)}
+.df4-search:focus-within{border-color:var(--df4-accent)}
+.df4-search svg{flex:none;width:18px;height:18px;color:var(--df4-ink-muted)}
+.df4-search input{flex:1;border:0;outline:0;background:transparent;font-size:15px;color:var(--df4-ink);font-family:inherit}
+.df4-search input::placeholder{color:var(--df4-ink-muted)}
+/* 섹션 헤더 */
+.df4-section{padding:0 20px;margin-top:18px}
+.df4-section__header{font-size:11px;font-weight:700;color:var(--df4-accent-ink);text-transform:uppercase;letter-spacing:0.05em;padding:0 0 8px}
+.df4-popular{padding:0 20px;margin-top:18px}
+.df4-popular__title{font-size:11px;font-weight:700;color:var(--df4-accent-ink);text-transform:uppercase;letter-spacing:0.05em;padding:0 0 8px}
+.df4-popular__row{display:flex;flex-wrap:wrap;gap:8px}
+/* 칩 */
+.df4-chip{display:inline-flex;align-items:center;min-height:40px;padding:0 15px;background:var(--df4-surface);border:1px solid var(--df4-line);border-radius:999px;font-size:14px;font-weight:500;color:var(--df4-ink);cursor:pointer;font-family:inherit;transition:background-color var(--df4-dur),border-color var(--df4-dur),color var(--df4-dur)}
+.df4-chip:hover,.df4-chip:active{background:var(--df4-accent-softer);border-color:var(--df4-accent-soft);color:var(--df4-accent-ink)}
+/* 리스트 그룹 */
+.df4-list-group{background:var(--df4-surface);border:1px solid var(--df4-line);border-radius:var(--df4-radius);overflow:hidden}
+.df4-list-item{display:flex;align-items:center;min-height:52px;padding:12px 16px;border-bottom:1px solid var(--df4-line-soft);gap:12px;cursor:pointer;transition:background-color var(--df4-dur)}
+.df4-list-item:last-child{border-bottom:none}
+.df4-list-item:active{background:var(--df4-field)}
+.df4-list-item__icon{flex:none;width:32px;height:32px;border-radius:9px;background:var(--df4-accent-softer);display:grid;place-items:center;font-size:16px;line-height:1}
+.df4-list-item__body{flex:1;min-width:0}
+.df4-list-item__title{font-size:15px;font-weight:600;color:var(--df4-ink);letter-spacing:-0.01em}
+.df4-list-item__sub{font-size:13px;color:var(--df4-ink-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.df4-list-item__chevron{color:var(--df4-ink-muted);font-size:16px;flex:none}
+/* 화면 공통 래퍼 */
+.df4-screen{padding:20px 20px 32px;display:flex;flex-direction:column;gap:12px}
+/* 카드 */
+.df4-card{background:var(--df4-surface);border:1px solid var(--df4-line);border-radius:var(--df4-radius);overflow:hidden}
+.df4-card__header{padding:12px 16px 10px;border-bottom:1px solid var(--df4-line-soft)}
+.df4-card__title{font-size:11px;font-weight:700;color:var(--df4-accent-ink);text-transform:uppercase;letter-spacing:0.05em}
+/* 정보 행 */
+.df4-row{display:flex;align-items:center;min-height:44px;padding:10px 16px;gap:12px;border-bottom:1px solid var(--df4-line-soft)}
+.df4-row:last-child{border-bottom:none}
+.df4-row__label{flex:none;width:76px;font-size:14px;color:var(--df4-ink-muted)}
+.df4-row__value{flex:1;font-size:15px;color:var(--df4-ink);text-align:right;font-weight:600}
+/* 버튼 — CTA = 다크 네이비 */
+.df4-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:var(--df4-tap);padding:0 20px;background:var(--df4-primary);color:var(--df4-on-primary);font-size:16px;font-weight:700;border:0;border-radius:var(--df4-radius);cursor:pointer;letter-spacing:-0.01em;font-family:inherit;transition:background-color var(--df4-dur) var(--df4-ease)}
+.df4-btn:hover{background:var(--df4-primary-hover)}
+.df4-btn:active{background:var(--df4-primary-press)}
+.df4-btn--secondary{background:var(--df4-surface);color:var(--df4-ink);border:1px solid var(--df4-line)}
+.df4-btn--secondary:hover{background:var(--df4-primary-softer)}
+.df4-btn--muted{background:var(--df4-line-soft);color:var(--df4-ink-muted)}
+/* 인증 화면 */
+.df4-auth{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 0 8px;gap:8px}
+.df4-auth__icon{font-size:40px;line-height:1}
+.df4-auth__title{font-size:24px;font-weight:900;letter-spacing:-0.03em;color:var(--df4-ink);line-height:1.25}
+.df4-auth__title::first-line{color:var(--df4-accent-ink)}
+.df4-auth__sub{font-size:14px;color:var(--df4-ink-muted);line-height:1.6}
+.df4-auth__methods{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.df4-auth__method{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--df4-surface);border:1px solid var(--df4-line);border-radius:var(--df4-radius);font-size:15px;font-weight:600;color:var(--df4-ink);cursor:pointer;transition:background-color var(--df4-dur),border-color var(--df4-dur)}
+.df4-auth__method:hover{background:var(--df4-primary-softer);border-color:var(--df4-primary-soft)}
+.df4-auth__method__icon{font-size:20px;flex:none;line-height:1}
+.df4-auth__method__chevron{margin-left:auto;color:var(--df4-ink-muted);font-size:14px}
+.df4-auth-badge{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--df4-accent-soft);border:1px solid color-mix(in oklch,var(--df4-accent) 30%,var(--df4-line));border-radius:var(--df4-radius);font-size:15px;font-weight:600;color:var(--df4-accent-ink);justify-content:center}
+/* 서류 슬롯 */
+.df4-slot{display:flex;align-items:center;min-height:52px;padding:12px 16px;gap:12px;border-bottom:1px solid var(--df4-line-soft)}
+.df4-slot:last-child{border-bottom:none}
+.df4-slot__icon{flex:none;font-size:20px;line-height:1}
+.df4-slot__body{flex:1;min-width:0}
+.df4-slot__name{font-size:15px;font-weight:600;color:var(--df4-ink);letter-spacing:-0.01em}
+.df4-slot__status{font-size:13px;color:var(--df4-ink-muted);margin-top:2px}
+.df4-slot__attach{flex:none;padding:0 14px;min-height:36px;border-radius:var(--df4-radius-sm);background:var(--df4-primary);color:var(--df4-on-primary);font-size:13px;font-weight:700;cursor:pointer;border:0;display:inline-flex;align-items:center;font-family:inherit;transition:background-color var(--df4-dur)}
+.df4-slot__attach:hover{background:var(--df4-primary-hover)}
+.df4-slot__attach--done{background:var(--df4-accent-soft);color:var(--df4-accent-ink)}
+.df4-slot__attach--checking{background:var(--df4-line-soft);color:var(--df4-ink-muted)}
+/* 안내 박스 */
+.df4-notice{display:flex;align-items:flex-start;gap:8px;padding:12px 16px;background:var(--df4-field);border:1px solid var(--df4-line-soft);border-radius:var(--df4-radius-sm);font-size:14px;color:var(--df4-ink-muted);line-height:1.55}
+.df4-notice__icon{flex:none;font-size:15px;margin-top:1px}
+/* 완료 화면 */
+.df4-done{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 8px 16px;gap:10px}
+.df4-done__mark{width:56px;height:56px;border-radius:50%;background:var(--df4-accent-soft);display:grid;place-items:center;font-size:26px;line-height:1;color:var(--df4-accent-ink);margin-bottom:4px;animation:df4MarkIn 0.35s var(--df4-ease) both}
+.df4-done__title{font-size:24px;font-weight:900;color:var(--df4-ink);letter-spacing:-0.03em}
+.df4-done__sub{font-size:15px;color:var(--df4-ink-muted);line-height:1.6}
+/* 빈 상태 */
+.df4-empty{padding:40px 16px;text-align:center;color:var(--df4-ink-muted);font-size:15px}
+@media(prefers-reduced-motion:reduce){#dform4-phone *,#dform4-phone *::before,#dform4-phone *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 /* ====== Ver 4.3 (dform2) · 음성ARS 메뉴 네비게이터 — '라이트 넘버 인덱스' 고유 디자인, av- 프리픽스로 격리 ====== */
 #dform2-phone .screen{background:#fff}
 #dform2-phone .statusbar{background:#fff;color:#14162A}
@@ -2666,6 +2791,7 @@ body{
     <div class="ref-item" data-sian="dform2"><span class="rf-nm">Ver 4.3</span><span class="rf-tel">Digital Form 복사본 · 서류 제출 폼 (독립 편집용)</span></div>
     <div class="ref-item" data-sian="dform"><span class="rf-nm">Digital Form</span><span class="rf-tel">키움증권 로고만 있는 빈 화면 (작업용 템플릿)</span></div>
     <div class="ref-item" data-sian="dform3"><span class="rf-nm">Digital Form_v0.1</span><span class="rf-tel">서류제출 엔진 흐름 재현 · 5단계(인증→서류준비→첨부→제출→완료) · 업무 11종·상태머신</span></div>
+    <div class="ref-item" data-sian="dform4"><span class="rf-nm">Digital Form_v0.2</span><span class="rf-tel">iOS HIG 디자인 · SF Pro·8pt 그리드·시맨틱 컬러·다크모드 · 서류제출 엔진 5단계</span></div>
     <!-- 시안 · 이전버전 (접이식 · 우측 [+] 토글) -->
     <div class="ref-title prev-title" data-prevtoggle>시안 · 이전버전<span class="prev-plus" aria-hidden="true">+</span></div>
     <div class="ref-item prev-item" data-sian="s1" data-ver="v1"><span class="rf-nm">Ver 1.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (화면구현)</span></div>
@@ -3276,6 +3402,18 @@ body{
       </div></div>
     </div>
   </div>
+  <!-- ====== Digital Form_v0.2 (dform4) · iOS HIG 디자인 · SF Pro·8pt 그리드·시맨틱 컬러 ====== -->
+  <div class="dars-deck" data-scheme="dform4">
+    <div class="phone-wrap" id="dform4-phone">
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="dform4-root">
+          <div class="statusbar"><span>9:41</span><span class="icons">●●● 5G ▮</span></div>
+          <header class="df4-topbar"><span>키움증권 · 서류제출</span></header>
+          <div class="df4-app" id="dform4-app"><!-- renderApp() 주입 --></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
   <script>
   /* ====== Digital Form_v0.1 (dform3) · 서류제출 엔진(서류제출엔진/) 흐름 재현 ======
      원본: src/render/screen1~4.js + engine.js + steps.js + labels/icons/catalog/tasks. ESM→인라인 IIFE 정적 포팅.
@@ -3518,6 +3656,285 @@ body{
 
     window.__dform3Home=function(){ reset(); paint(); };   // 탭 재진입 시 explore로 리셋(selectSian에서 호출)
     reset(); paint();
+  })();
+  </script>
+  <script>
+  /* ====== Digital Form_v0.2 (dform4) · iOS HIG 디자인 리빌드 — dform3 상태머신 그대로, 렌더만 Apple HIG CSS로 교체 ====== */
+  (function(){
+    var root = document.getElementById('dform4-app');
+    if(!root) return;
+    var phone = document.getElementById('dform4-phone');
+
+    /* ---- 데이터 (dform3와 동일) ---- */
+    var CATALOG = [
+      {id:'idCard',name:'신분증',slotType:'photo',coaching:'네 모서리가 다 보이게 밝은 곳에서 찍어 주세요.',constraints:{maxMB:10,accept:['image/jpeg','image/png']}},
+      {id:'fundPurpose',name:'금융거래목적확인서',slotType:'eform',coaching:'화면에서 항목을 고르고 서명하면 끝나요.'},
+      {id:'incomeProof',name:'소득·자격 증빙',slotType:'file',coaching:'발급일 90일 이내 서류를 올려 주세요.',acquireHelp:'정부24 발급 안내',constraints:{maxMB:20,accept:['application/pdf','image/*']}},
+      {id:'inquiryCapture',name:'문의 화면·영상',slotType:'photo',coaching:'문의하실 화면을 캡처하거나 짧은 영상으로 올려 주세요.',constraints:{maxMB:50,maxSec:30}},
+      {id:'familyCert',name:'가족관계증명서',slotType:'file',coaching:'대리인과의 관계를 확인하는 서류예요.',acquireHelp:'정부24 발급 안내',constraints:{maxMB:20,accept:['application/pdf','image/*']}},
+      {id:'basicCert',name:'기본증명서',slotType:'file',coaching:'개명 사실을 확인하는 서류예요.',acquireHelp:'정부24 발급 안내',constraints:{maxMB:20,accept:['application/pdf','image/*']}},
+      {id:'finTxInfoForm',name:'금융거래정보신청서',slotType:'provided',coaching:'아래에서 양식을 받아 작성해 올려 주세요.',acquireHelp:'신청서 양식 받기',constraints:{maxMB:20,accept:['application/pdf','image/*']}}
+    ];
+    var TASKS = [
+      {id:'pwReset',name:'비밀번호 재설정',authLevel:'L2',requiredDocs:[{docId:'idCard',order:1}],sla:'즉시~영업일 1일',copy:{intro:'신분증만 확인되면 비밀번호를 바로 재설정할 수 있어요.'}},
+      {id:'acctOpenConfirm',name:'비대면 계좌개설 확인',authLevel:'L2',requiredDocs:[{docId:'idCard',order:1}],sla:'영업일 1일',copy:{intro:'신분증으로 계좌개설 본인확인을 마무리해요.'}},
+      {id:'kyc',name:'고객확인 KYC(CDD/EDD)',authLevel:'L2',requiredDocs:[{docId:'idCard',order:1}],sla:'즉시',copy:{intro:'신분증 확인과 몇 가지 항목 입력으로 고객확인을 끝내요.'}},
+      {id:'fundPurposeTask',name:'금융거래목적확인서',authLevel:'L2',requiredDocs:[{docId:'fundPurpose',order:1}],sla:'즉시',copy:{intro:'화면에서 목적을 선택하고 서명하면 끝나요.'}},
+      {id:'certIssue',name:'제증명 발급',authLevel:'L2',requiredDocs:[],sla:'즉시',copy:{intro:'따로 낼 서류 없이 바로 발급해 드려요.'}},
+      {id:'isaEligibility',name:'ISA 자격 서류(서민형)',authLevel:'L2',requiredDocs:[{docId:'incomeProof',order:1}],sla:'영업일 1~2일',copy:{intro:'소득·자격 증빙 1건이면 서민형 자격 확인이 끝나요.'}},
+      {id:'rightsTask',name:'권리업무(유상청약 등)',authLevel:'L2',requiredDocs:[{docId:'finTxInfoForm',order:1}],sla:'건별 안내',copy:{intro:'신청서를 받아 작성해 올리면 접수돼요.'}},
+      {id:'minorProxy',name:'미성년자 대리인 본인확인',authLevel:'L2',requiredDocs:[{docId:'familyCert',order:1},{docId:'idCard',order:2}],sla:'영업일 1일',copy:{intro:'가족관계증명서와 대리인 신분증으로 본인확인을 해요.'}},
+      {id:'nameChange',name:'개명 정보변경',authLevel:'L2',requiredDocs:[{docId:'basicCert',order:1},{docId:'idCard',order:2}],sla:'즉시~영업일 1일',copy:{intro:'기본증명서와 신분증으로 개명 정보를 바꿔요.'}},
+      {id:'recordRequest',name:'녹취·로그 확인 신청',authLevel:'L2',requiredDocs:[{docId:'finTxInfoForm',order:1}],sla:'건별 안내',copy:{intro:'금융거래정보신청서 양식을 받아 작성해 올려 주세요.'}},
+      {id:'inquiryTask',name:'화면 문의 접수',authLevel:'L2',requiredDocs:[{docId:'inquiryCapture',order:1}],sla:'건별 안내',copy:{intro:'문의하실 화면을 첨부하면 담당자가 확인해요.'}}
+    ];
+    var POPULAR = ['pwReset','certIssue','fundPurposeTask','kyc','inquiryTask'];
+    var TASK_ICONS = {pwReset:'🔑',acctOpenConfirm:'🏦',kyc:'🪪',fundPurposeTask:'📋',certIssue:'📄',isaEligibility:'📊',rightsTask:'📬',minorProxy:'👨‍👧',nameChange:'✏️',recordRequest:'📼',inquiryTask:'💬'};
+
+    function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function getTask(id){return TASKS.find(function(t){return t.id===id;});}
+    function getDoc(id){return CATALOG.find(function(d){return d.id===id;});}
+    function resolveDocs(taskId){var t=getTask(taskId);if(!t)return [];return t.requiredDocs.slice().sort(function(a,b){return a.order-b.order;}).map(function(r){return getDoc(r.docId);}).filter(Boolean);}
+    function authPlan(lv){if(lv==='L0')return {needIdentity:false,needAccount:false};if(lv==='L1')return {needIdentity:true,needAccount:false};return {needIdentity:true,needAccount:true};}
+
+    /* ---- 엔진 (dform3와 동일) ---- */
+    var SLOT={EMPTY:'empty',UPLOADED:'uploaded',CHECKING:'checking',OK:'ok',NEEDFIX:'needFix'};
+    var SESS={DRAFT:'draft',RECEIVED:'received',CHECKING:'checking',DONE:'done',NEEDFIX:'needFix'};
+    function makeSlot(docId){return {docId:docId,state:SLOT.EMPTY,files:[],reason:null};}
+    function createSubmission(taskId){var t=getTask(taskId);return {taskId:taskId,authState:{identity:false,account:false},slots:resolveDocs(taskId).map(function(d){return makeSlot(d.id);}),status:SESS.DRAFT,receiptNo:null,sla:t?t.sla:''};}
+    function acceptMatch(type,accept){return accept.some(function(a){return a.slice(-2)==='/*'?type.indexOf(a.slice(0,-1))===0:a===type;});}
+    function acceptHint(accept){var L={'image/*':'사진','application/pdf':'PDF','image/jpeg':'JPG','image/png':'PNG'};return accept.map(function(a){return L[a]||a;}).filter(function(v,i,arr){return arr.indexOf(v)===i;}).join('·');}
+    function runValidation(doc,files){
+      var c=doc.constraints||{};
+      for(var i=0;i<files.length;i++){var f=files[i];
+        if(typeof c.maxMB==='number'&&f.sizeMB>c.maxMB)return {ok:false,reason:'파일 용량이 커요. '+c.maxMB+'MB 이하로 다시 올려 주세요.'};
+        if(Array.isArray(c.accept)&&!acceptMatch(f.type,c.accept))return {ok:false,reason:'지원하는 형식으로 다시 올려 주세요. ('+acceptHint(c.accept)+')'};
+        if(typeof c.maxSec==='number'&&typeof f.sec==='number'&&f.sec>c.maxSec)return {ok:false,reason:'영상은 '+c.maxSec+'초 이하로 올려 주세요.'};
+      }
+      if(files.length===0)return {ok:false,reason:'파일을 올려 주세요.'};
+      return {ok:true,reason:null};
+    }
+    function canSubmit(sub){return sub.slots.every(function(s){return s.state===SLOT.OK;});}
+    function genReceipt(seq,dateStr){return 'DR-'+dateStr+'-'+String(seq).padStart(6,'0');}
+    function ymd(){var d=new Date();return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');}
+
+    /* ---- 상태 ---- */
+    var STEP_OF={screen1:'auth',screen2:'auth',screen3:'attach',screen4:'done'};
+    var STEP_MODEL=[{id:'auth',label:'인증'},{id:'prepare',label:'서류준비'},{id:'attach',label:'첨부'},{id:'submit',label:'제출'},{id:'done',label:'완료'}];
+    var FLOW=[SESS.RECEIVED,SESS.CHECKING,SESS.DONE];
+    var SESSION_STATE_LABEL={draft:'작성중',received:'접수됨',checking:'확인중',done:'처리완료',needFix:'보완요청'};
+    var state, seq=4820, query='';
+    function reset(){state={screen:'screen1',task:null,submission:createSubmission('pwReset')};query='';}
+    function setTask(taskId){state={screen:'screen1',task:getTask(taskId),submission:createSubmission(taskId)};query='';}
+
+    /* ---- Apple HIG 렌더 함수 ---- */
+    function renderStepbar(activeId){
+      var ai=STEP_MODEL.map(function(s){return s.id;}).indexOf(activeId);
+      return '<div class="df4-stepbar">'+STEP_MODEL.map(function(s,i){
+        var st=i<ai?'done':i===ai?'current':'todo';
+        return '<div class="df4-step df4-step--'+st+'"><div class="df4-step__line"></div><div class="df4-step__label">'+esc(s.label)+'</div></div>';
+      }).join('')+'</div>';
+    }
+
+    /* screen1-a: 업무 탐색 */
+    function exploreDyn(){
+      var q=query.trim();
+      var matches=q?TASKS.filter(function(t){return t.name.indexOf(q)>=0;}):POPULAR.map(getTask);
+      if(!matches.length)return '<div class="df4-empty">검색 결과가 없어요. 다른 이름으로 찾아 주세요.</div>';
+      if(q){
+        return '<div class="df4-section"><div class="df4-section__header">검색 결과</div>'
+          +'<div class="df4-list-group">'
+          +matches.map(function(t){
+            return '<div class="df4-list-item" data-df4pick="'+esc(t.id)+'">'
+              +'<div class="df4-list-item__icon">'+(TASK_ICONS[t.id]||'📄')+'</div>'
+              +'<div class="df4-list-item__body"><div class="df4-list-item__title">'+esc(t.name)+'</div><div class="df4-list-item__sub">'+esc(t.copy.intro)+'</div></div>'
+              +'<div class="df4-list-item__chevron">›</div></div>';
+          }).join('')+'</div></div>';
+      }
+      return '<div class="df4-popular"><div class="df4-popular__title">자주 찾는 서비스</div>'
+        +'<div class="df4-popular__row">'
+        +matches.map(function(t){return '<div class="df4-chip" data-df4pick="'+esc(t.id)+'">'+esc(t.name)+'</div>';}).join('')
+        +'</div></div>'
+        +'<div class="df4-section"><div class="df4-section__header">전체 서비스</div>'
+        +'<div class="df4-list-group">'
+        +TASKS.map(function(t){
+          return '<div class="df4-list-item" data-df4pick="'+esc(t.id)+'">'
+            +'<div class="df4-list-item__icon">'+(TASK_ICONS[t.id]||'📄')+'</div>'
+            +'<div class="df4-list-item__body"><div class="df4-list-item__title">'+esc(t.name)+'</div>'
+            +'<div class="df4-list-item__sub">'+esc(t.sla)+'</div></div>'
+            +'<div class="df4-list-item__chevron">›</div></div>';
+        }).join('')+'</div></div>';
+    }
+    function renderExplore(){
+      return '<div class="df4-home"><div class="df4-hero">'
+        +'<div class="df4-hero__title">무엇을<br>도와드릴까요?</div>'
+        +'<div class="df4-hero__sub">서류 업무를 검색하거나 아래에서 골라 주세요.</div></div>'
+        +'<div class="df4-search-wrap"><div class="df4-search">'
+        +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5l-4.2-4.2"/></svg>'
+        +'<input type="text" placeholder="예: 비밀번호, 개명, 서류 발급" data-df4query value="'+esc(query)+'"></div></div>'
+        +'<div id="df4-explore-dyn">'+exploreDyn()+'</div>'
+        +'</div>';
+    }
+
+    /* screen1-b: 업무 확인 */
+    function renderConfirm(task,docs){
+      var plan=authPlan(task.authLevel);
+      var authLabel=plan.needAccount?'본인 + 계좌':plan.needIdentity?'본인':'인증 불필요';
+      var docRows=docs.length
+        ? docs.map(function(d,i){return '<div class="df4-row"><div class="df4-row__label">서류 '+(i+1)+'</div><div class="df4-row__value">'+esc(d.name)+'</div></div>';}).join('')
+        : '<div class="df4-row"><div class="df4-row__label">서류</div><div class="df4-row__value" style="color:var(--df4-label3)">없음</div></div>';
+      return '<div class="df4-screen">'
+        +'<div class="df4-card"><div class="df4-card__header"><div class="df4-card__title">'+esc(task.name)+'</div></div>'
+        +'<div class="df4-row"><div class="df4-row__label" style="width:auto;flex:1;color:var(--df4-label2);font-size:14px;text-align:left">'+esc(task.copy.intro)+'</div></div>'
+        +docRows
+        +'<div class="df4-row"><div class="df4-row__label">소요 시간</div><div class="df4-row__value">'+esc(task.sla)+'</div></div>'
+        +'<div class="df4-row"><div class="df4-row__label">인증</div><div class="df4-row__value">'+esc(authLabel)+'</div></div>'
+        +'</div>'
+        +'<button class="df4-btn" data-df4go="screen2">시작하기</button>'
+        +'<button class="df4-btn df4-btn--secondary" data-df4go="explore">다른 업무 찾기</button>'
+        +'</div>';
+    }
+    function renderScreen1(){return state.task?renderConfirm(state.task,resolveDocs(state.task.id)):renderExplore();}
+
+    /* screen2: 인증 */
+    function renderScreen2(){
+      var task=state.task||getTask(state.submission.taskId);
+      var plan=authPlan(task?task.authLevel:'L2');
+      var a=state.submission.authState;
+      var bothDone=(!plan.needIdentity||a.identity)&&(!plan.needAccount||a.account);
+      var identityEl=plan.needIdentity
+        ?(a.identity
+          ?'<div class="df4-auth-badge">✓&nbsp; 본인인증 완료</div>'
+          :'<div class="df4-auth__method" data-df4auth="auth-identity"><span class="df4-auth__method__icon">📱</span><span>본인 인증</span><span class="df4-auth__method__chevron">›</span></div>')
+        :'';
+      var accountEl=plan.needAccount
+        ?(a.account
+          ?'<div class="df4-auth-badge">✓&nbsp; 계좌인증 완료</div>'
+          :'<div class="df4-auth__method" data-df4auth="auth-account"><span class="df4-auth__method__icon">🏦</span><span>계좌 인증</span><span class="df4-auth__method__chevron">›</span></div>')
+        :'';
+      return '<div class="df4-screen">'
+        +'<div class="df4-auth"><div class="df4-auth__icon">🔐</div>'
+        +'<div class="df4-auth__title">인증하고<br>시작할게요</div>'
+        +'<div class="df4-auth__sub">본인과 계좌를 확인하면<br>서류를 올릴 수 있어요.</div>'
+        +'<div class="df4-auth__methods">'+identityEl+accountEl+'</div></div>'
+        +'<button class="df4-btn"'+(bothDone?'':' style="opacity:.4;pointer-events:none"')+' data-df4go="screen3">서류 준비로 이동</button>'
+        +'</div>';
+    }
+
+    /* screen3: 서류 첨부 */
+    function renderSlot(slot,doc){
+      var isDone=slot.state===SLOT.OK, isChecking=slot.state===SLOT.CHECKING, isNeedFix=slot.state===SLOT.NEEDFIX;
+      var actionLabel=doc.slotType==='photo'?'촬영':doc.slotType==='eform'?'작성':'첨부';
+      var attachCls=isDone?' df4-slot__attach--done':isChecking?' df4-slot__attach--checking':'';
+      var slotIcon=isDone?'✅':isChecking?'⏳':isNeedFix?'⚠️':'📎';
+      var statusText=isChecking?'확인 중…':isDone?'확인됨':isNeedFix?'보완 필요'+(slot.reason?' · '+slot.reason.slice(0,18):''):(doc.acquireHelp||'대기');
+      var statusColor=isNeedFix?'color:var(--df4-red)':'';
+      return '<div class="df4-slot">'
+        +'<div class="df4-slot__icon">'+slotIcon+'</div>'
+        +'<div class="df4-slot__body"><div class="df4-slot__name">'+esc(doc.name)+'</div>'
+        +'<div class="df4-slot__status" style="'+statusColor+'">'+esc(statusText)+'</div></div>'
+        +'<div class="df4-slot__attach'+attachCls+'" data-df4upload="'+esc(doc.id)+'">'+esc(actionLabel)+'</div>'
+        +'</div>';
+    }
+    function renderScreen3(){
+      var sub=state.submission, docDefs=resolveDocs(sub.taskId);
+      var total=sub.slots.length, done=sub.slots.filter(function(s){return s.state===SLOT.OK;}).length;
+      var ready=canSubmit(sub);
+      var notice=total
+        ?'<div class="df4-notice"><div class="df4-notice__icon">ℹ</div><div>서류 <strong>'+done+' / '+total+'</strong> 준비 완료'+(ready?' · 제출 가능':'')+'</div></div>'
+        :'<div class="df4-notice"><div class="df4-notice__icon">✓</div><div>따로 올릴 서류가 없어요. 바로 제출할 수 있어요.</div></div>';
+      var slots=sub.slots.map(function(slot){var doc=docDefs.find(function(d){return d.id===slot.docId;})||{name:slot.docId,coaching:'',slotType:'file'};return renderSlot(slot,doc);}).join('');
+      return '<div class="df4-screen">'
+        +notice
+        +(total?'<div class="df4-card">'+slots+'</div>':'')
+        +'<button class="df4-btn"'+(ready?'':' style="opacity:.4;pointer-events:none"')+' data-df4submit>제출하기</button>'
+        +'</div>';
+    }
+
+    /* screen4: 완료/추적 */
+    function renderScreen4(){
+      var sub=state.submission;
+      var raw=FLOW.indexOf(sub.status), cur=raw>=0?raw:0;
+      var TITLE={received:'접수 완료',checking:'확인 중이에요',done:'처리 완료'};
+      var LEAD={received:'서류가 잘 접수됐어요.\n진행되면 알려드릴게요.',checking:'담당자가 서류를 확인하고 있어요.',done:'처리가 모두 완료됐어요.'};
+      var isDone=sub.status===SESS.DONE;
+      var markBg=isDone?'background:var(--df4-green)':'';
+      var markIcon=isDone?'✓':sub.status===SESS.CHECKING?'⏳':'📬';
+      var trackRows=FLOW.map(function(stt,i){
+        var active=i===cur, passed=i<cur;
+        var labelColor=active?'var(--df4-tint)':passed?'var(--df4-green)':'var(--df4-label3)';
+        var stateText=active?'진행중':passed?'완료':'대기';
+        return '<div class="df4-row">'
+          +'<div class="df4-row__label" style="color:'+labelColor+'">'+(passed?'✓ ':active?'→ ':'')+esc(SESSION_STATE_LABEL[stt])+'</div>'
+          +'<div class="df4-row__value" style="font-size:13px;color:var(--df4-label3)">'+stateText+'</div></div>';
+      }).join('');
+      return '<div class="df4-screen">'
+        +'<div class="df4-done">'
+        +'<div class="df4-done__mark" style="'+markBg+'">'+markIcon+'</div>'
+        +'<div class="df4-done__title">'+esc(TITLE[sub.status]||'접수 완료')+'</div>'
+        +'<div class="df4-done__sub">'+esc(LEAD[sub.status]||LEAD.received)+'</div>'
+        +'</div>'
+        +'<div class="df4-card">'
+        +'<div class="df4-card__header"><div class="df4-card__title">접수 정보</div></div>'
+        +'<div class="df4-row"><div class="df4-row__label">접수번호</div><div class="df4-row__value" style="font-size:12px;font-family:monospace;letter-spacing:.5px">'+esc(sub.receiptNo||'')+'</div></div>'
+        +'<div class="df4-row"><div class="df4-row__label">처리 예정</div><div class="df4-row__value">'+esc(sub.sla)+'</div></div>'
+        +'<div class="df4-card__header" style="border-top:0.5px solid var(--df4-separator)"><div class="df4-card__title">진행 상태</div></div>'
+        +trackRows+'</div>'
+        +'<div class="df4-notice"><div class="df4-notice__icon">🔔</div><div>진행 상황은 알림톡으로 보내드려요.</div></div>'
+        +(sub.status!==SESS.DONE?'<button class="df4-btn df4-btn--secondary" data-df4advance>처리 진행 보기</button>':'')
+        +'<button class="df4-btn df4-btn--muted" data-df4go="screen1">다른 업무 하기</button>'
+        +'</div>';
+    }
+
+    var SCREENS={screen1:renderScreen1,screen2:renderScreen2,screen3:renderScreen3,screen4:renderScreen4};
+    function paint(){root.innerHTML=renderStepbar(STEP_OF[state.screen])+'<div class="df4-appbody">'+(SCREENS[state.screen]||renderScreen1)()+'</div>';}
+
+    /* ---- 이벤트 위임 · #dform4-phone 스코프 ---- */
+    phone.addEventListener('input',function(e){
+      if(!e.target.closest('[data-df4query]'))return;
+      query=e.target.value;
+      var d=document.getElementById('df4-explore-dyn');if(d)d.innerHTML=exploreDyn();
+    });
+    phone.addEventListener('click',function(e){
+      var el=e.target.closest('[data-df4go],[data-df4pick],[data-df4auth],[data-df4upload],[data-df4submit],[data-df4advance],[data-df4acquire]');
+      if(!el)return;
+      if(el.hasAttribute('data-df4go')){
+        var go=el.getAttribute('data-df4go');
+        if(go==='explore'){state.task=null;state.screen='screen1';query='';return paint();}
+        state.screen=go;return paint();
+      }
+      if(el.hasAttribute('data-df4pick')){setTask(el.getAttribute('data-df4pick'));return paint();}
+      if(el.hasAttribute('data-df4auth')){
+        var key=el.getAttribute('data-df4auth')==='auth-identity'?'identity':'account';
+        state.submission.authState[key]=true;state.screen='screen2';return paint();
+      }
+      if(el.hasAttribute('data-df4upload')){
+        var docId=el.getAttribute('data-df4upload');
+        var doc=resolveDocs(state.submission.taskId).find(function(d){return d.id===docId;});
+        var file=e.shiftKey?{name:'big.jpg',sizeMB:25,type:'image/jpeg'}:{name:'id.jpg',sizeMB:2,type:'image/jpeg'};
+        var slot=state.submission.slots.find(function(s){return s.docId===docId;});
+        slot.state=SLOT.CHECKING;slot.files=[file];slot.reason=null;paint();
+        window.setTimeout(function(){
+          var r=runValidation(doc,[file]);
+          slot.state=r.ok?SLOT.OK:SLOT.NEEDFIX;slot.reason=r.reason;
+          if(state.screen==='screen3')paint();
+        },720);
+        return;
+      }
+      if(el.hasAttribute('data-df4submit')){
+        if(!canSubmit(state.submission))return;
+        state.submission.status=SESS.RECEIVED;state.submission.receiptNo=genReceipt(++seq,ymd());
+        state.screen='screen4';return paint();
+      }
+      if(el.hasAttribute('data-df4advance')){
+        var order=['received','checking','done'];var i=order.indexOf(state.submission.status);
+        state.submission.status=order[Math.min(i+1,order.length-1)];return paint();
+      }
+      if(el.hasAttribute('data-df4acquire')){alert('양식/발급 안내는 실제 서비스에서 연결됩니다. (목업)');return;}
+    });
+
+    window.__dform4Home=function(){reset();paint();};
+    reset();paint();
   })();
   </script>
   <script>

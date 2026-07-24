@@ -6117,7 +6117,7 @@ function switchScheme(s){
   document.querySelectorAll('#schemeTabs .tab').forEach(t=>t.classList.toggle('active', t.dataset.scheme===s));
   document.querySelectorAll('.flow').forEach(f=>f.classList.toggle('active', f.dataset.scheme===activeFlow));
   // 폰 스테이지(시안1·참고) ↔ 시안2/3 덱 전환
-  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2' || activeFlow==='dform3');
+  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2' || activeFlow==='dform3' || activeFlow==='dform4');
   const mainStage = document.getElementById('mainStage');
   if(mainStage) mainStage.style.display = isDarsView ? 'none' : '';
   document.querySelectorAll('.dars-deck').forEach(d=>d.classList.toggle('active', d.dataset.scheme===activeFlow));
@@ -6244,6 +6244,7 @@ function selectSian(v, ver){
   else if(v==='dform'){ if(window.__dformHome) window.__dformHome(); }
   else if(v==='dform2'){ if(window.__dform2Home) window.__dform2Home(); }
   else if(v==='dform3'){ if(window.__dform3Home) window.__dform3Home(); }
+  else if(v==='dform4'){ if(window.__dform4Home) window.__dform4Home(); }
   switchScheme('sian');
 }
 (function(){
