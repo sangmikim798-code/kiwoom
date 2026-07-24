@@ -2369,6 +2369,23 @@ function tossFaqCard(){
   const rows = V40_FAQ_V40.map(rowHtml).join('') + rowHtml(V40_FAQ_V40[0]);
   return head + `<div class="toss-faq"><div class="tf-list tf-ticker">${rows}</div></div>`;
 }
+/* Ver 4.5 · 홈 인디고 배너 (동영상 레퍼런스: Find the Qualified skilled Professional 배너) */
+function v45Banner(){
+  const ic = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="12" y="5" width="24" height="38" rx="4" fill="rgba(255,255,255,0.2)"/>
+    <rect x="16" y="9" width="16" height="25" rx="2" fill="rgba(255,255,255,0.12)"/>
+    <path d="M18 14h12M18 19h8M18 24h10" stroke="rgba(255,255,255,0.65)" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="24" cy="39" r="2" fill="rgba(255,255,255,0.6)"/>
+  </svg>`;
+  return `<div class="v45-banner">
+    <div class="v45-bn-body">
+      <div class="v45-bn-kicker">키움증권 디지털 ARS</div>
+      <div class="v45-bn-title">상담 없이<br>직접 해결해요</div>
+      <div class="v45-bn-sub">빠르고 쉬운 셀프 서비스</div>
+    </div>
+    <div class="v45-bn-ic">${ic}</div>
+  </div>`;
+}
 function banner(){
   return `<div class="banner">
     <div class="big">최대 551<small>만원</small></div>
@@ -2439,6 +2456,19 @@ function authSelect(){
   const heading = isV40()
     ? `<div class="toss-dhead"><div class="td-title">${selTitle}</div><div class="td-desc">${selDesc}</div></div>`
     : `<div class="auth-head">${head}</div>`;
+  // Ver 4.5: pill 카드 스타일 인증 선택 (동영상 레퍼런스)
+  if(isV45()){
+    return `<div class="auth-wrap${che?' cheauth':''}">
+      ${heading}
+      <div class="v45-auth-list">${methods.map(m=>
+        `<div class="v45-auth-pill" data-auth="${m.key}">
+          <div class="v45-pill-ic">${I[m.ic]}</div>
+          <div class="v45-pill-tx"><div class="v45-pill-nm">${m.t}</div><div class="v45-pill-desc">${m.d}</div></div>
+          <div class="v45-pill-arw">${I.chev}</div>
+        </div>`
+      ).join('')}</div>
+    </div>`;
+  }
   return `<div class="auth-wrap${che?' cheauth':''}">
     ${heading}
     <div class="auth-list">` + methods.map(m=>
@@ -4689,7 +4719,7 @@ function renderS1(){
         html += `<div class="toss-stick"><div class="toss-top"><div class="toss-logo"><img src="assets/kiwoom-logo.png" alt="키움증권"></div><div class="th-right">${bf}${accReport}</div></div>`
           + `<div class="toss-hero"><div class="th-hi">안녕하세요,<br>무엇을 도와드릴까요?</div></div></div>`
           + tossFaqCard()
-          + ((s1Ver==='v41' && !bigFont) ? tossCatGrid() : tossCatList());   // v41: 3×3 그리드 (단 큰글씨 ON이면 v40과 동일한 리스트) / v40: 항상 리스트
+          + (isV45() ? (v45Banner() + tossCatGrid()) : (s1Ver==='v41' && !bigFont) ? tossCatGrid() : tossCatList());   // v45: 배너+그리드 / v41: 3×3 그리드 / v40: 리스트
       } else {
         // 드릴다운 헤더: 현재 단계 이름을 타이틀로(대메뉴 진입 시 = 대메뉴명), 대메뉴 단계면 설명글도 표기
         const dtrail = sarsWalk(catData(), path).trail;

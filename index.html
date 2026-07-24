@@ -354,6 +354,67 @@ body{
 .app-pop-ov.v45 .ap-logo.end svg{width:30px;height:30px;color:var(--primary)}
 .app-pop-ov.v45 .ap-btn.go{box-shadow:0 8px 20px rgba(72,72,216,.3)}
 .ars-float.v45{background:linear-gradient(135deg,#5E5EF0,#4848D8);animation:arsBlinkV40 1.1s ease-in-out infinite}
+
+/* ===== Ver 4.5 · 홈 배너 (동영상 레퍼런스: 인디고 배경 프로모션 배너) ===== */
+.v45-banner{margin:0 16px 20px;background:var(--primary-grad);border-radius:18px;
+  padding:20px 16px 20px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;overflow:hidden}
+.v45-bn-body{flex:1;min-width:0}
+.v45-bn-kicker{font-size:calc(11px*var(--scale));font-weight:600;color:rgba(255,255,255,.72);letter-spacing:.3px;margin-bottom:4px}
+.v45-bn-title{font-size:calc(22px*var(--scale));font-weight:800;color:#fff;line-height:1.3;margin-bottom:5px}
+.v45-bn-sub{font-size:calc(12px*var(--scale));color:rgba(255,255,255,.8);font-weight:500}
+.v45-bn-ic{flex:none;width:62px;height:62px;opacity:.9}
+.v45-bn-ic svg{width:100%;height:100%}
+
+/* ===== Ver 4.5 · 카테고리 그리드 카드 (동영상 레퍼런스: Carpenter/Plumber/Cleaning 카드) ===== */
+.flow.toss.v45 .toss-grid{gap:10px;padding:0 16px 20px}
+.flow.toss.v45 .toss-gcell{background:#fff;border-radius:16px;
+  box-shadow:0 2px 12px rgba(72,72,216,.07);border:1.5px solid #ECEEFF;
+  padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:transform .13s,box-shadow .13s}
+.flow.toss.v45 .toss-gcell:active{transform:scale(.96);box-shadow:0 1px 6px rgba(72,72,216,.12);
+  background:#F5F5FF;border-color:#4848D8}
+.flow.toss.v45 .tg-ic{width:42px;height:42px;background:#ECEEFF;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;color:#4848D8}
+.flow.toss.v45 .tg-ic svg{width:22px;height:22px}
+.flow.toss.v45 .tg-nm{font-size:calc(12px*var(--scale));font-weight:700;color:#1A1A4E;
+  text-align:center;line-height:1.35;word-break:keep-all}
+
+/* ===== Ver 4.5 · 인증 선택 pill 카드 (동영상 레퍼런스: 카드형 선택 버튼) ===== */
+.v45-auth-list{display:flex;flex-direction:column;gap:10px;padding:4px 18px}
+.v45-auth-pill{display:flex;align-items:center;gap:14px;padding:16px;
+  background:#fff;border:1.5px solid #ECEEFF;border-radius:16px;cursor:pointer;
+  transition:border-color .15s,box-shadow .15s}
+.v45-auth-pill:active{border-color:#4848D8;box-shadow:0 4px 14px rgba(72,72,216,.15)}
+.v45-pill-ic{width:40px;height:40px;background:#ECEEFF;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;color:#4848D8;flex:none}
+.v45-pill-ic svg{width:20px;height:20px}
+.v45-pill-tx{flex:1;min-width:0}
+.v45-pill-nm{font-size:calc(14px*var(--scale));font-weight:700;color:#1A1A4E;margin-bottom:2px}
+.v45-pill-desc{font-size:calc(12px*var(--scale));color:#8B95A1;line-height:1.4}
+.v45-pill-arw{flex:none;color:#8B95A1}
+.v45-pill-arw svg{width:18px;height:18px}
+
+/* ===== Ver 4.5 · Underline 입력 필드 (동영상 레퍼런스: Location/Phone 입력) ===== */
+.flow.toss.v45 .iodauth .auth-info,.flow.toss.v45:not(.iodauth) .auth-info{padding:0 18px}
+.flow.toss.v45 .auth-info .ir{border:none;border-bottom:1.5px solid #F2F4F6;border-radius:0;
+  background:transparent;box-shadow:none;padding:14px 0;gap:12px}
+.flow.toss.v45 .auth-info .ir:focus-within{border-bottom-color:#4848D8}
+.flow.toss.v45 .auth-info .ir .k{font-size:calc(13px*var(--scale));font-weight:600;color:#8B95A1;
+  min-width:60px;flex:none}
+.flow.toss.v45 .auth-info .ir-input{border:none;background:transparent;
+  font-size:calc(15px*var(--scale));font-weight:500;color:#1A1A4E;flex:1;padding:0}
+.flow.toss.v45 .auth-info .ir-input:focus{outline:none}
+.flow.toss.v45 .auth-info .ir-pw{min-height:24px}
+
+/* ===== Ver 4.5 · OTP 인증번호 입력 Underline (동영상 레퍼런스: underline 폼 필드) ===== */
+.flow.toss.v45 .otp-row{background:transparent;border:none;box-shadow:none;
+  padding:0;border-bottom:1.5px solid #F2F4F6;border-radius:0}
+.flow.toss.v45 .otp-row:focus-within{border-bottom-color:#4848D8}
+.flow.toss.v45 .otp-row .auth-input{border:none;border-radius:0;background:transparent;
+  font-size:calc(18px*var(--scale));font-weight:700;letter-spacing:4px;color:#4848D8;padding:8px 0}
+.flow.toss.v45 .otp-row .auth-input:focus{outline:none}
+.flow.toss.v45 .otp-timer{color:#4848D8}
+
 .flow.toss .toss-home{min-height:100%;display:flex;flex-direction:column;background:#fff}
 /* 상단 헤더(로고~인사말 / 뒤로가기~제목·설명) 고정 — 아래 리스트만 스크롤 */
 .flow.toss .toss-stick{position:sticky;top:0;z-index:6;background:#fff;flex:none}
