@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -2113,6 +2113,537 @@ body{
 #dars1-phone .d1-end{flex:none;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px;
   background:#eeeef3;color:#9a93ab}
 #dars1-phone .d1-end.staff{background:var(--purple-l);color:var(--purple)}
+
+/* ====== Ver 4.4 · 인디고 디자인 시스템 ====== */
+#darsv44-phone {
+  --v44-primary: oklch(0.50 0.27 272);
+  --v44-primary-dk: oklch(0.40 0.27 272);
+  --v44-on-primary: oklch(1 0 0);
+  --v44-bg: oklch(0.97 0.006 272);
+  --v44-surface: oklch(1 0 0);
+  --v44-ink: oklch(0.18 0.025 272);
+  --v44-ink-sub: oklch(0.48 0.018 272);
+  --v44-ink-muted: oklch(0.65 0.010 272);
+  --v44-line: oklch(0.91 0.006 272);
+  --v44-primary-soft: oklch(0.94 0.045 272);
+  --v44-danger: oklch(0.45 0.20 25);
+  --v44-danger-soft: oklch(0.95 0.04 25);
+  --v44-success: oklch(0.45 0.15 155);
+  --v44-shadow-sm: 0 2px 8px oklch(0 0 0 / 0.06);
+  --v44-shadow-md: 0 4px 16px oklch(0 0 0 / 0.10);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+}
+#darsv44-phone .screen { background: var(--v44-bg); }
+/* 전반적 배경색 오버라이드 */
+#darsv44-phone .dars { background: var(--v44-bg); }
+/* ─ 상단 바 ─ */
+#darsv44-phone .topbar {
+  background: var(--v44-surface);
+  border-bottom: 1px solid var(--v44-line);
+  padding: 11px 18px;
+  box-shadow: none;
+}
+#darsv44-phone .topbar .hd-center {
+  background: var(--v44-primary-soft);
+  border: none;
+  border-radius: 999px;
+  color: var(--v44-primary);
+  font-size: 11px; font-weight: 700;
+  padding: 5px 10px;
+}
+#darsv44-phone .topbar .hd-center svg { stroke: var(--v44-primary); }
+#darsv44-phone .topbar .badge-ok { color: var(--v44-success); }
+#darsv44-phone .topbar .badge-ok::before { background: var(--v44-success); }
+#darsv44-phone .icon-btn svg { stroke: var(--v44-ink); }
+/* ─ 히어로 배너 (notice-card 교체) ─ */
+#darsv44-phone .notice-card {
+  background: var(--v44-primary);
+  border: none;
+  border-radius: 20px;
+  padding: 18px 16px;
+  margin: 0 0 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  box-shadow: var(--v44-shadow-md);
+  cursor: default;
+}
+#darsv44-phone .notice-card .nic svg { stroke: rgba(255,255,255,0.85); }
+#darsv44-phone .notice-card .nmq {
+  -webkit-mask-image: none;
+  mask-image: none;
+  overflow: visible;
+}
+#darsv44-phone .notice-card .ntrack {
+  animation: none;
+  display: flex;
+  flex-direction: column;
+  white-space: normal;
+}
+#darsv44-phone .notice-card .ni {
+  color: rgba(255,255,255,0.88);
+  font-size: 11px;
+  font-weight: 500;
+  padding-right: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+#darsv44-phone .notice-card .nmore { color: rgba(255,255,255,0.6); font-size: 11px; }
+/* 히어로 인사문구를 notice-card 안으로 표현 */
+#darsv44-phone .dars-guide {
+  padding: 0 0 16px;
+}
+#darsv44-phone .dars-guide .dg-hi {
+  font-size: 18px; font-weight: 800;
+  color: var(--v44-ink);
+  letter-spacing: -0.5px;
+}
+#darsv44-phone .dars-guide .dg-sub {
+  margin-top: 3px; font-size: 13px;
+  color: var(--v44-ink-muted); font-weight: 500;
+}
+/* ─ Pill 탭 스위처 (셀프서비스/ARS/상담원) ─ */
+#darsv44-phone .d1-tabs {
+  display: flex;
+  background: var(--v44-primary-soft);
+  border: none;
+  border-radius: 999px;
+  padding: 4px;
+  margin: 0 0 14px;
+  gap: 2px;
+}
+#darsv44-phone .d1-tab {
+  flex: 1; text-align: center;
+  padding: 8px 4px;
+  font-size: 12.5px; font-weight: 600;
+  color: var(--v44-ink-sub);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+}
+#darsv44-phone .d1-tab.on {
+  background: var(--v44-surface);
+  color: var(--v44-primary);
+  font-weight: 800;
+  box-shadow: 0 1px 6px oklch(0 0 0 / 0.10);
+}
+#darsv44-phone .d1-tab.on::after { display: none; }
+#darsv44-phone .d1-tab:active { opacity: 0.7; }
+/* ─ 서비스 그리드 ─ */
+#darsv44-phone .cell {
+  aspect-ratio: auto;
+  padding: 14px 8px;
+  background: var(--v44-surface);
+  border: 1.5px solid var(--v44-line);
+  border-radius: 16px;
+  box-shadow: var(--v44-shadow-sm);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+}
+#darsv44-phone .cell:hover {
+  border-color: var(--v44-primary);
+  box-shadow: var(--v44-shadow-md);
+  transform: translateY(-2px);
+}
+#darsv44-phone .cell:active { transform: scale(0.96); }
+#darsv44-phone .cell .ic-wrap {
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  background: var(--v44-primary-soft);
+}
+#darsv44-phone .cell svg { stroke: var(--v44-primary); width: 24px; height: 24px; }
+#darsv44-phone .cell .lbl {
+  font-size: 12px; font-weight: 600;
+  color: var(--v44-ink);
+  line-height: 1.3;
+}
+/* ─ ARS 드릴다운 패널 ─ */
+#darsv44-phone .d1-arspanel {
+  background: var(--v44-primary-soft);
+  border-radius: 16px;
+  padding: 8px 10px 6px;
+}
+#darsv44-phone .d1-path {
+  color: var(--v44-primary);
+  font-size: 12px; font-weight: 700;
+  padding: 1px 4px 8px;
+}
+#darsv44-phone .d1-back {
+  background: var(--v44-surface);
+  border: 1.5px solid var(--v44-line);
+  border-radius: 12px;
+  color: var(--v44-primary);
+  font-size: 12.5px; font-weight: 700;
+}
+#darsv44-phone .d1-back:active { background: var(--v44-primary-soft); }
+#darsv44-phone .d1-list { gap: 4px; }
+#darsv44-phone .d1-row {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 12px;
+  padding: 6px 12px;
+  box-shadow: var(--v44-shadow-sm);
+  transition: border-color 0.14s;
+}
+#darsv44-phone .d1-row.nav:hover,
+#darsv44-phone .d1-row.staff:hover { border-color: var(--v44-primary); }
+#darsv44-phone .d1-num {
+  background: var(--v44-primary-soft);
+  color: var(--v44-primary);
+  width: 22px; height: 22px;
+  border-radius: 50%;
+}
+#darsv44-phone .d1-row.leaf:not(.staff) .d1-num {
+  background: var(--v44-line);
+  color: var(--v44-ink-muted);
+}
+#darsv44-phone .d1-t { color: var(--v44-ink); font-size: 13.5px; font-weight: 700; }
+#darsv44-phone .d1-row.leaf:not(.staff) .d1-t { color: var(--v44-ink-sub); font-weight: 600; }
+#darsv44-phone .d1-arw { color: var(--v44-primary); }
+#darsv44-phone .d1-end {
+  background: var(--v44-line);
+  color: var(--v44-ink-muted);
+  font-size: 10.5px; font-weight: 700;
+  border-radius: 999px; padding: 3px 9px;
+}
+#darsv44-phone .d1-end.staff {
+  background: var(--v44-primary-soft);
+  color: var(--v44-primary);
+}
+#darsv44-phone .d1-guide { display: none; }
+/* ─ 리스트 행 ─ */
+#darsv44-phone .listrow {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 14px;
+  box-shadow: var(--v44-shadow-sm);
+  transition: border-color 0.14s, box-shadow 0.14s;
+}
+#darsv44-phone .listrow:hover {
+  border-color: var(--v44-primary);
+  box-shadow: var(--v44-shadow-md);
+}
+#darsv44-phone .listrow .ic-wrap {
+  background: var(--v44-primary-soft);
+  border-radius: 12px;
+}
+#darsv44-phone .listrow svg { stroke: var(--v44-primary); }
+#darsv44-phone .listrow .ct .t { color: var(--v44-ink); font-size: 14.5px; }
+#darsv44-phone .listrow .ct .d { color: var(--v44-ink-muted); }
+#darsv44-phone .listrow .chev { color: var(--v44-ink-muted); }
+/* ─ 섹션 제목 ─ */
+#darsv44-phone .section-title { color: var(--v44-ink); }
+/* ─ 데이터 카드 ─ */
+#darsv44-phone .data-card {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 14px;
+  box-shadow: var(--v44-shadow-sm);
+  padding: 0 16px;
+  margin: 10px 0 14px;
+}
+#darsv44-phone .data-card .tr {
+  border-bottom-color: var(--v44-line);
+  font-size: 13px;
+}
+#darsv44-phone .data-card .tr .k { color: var(--v44-ink-sub); }
+#darsv44-phone .data-card .tr .v { color: var(--v44-ink); font-weight: 700; }
+#darsv44-phone .data-card .tr.hl .v { color: var(--v44-primary); font-size: 15px; }
+/* ─ 큰 카드 메뉴 ─ */
+#darsv44-phone .menu-card {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 16px;
+  box-shadow: var(--v44-shadow-sm);
+}
+#darsv44-phone .menu-card:hover {
+  border-color: var(--v44-primary);
+  box-shadow: var(--v44-shadow-md);
+}
+#darsv44-phone .menu-card .lbl { color: var(--v44-ink); font-size: 17px; }
+#darsv44-phone .menu-card .desc { color: var(--v44-ink-muted); }
+#darsv44-phone .menu-card .chev { color: var(--v44-ink-muted); }
+/* ─ 페이지 헤더 ─ */
+#darsv44-phone .pageheader {
+  background: var(--v44-surface);
+  border-bottom: 1px solid var(--v44-line);
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+#darsv44-phone .pageheader .back {
+  width: 32px; height: 32px;
+  background: var(--v44-primary-soft);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1;
+  color: var(--v44-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+#darsv44-phone .pageheader .pt {
+  flex: 1;
+  text-align: center;
+  font-size: 16px; font-weight: 800;
+  color: var(--v44-ink);
+  letter-spacing: -0.4px;
+  margin-right: 32px; /* back 버튼 폭 보정 */
+}
+#darsv44-phone .bigtext-btn {
+  background: var(--v44-surface);
+  border: 1.5px solid var(--v44-line);
+  border-radius: 999px;
+  color: var(--v44-ink-muted);
+  font-size: 12px; font-weight: 600;
+  padding: 6px 12px;
+  transition: 0.15s;
+}
+#darsv44-phone .bigtext-btn:hover { border-color: var(--v44-primary); color: var(--v44-primary); }
+#darsv44-phone .bigtext-btn.on {
+  background: var(--v44-primary-soft);
+  border-color: var(--v44-primary);
+  color: var(--v44-primary); font-weight: 800;
+}
+/* ─ 음성 ARS / 상담원 연결 화면 ─ */
+#darsv44-phone .vc-ic {
+  background: var(--v44-primary-soft);
+  animation: v44vcPulse 1.7s ease-in-out infinite;
+}
+#darsv44-phone .vc-ic svg { stroke: var(--v44-primary); }
+@keyframes v44vcPulse {
+  0%,100%{ box-shadow: 0 0 0 0 oklch(0.50 0.27 272 / 0.25); }
+  50%    { box-shadow: 0 0 0 14px oklch(0.50 0.27 272 / 0); }
+}
+#darsv44-phone .vc-t { color: var(--v44-ink); }
+#darsv44-phone .vc-d { color: var(--v44-ink-sub); }
+#darsv44-phone .vc-card {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 14px;
+  box-shadow: var(--v44-shadow-sm);
+}
+#darsv44-phone .vc-row { border-bottom-color: var(--v44-line); }
+#darsv44-phone .vc-row .k { color: var(--v44-ink-sub); }
+#darsv44-phone .vc-row .v { color: var(--v44-ink); }
+#darsv44-phone .vc-btn {
+  background: var(--v44-primary);
+  border-radius: 14px;
+  font-size: 15px; font-weight: 800;
+  color: var(--v44-on-primary);
+}
+#darsv44-phone .vc-btn:active { background: var(--v44-primary-dk); opacity: 1; }
+#darsv44-phone .d1btn-warn { background: var(--v44-danger); }
+#darsv44-phone .vc-note { color: var(--v44-ink-muted); }
+/* ─ 본인인증 화면 ─ */
+#darsv44-phone .d1a-head {
+  font-size: 20px; font-weight: 800;
+  color: var(--v44-ink);
+  letter-spacing: -0.5px;
+  padding: 8px 4px 16px;
+  line-height: 1.3;
+}
+#darsv44-phone .d1a-field { margin-bottom: 16px; }
+#darsv44-phone .d1a-field label {
+  font-size: 11px; font-weight: 700;
+  color: var(--v44-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 6px;
+}
+#darsv44-phone .d1a-input {
+  width: 100%; border: none;
+  border-bottom: 2px solid var(--v44-line);
+  border-radius: 0;
+  background: transparent;
+  padding: 8px 2px;
+  font-size: 16px; font-weight: 600;
+  color: var(--v44-ink);
+  outline: none;
+  transition: border-color 0.15s;
+}
+#darsv44-phone .d1a-input:focus { border-bottom-color: var(--v44-primary); }
+#darsv44-phone .d1a-note { color: var(--v44-ink-muted); font-size: 12px; line-height: 1.5; margin: 8px 0 14px; }
+#darsv44-phone .d1pw-card {
+  border: none;
+  border-bottom: 2px solid var(--v44-line);
+  border-radius: 0;
+  padding: 8px 2px;
+}
+#darsv44-phone .d1pw-dots {
+  font-size: 16px; letter-spacing: 4px;
+  color: var(--v44-ink);
+}
+/* ─ 간편인증서 그리드 ─ */
+#darsv44-phone .d1a-prov-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 6px 0 16px; }
+#darsv44-phone .d1a-prov { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+#darsv44-phone .d1a-badge { border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+#darsv44-phone .d1a-pnm { font-size: 10px; font-weight: 600; color: var(--v44-ink-sub); text-align: center; line-height: 1.2; }
+/* ─ 하단 바 ─ */
+#darsv44-phone .d-bottom {
+  background: var(--v44-surface);
+  border-top: 1px solid var(--v44-line);
+  height: 64px;
+  padding-bottom: 4px;
+}
+#darsv44-phone .bnav { color: var(--v44-ink-muted); font-size: 10px; font-weight: 600; }
+#darsv44-phone .bnav svg { stroke: var(--v44-ink-muted); }
+#darsv44-phone .bnav.on { color: var(--v44-primary); }
+#darsv44-phone .bnav.on svg { stroke: var(--v44-primary); }
+#darsv44-phone .bnav.end { color: var(--v44-danger); }
+#darsv44-phone .bnav.end svg { stroke: var(--v44-danger); }
+/* ─ 음성 ARS 팝업 (bottom sheet 스타일) ─ */
+#darsv44-phone + .dars-pop,
+#darsv44-phone .dars-pop {
+  background: oklch(0 0 0 / 0.45);
+  align-items: flex-end;
+  padding: 0;
+}
+#darsv44-phone .dars-pop .dp-card {
+  width: 100%; max-width: 100%;
+  border-radius: 24px 24px 0 0;
+  padding: 8px 20px 28px;
+  box-shadow: none;
+}
+#darsv44-phone .dars-pop .dp-card::before {
+  content: '';
+  display: block;
+  width: 36px; height: 4px;
+  background: var(--v44-line);
+  border-radius: 2px;
+  margin: 0 auto 18px;
+}
+#darsv44-phone .dars-pop .dp-ic {
+  background: var(--v44-primary-soft);
+}
+#darsv44-phone .dars-pop .dp-ic svg { stroke: var(--v44-primary); }
+#darsv44-phone .dars-pop .dp-t { color: var(--v44-ink); }
+#darsv44-phone .dars-pop .dp-d { color: var(--v44-ink-sub); }
+#darsv44-phone .dars-pop .dp-btn.ok {
+  background: var(--v44-primary);
+  border-radius: 14px; font-size: 15px;
+}
+#darsv44-phone .dars-pop .dp-btn.cancel {
+  background: var(--v44-line);
+  color: var(--v44-ink-sub);
+  border-radius: 14px;
+}
+/* ─ 전체메뉴 드로어 ─ */
+#darsv44-phone .d1v44menu-ov { background: oklch(0 0 0 / 0.45); }
+#darsv44-phone .d1menu-panel {
+  border-radius: 20px 20px 0 0;
+  box-shadow: none;
+}
+#darsv44-phone .d1menu-head { border-bottom: 1px solid var(--v44-line); }
+#darsv44-phone .d1menu-title { color: var(--v44-ink); }
+#darsv44-phone .d1m-cat {
+  color: var(--v44-ink-sub);
+  border-radius: 8px;
+  font-weight: 600;
+}
+#darsv44-phone .d1m-cat.on {
+  background: var(--v44-primary-soft);
+  color: var(--v44-primary);
+  font-weight: 800;
+}
+#darsv44-phone .d1m-t { color: var(--v44-ink); }
+#darsv44-phone .d1m-row.nav:hover { background: var(--v44-primary-soft); }
+#darsv44-phone .d1m-row.leaf:hover { background: var(--v44-primary-soft); }
+#darsv44-phone .d1m-arw svg { stroke: var(--v44-ink-muted); }
+/* ─ 계좌 키패드 ─ */
+#darsv44-phone .d1v44kp-ov { background: oklch(0 0 0 / 0.45); }
+#darsv44-phone .d1kp-sheet { border-radius: 24px 24px 0 0; }
+#darsv44-phone .d1kp-title { color: var(--v44-ink); font-weight: 800; }
+#darsv44-phone .d1kp-acct { background: var(--v44-primary-soft); border-radius: 12px; }
+#darsv44-phone .ka-nm { color: var(--v44-primary); font-weight: 700; }
+#darsv44-phone .ka-no { color: var(--v44-ink-sub); }
+#darsv44-phone .ka-chev { color: var(--v44-ink-muted); }
+#darsv44-phone .d1kp-key {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 12px;
+  color: var(--v44-ink);
+  font-weight: 700;
+  font-size: 18px;
+}
+#darsv44-phone .d1kp-key:active { background: var(--v44-primary-soft); color: var(--v44-primary); }
+#darsv44-phone .d1kp-key.back { color: var(--v44-ink-sub); }
+#darsv44-phone .d1kp-done { background: var(--v44-primary); color: var(--v44-on-primary); border-radius: 14px; font-weight: 800; }
+#darsv44-phone .d1kp-cancel { color: var(--v44-ink-sub); }
+/* ─ 데이터 테이블 공통 (d1sec, d1ipo, d1hold 등) ─ */
+#darsv44-phone .d1sec { font-size: 13px; font-weight: 700; color: var(--v44-ink); padding: 10px 0 6px; }
+#darsv44-phone .d1ipo-row { border-bottom-color: var(--v44-line); }
+#darsv44-phone .d1ipo-nm { color: var(--v44-ink); font-weight: 700; }
+#darsv44-phone .d1ipo-d { color: var(--v44-ink-muted); }
+#darsv44-phone .d1ipo-rate { color: var(--v44-primary); font-weight: 800; }
+#darsv44-phone .d1mini { background: var(--v44-primary-soft); color: var(--v44-primary); border-radius: 8px; }
+#darsv44-phone .d1tag.live { background: oklch(0.92 0.08 155); color: var(--v44-success); }
+#darsv44-phone .d1tag.wait { background: oklch(0.95 0.06 80); color: oklch(0.42 0.14 80); }
+#darsv44-phone .d1tag.done { background: var(--v44-line); color: var(--v44-ink-muted); }
+#darsv44-phone .d1tag.reject { background: var(--v44-danger-soft); color: var(--v44-danger); }
+#darsv44-phone .d1tag.buy { background: oklch(0.92 0.06 25); color: var(--v44-danger); }
+#darsv44-phone .d1tag.sell { background: oklch(0.91 0.06 240); color: oklch(0.40 0.20 240); }
+#darsv44-phone .d1up { color: oklch(0.45 0.20 25); }
+#darsv44-phone .d1down { color: oklch(0.40 0.20 240); }
+#darsv44-phone .d1hold-nm { color: var(--v44-ink); font-weight: 700; }
+#darsv44-phone .d1hold-sub { color: var(--v44-ink-muted); }
+#darsv44-phone .d1hold-ev { color: var(--v44-ink); font-weight: 700; }
+#darsv44-phone .d1sched-hd { color: var(--v44-ink); font-weight: 800; font-size: 14px; padding: 10px 0 4px; }
+/* ─ 큰글씨 리스트 ─ */
+#darsv44-phone .d-body .selectbox {
+  background: var(--v44-surface);
+  border: 1px solid var(--v44-line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: var(--v44-ink);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+/* ─ detail-tabs ─ */
+#darsv44-phone .detail-tabs { display: flex; border-bottom: 2px solid var(--v44-line); margin-bottom: 14px; }
+#darsv44-phone .dt {
+  flex: 1; text-align: center;
+  padding: 8px 4px;
+  font-size: 14px; font-weight: 600;
+  color: var(--v44-ink-muted);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.14s;
+}
+#darsv44-phone .dt.on { color: var(--v44-primary); font-weight: 800; }
+#darsv44-phone .dt.on::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 10%; right: 10%;
+  height: 2.5px; border-radius: 2px;
+  background: var(--v44-primary);
+}
+/* ─ d-status (상태바) ─ */
+#darsv44-phone .d-status {
+  background: var(--v44-surface);
+  color: var(--v44-ink-muted);
+}
+/* ─ dars-charge ─ */
+#darsv44-phone .dars-charge { color: var(--v44-ink-muted); }
+#darsv44-phone .dars-charge svg { stroke: var(--v44-ink-muted); }
+/* ─ d-body fade-in ─ */
+#darsv44-phone .darsv44-view.active .d-body {
+  animation: v44FadeSlide 0.22s ease-out both;
+}
+@keyframes v44FadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #darsv44-phone .darsv44-view.active .d-body { animation: none; }
+  #darsv44-phone .vc-ic { animation: none; }
+  @keyframes v44vcPulse { 0%,100%{ box-shadow: none; } }
+}
+
 /* 배너 */
 .dars .banner{margin:14px 0;border-radius:18px;overflow:hidden;
   background:linear-gradient(120deg,#a78bfa 0%,#7c3aed 50%,#e8147a 100%);
@@ -2792,6 +3323,7 @@ body{
     <div class="ref-item" data-sian="dform"><span class="rf-nm">Digital Form</span><span class="rf-tel">키움증권 로고만 있는 빈 화면 (작업용 템플릿)</span></div>
     <div class="ref-item" data-sian="dform3"><span class="rf-nm">Digital Form_v0.1</span><span class="rf-tel">서류제출 엔진 흐름 재현 · 5단계(인증→서류준비→첨부→제출→완료) · 업무 11종·상태머신</span></div>
     <div class="ref-item" data-sian="dform4"><span class="rf-nm">Digital Form_v0.2</span><span class="rf-tel">iOS HIG 디자인 · SF Pro·8pt 그리드·시맨틱 컬러·다크모드 · 서류제출 엔진 5단계</span></div>
+    <div class="ref-item" data-sian="dars1v44"><span class="rf-nm">Ver 4.4</span><span class="rf-tel">인디고 계열 완전 새 디자인 · oklch 토큰 · pill 탭 · underline 입력 · 바텀시트</span></div>
     <!-- 시안 · 이전버전 (접이식 · 우측 [+] 토글) -->
     <div class="ref-title prev-title" data-prevtoggle>시안 · 이전버전<span class="prev-plus" aria-hidden="true">+</span></div>
     <div class="ref-item prev-item" data-sian="s1" data-ver="v1"><span class="rf-nm">Ver 1.0</span><span class="rf-tel">디지털 ARS + 보이는 ARS (화면구현)</span></div>
@@ -3201,6 +3733,370 @@ body{
 
         <!-- 음성 ARS 연결 안내 팝업 (시안2 디자인) -->
         <div class="dars-pop" id="dars1-voicepop">
+          <div class="dp-card">
+            <div class="dp-ic"><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div>
+            <div class="dp-t">음성 ARS 연결 안내</div>
+            <div class="dp-d">음성 ARS 상담으로<br>연결해 드립니다.</div>
+            <div class="dp-btns">
+              <button class="dp-btn cancel" data-voicecancel>취소</button>
+              <button class="dp-btn ok" data-voiceok>연결하기</button>
+            </div>
+          </div>
+        </div>
+
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- ====== 디지털ARS Ver 4.4 · 인디고 디자인 ====== -->
+  <div class="dars-deck" data-scheme="dars1v44">
+
+    <!-- Ver 4.4 인디고 디자인 · dars1 동일 구조 -->
+    <div class="phone-wrap" id="darsv44-phone">
+      <div class="phone"><div class="notch"></div><div class="screen">
+
+        <!-- 뷰: 메인 -->
+        <div class="dars darsv44-view active" data-view="main">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="topbar">
+            <div class="left"><img class="logo-img" src="assets/kiwoom-logo.png" alt="키움증권"></div>
+            <div class="right">
+              <span class="hd-center"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0v4a3 3 0 0 1-3 3h-1v-7h4M4 12v4a3 3 0 0 0 3 3h1v-7H4"/></svg>고객센터<span class="badge-ok">원활</span></span>
+              <span class="icon-btn" title="전체메뉴"><svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></span>
+            </div>
+          </div>
+          <div class="d-body">
+            <div class="notice-card">
+              <div class="nic"><svg viewBox="0 0 24 24"><path d="M3 11l16-6v14L3 13z"/><path d="M11 17a2.5 2.5 0 0 1-4.8-1"/></svg></div>
+              <div class="nmq"><div class="ntrack"><span class="ni">[공지] 디지털 ARS 정기점검 (6/25 02:00~04:00)</span><span class="ni">[안내] 공모주 청약 — 에이펙스반도체 6/24~6/25</span><span class="ni">[이벤트] 중개형 ISA 타사 이전 시 최대 551만원 혜택</span><span class="ni">[공지] 디지털 ARS 정기점검 (6/25 02:00~04:00)</span><span class="ni">[안내] 공모주 청약 — 에이펙스반도체 6/24~6/25</span><span class="ni">[이벤트] 중개형 ISA 타사 이전 시 최대 551만원 혜택</span></div></div>
+              <div class="nmore">전체 ›</div>
+            </div>
+            <div class="dars-guide"><div class="dg-hi">안녕하세요, 키움증권입니다</div><div class="dg-sub">이용하실 서비스를 선택해 주세요</div></div>
+            <div class="d1-tabs">
+              <div class="d1-tab on" data-d1tab="self">셀프서비스</div>
+              <div class="d1-tab" data-d1tab="ars">ARS메뉴</div>
+              <div class="d1-tab" data-d1tab="staff">상담원연결</div>
+            </div>
+            <div class="d1-pane" data-pane="self">
+            <div class="grid3">
+              <div class="cell" data-d1dae="0"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><span class="lbl">ID조회<br>PW초기화</span></div>
+              <div class="cell" data-d1dae="1"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 14.5l2 2 3.5-3.5"/></svg></div><span class="lbl">비대면업무<br>신청현황</span></div>
+              <div class="cell" data-d1dae="2"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="12" rx="2.5"/><path d="M16 11h5v4h-5a2 2 0 0 1 0-4z"/></svg></div><span class="lbl">계좌잔고<br>거래내역조회</span></div>
+              <div class="cell" data-d1dae="3"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><line x1="12" y1="8" x2="12" y2="12.5"/><line x1="12" y1="15" x2="12" y2="15.01"/></svg></div><span class="lbl">계좌사고<br>해지</span></div>
+              <div class="cell" data-d1dae="4"><div class="ic-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg></div><span class="lbl">고객확인등록<br>(CDD/EDD)</span></div>
+              <div class="cell" data-d1dae="5"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="4.5" y="3" width="13" height="18" rx="2.5"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="11.5" x2="12" y2="11.5"/><circle cx="16" cy="17.5" r="3.5"/></svg></div><span class="lbl">서류발급</span></div>
+              <div class="cell" data-d1dae="6"><div class="ic-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><span class="lbl">신용/대출<br>만기연장</span></div>
+              <div class="cell" data-d1dae="7"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 16l-5 2.7 1-5.5-4-3.9 5.5-.8z"/></svg></div><span class="lbl">공모주<br>청약</span></div>
+              <div class="cell" data-d1dae="8"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-1.8-3 1.8-3-1.8-3 1.8z"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="14" y2="12"/></svg></div><span class="lbl">권리업무</span></div>
+            </div>
+            <div class="dars-charge"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg><span>이동통신망 이용 시 데이터 통화료가 부과될 수 있습니다.</span></div>
+            </div>
+            <div class="d1-pane" data-pane="ars" hidden><div class="d1-arspanel" id="d1v44ars"></div><div class="dars-charge"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg><span>이동통신망 이용 시 데이터 통화료가 부과될 수 있습니다.</span></div></div>
+            <div class="d1-pane" data-pane="staff" hidden><div class="d1-arspanel" id="d1v44staff"></div><div class="dars-charge"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg><span>이동통신망 이용 시 데이터 통화료가 부과될 수 있습니다.</span></div></div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 시세/지수조회 -->
+        <div class="dars darsv44-view" data-view="sise">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">시세/지수조회</span>
+            <div class="bigtext-btn" data-go="bigfont">큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M3 18l5-5 4 3 9-9"/></svg></div><div class="ct"><div class="t">현재가</div><div class="d">국내주식 가격, 거래량, 호가 등 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow" data-go="index"><div class="ic-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div><div class="ct"><div class="t">국내/해외지수</div><div class="d">코스피, 코스닥, 다우존스 등 국내/해외 지수확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M4 18l4-8 4 4 8-10"/></svg></div><div class="ct"><div class="t">선물시세</div><div class="d">선물 가격, 거래량 등 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="ct"><div class="t">옵션시세</div><div class="d">옵션의 가격, 거래량 등 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div><div class="ct"><div class="t">시간외단일가</div><div class="d">시간외단일가시장 가격, 거래량 등 확인</div></div><div class="chev">›</div></div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 국내지수 -->
+        <div class="dars darsv44-view" data-view="index">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">국내지수</span>
+            <div class="bigtext-btn">큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="detail-tabs">
+              <div class="dt on">국내지수</div>
+              <div class="dt">해외지수</div>
+            </div>
+            <div class="selectbox">코스피 <span>▾</span></div>
+            <div class="data-card">
+              <div class="tr hl"><span class="k">지수(전일대비)</span><span class="v">2,025.08 ▲15.95</span></div>
+              <div class="tr"><span class="k">거래량(천주)</span><span class="v">179,910</span></div>
+              <div class="tr"><span class="k">거래대금(백만)</span><span class="v">1,533,276</span></div>
+              <div class="tr"><span class="k">상승 종목 수</span><span class="v">486</span></div>
+              <div class="tr"><span class="k">하락 종목 수</span><span class="v">300</span></div>
+              <div class="tr"><span class="k">보합 종목 수</span><span class="v">101</span></div>
+              <div class="tr"><span class="k">상한가 종목 수</span><span class="v">0</span></div>
+              <div class="tr"><span class="k">하한가 종목 수</span><span class="v">0</span></div>
+            </div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 큰글씨 리스트 (마지막 화면에서 큰글씨 클릭 시) -->
+        <div class="dars darsv44-view" data-view="bigfont">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">큰글씨 메뉴</span>
+            <div class="bigtext-btn on" data-back>큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="menu-card" data-go="sise">
+              <div class="m-ic" style="background:var(--purple-ll)"><svg viewBox="0 0 24 24" style="stroke:var(--purple)"><path d="M3 18l5-5 4 3 9-9"/></svg></div>
+              <div style="flex:1"><div class="lbl">시세/지수조회</div><div class="desc">국내·해외 시세, 지수, 선물·옵션 확인</div></div>
+              <div class="chev">›</div>
+            </div>
+            <div class="menu-card" data-go="order">
+              <div class="m-ic" style="background:var(--magenta-l)"><svg viewBox="0 0 24 24" style="stroke:var(--magenta)"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/></svg></div>
+              <div style="flex:1"><div class="lbl">주문/체결안내</div><div class="desc">주식 주문, 체결 내역 확인</div></div>
+              <div class="chev">›</div>
+            </div>
+            <div class="menu-card" data-go="balance">
+              <div class="m-ic" style="background:#fff7e0"><svg viewBox="0 0 24 24" style="stroke:#d97706"><path d="M3 7h18v12H3z"/><path d="M3 7l9-4 9 4"/></svg></div>
+              <div style="flex:1"><div class="lbl">잔고/거래내역</div><div class="desc">보유 잔고, 거래·입출금 내역</div></div>
+              <div class="chev">›</div>
+            </div>
+            <div class="menu-card" data-go="transfer">
+              <div class="m-ic" style="background:#dcfce7"><svg viewBox="0 0 24 24" style="stroke:#15803d"><path d="M7 7h14M21 7l-4-4M21 7l-4 4M17 17H3M3 17l4-4M3 17l4 4"/></svg></div>
+              <div style="flex:1"><div class="lbl">이체/서비스</div><div class="desc">은행이체, 출금가능금액 조회</div></div>
+              <div class="chev">›</div>
+            </div>
+            <div class="menu-card" data-go="ipo">
+              <div class="m-ic" style="background:#dbeafe"><svg viewBox="0 0 24 24" style="stroke:#1d4ed8"><path d="M12 3a4 4 0 0 1 4 4v3a8 8 0 1 1-8 0V7a4 4 0 0 1 4-4z"/></svg></div>
+              <div style="flex:1"><div class="lbl">공모주청약</div><div class="desc">진행중인 공모주 청약 안내</div></div>
+              <div class="chev">›</div>
+            </div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 주문/체결안내 -->
+        <div class="dars darsv44-view" data-view="order">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">주문/체결안내</span>
+            <div class="bigtext-btn on">큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div><div class="ct"><div class="t">국내주식 주문</div><div class="d">매수·매도 주문 접수</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div><div class="ct"><div class="t">체결 내역</div><div class="d">당일 체결된 주문 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="ct"><div class="t">미체결 조회</div><div class="d">정정·취소 가능한 주문 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="9" y1="3" x2="9" y2="6"/><line x1="15" y1="3" x2="15" y2="6"/></svg></div><div class="ct"><div class="t">예약주문</div><div class="d">장 시작 전 예약 주문</div></div><div class="chev">›</div></div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 잔고/거래내역 -->
+        <div class="dars darsv44-view" data-view="balance">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">잔고/거래내역</span>
+            <div class="bigtext-btn on">큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="ct"><div class="t">보유 잔고</div><div class="d">평가손익·보유종목 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M3 7l9-4 9 4"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="ct"><div class="t">거래 내역</div><div class="d">기간별 매매 내역 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M7 7h14M21 7l-4-4M21 7l-4 4M17 17H3M3 17l4-4M3 17l4 4"/></svg></div><div class="ct"><div class="t">입출금 내역</div><div class="d">예수금 입출금 흐름 확인</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M3 18l5-5 4 3 9-9"/><polyline points="15 7 21 7 21 13"/></svg></div><div class="ct"><div class="t">실현손익</div><div class="d">기간별 실현손익 집계</div></div><div class="chev">›</div></div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 이체/서비스 -->
+        <div class="dars darsv44-view" data-view="transfer">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">이체/서비스</span>
+            <div class="bigtext-btn on">큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M7 7h14M21 7l-4-4M21 7l-4 4M17 17H3M3 17l4-4M3 17l4 4"/></svg></div><div class="ct"><div class="t">계좌이체</div><div class="d">은행·증권 계좌로 이체</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="16" cy="13" r="1.5"/></svg></div><div class="ct"><div class="t">출금가능금액</div><div class="d">출금 가능 예수금 조회</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="ct"><div class="t">자동이체 관리</div><div class="d">정기 이체 등록·해지</div></div><div class="chev">›</div></div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 공모주청약 -->
+        <div class="dars darsv44-view" data-view="ipo">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">공모주청약</span>
+            <div class="bigtext-btn on">큰글씨</div>
+          </div>
+          <div class="d-body">
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 16l-5 2.7 1-5.5-4-3.9 5.5-.8z"/></svg></div><div class="ct"><div class="t">진행중 공모주</div><div class="d">청약 일정·경쟁률 안내</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 14l2 2 3-3"/></svg></div><div class="ct"><div class="t">청약하기</div><div class="d">진행중인 공모주 청약 신청</div></div><div class="chev">›</div></div>
+            <div class="listrow"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M8 14l2 2 4-4"/></svg></div><div class="ct"><div class="t">배정/환불 결과</div><div class="d">배정 수량·환불 금액 확인</div></div><div class="chev">›</div></div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 음성 ARS 연결 (시안2 디자인) -->
+        <div class="dars darsv44-view" data-view="voice">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">음성 ARS 연결</span>
+          </div>
+          <div class="d-body">
+            <div class="voice-connect">
+              <div class="vc-ic"><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div>
+              <div class="vc-t">음성 ARS 연결 중</div>
+              <div class="vc-d">키움증권 음성 ARS에 연결하고 있습니다.<br>잠시만 기다려 주세요.</div>
+              <div class="vc-card">
+                <div class="vc-row"><span class="k">연결 번호</span><span class="v">1544-9000</span></div>
+                <div class="vc-row"><span class="k">상태</span><span class="v">연결 중…</span></div>
+                <div class="vc-row"><span class="k">예상 대기</span><span class="v">약 30초</span></div>
+              </div>
+              <div class="vc-btn" data-back>통화 종료</div>
+              <div class="vc-note">음성 안내에 따라 키패드를 입력하시면 상담이 진행됩니다.</div>
+            </div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 상담원 연결 (Ver 2.1 상담원연결 참고 · Ver 3.0 디자인) -->
+        <div class="dars darsv44-view" data-view="agent">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader">
+            <span class="back" data-back>‹</span>
+            <span class="pt">상담원 연결</span>
+          </div>
+          <div class="d-body">
+            <div class="voice-connect">
+              <div class="vc-ic"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="6" rx="1.5"/><rect x="17" y="14" width="5" height="6" rx="1.5"/><path d="M20 20a3 3 0 0 1-3.2 2.5H15"/></svg></div>
+              <div class="vc-t">상담원 연결</div>
+              <div class="vc-d" id="d1v44agentDesc">상담원(직원)에게 바로 연결해 드립니다.<br>아래 버튼을 눌러 상담을 시작하세요.</div>
+              <div class="vc-card" id="d1v44agentInfo"></div>
+              <div class="vc-btn" id="d1v44agentBtn" data-d1flash="상담원에게 연결합니다. (시연용)">상담원 연결하기</div>
+              <div class="vc-note">연결 시 음성 통화 또는 채팅 상담으로 진행됩니다.</div>
+            </div>
+          </div>
+          <div class="d-bottom">
+            <div class="bnav" data-voicepop><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>음성 ARS</span></div>
+            <div class="bnav"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/></svg><span>챗봇</span></div>
+            <div class="bnav end"><svg viewBox="0 0 24 24"><path d="M12 4v8"/><path d="M6 8a8 8 0 1 0 12 0"/></svg><span>서비스종료</span></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 본인인증 방법 선택 (Ver 1.2 디자인) -->
+        <div class="dars darsv44-view" data-view="authsel">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader"><span class="back" data-back>‹</span><span class="pt">본인인증</span></div>
+          <div class="d-body">
+            <div class="d1a-head">본인 인증 방법을<br>선택해주세요</div>
+            <div class="listrow" data-d1auth="phone"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div><div class="ct"><div class="t">휴대폰 인증</div><div class="d">본인 명의 휴대폰으로 인증</div></div><div class="chev">›</div></div>
+            <div class="listrow" data-d1auth="simple"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9.5 12l2 2 3.5-4"/></svg></div><div class="ct"><div class="t">간편(민간인증서) 인증</div><div class="d">카카오·네이버·KB 등 민간인증서로 인증</div></div><div class="chev">›</div></div>
+            <div class="listrow" data-d1auth="account"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="12" rx="2.5"/><path d="M16 11h5v4h-5a2 2 0 0 1 0-4z"/></svg></div><div class="ct"><div class="t">계좌번호 인증</div><div class="d">본인 계좌번호·비밀번호로 인증</div></div><div class="chev">›</div></div>
+          </div>
+        </div>
+
+        <!-- 뷰: 본인인증 진행 (방법별 · JS 렌더) -->
+        <div class="dars darsv44-view" data-view="authstep">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader"><span class="back" data-back>‹</span><span class="pt" id="d1v44authTitle">본인인증</span></div>
+          <div class="d-body" id="d1v44authBody"></div>
+        </div>
+
+        <!-- 뷰: 계좌 비밀번호 입력 (휴대폰·간편 인증 후 · 플로팅 키패드) -->
+        <div class="dars darsv44-view" data-view="authpw">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader"><span class="back" data-back>‹</span><span class="pt">계좌 선택</span></div>
+          <div class="d-body">
+            <div class="d1a-head">계좌를 선택해<br>비밀번호를 입력해 주세요</div>
+            <div class="d1acct-list">
+              <div class="listrow" data-d1acct="0"><div class="ic-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="12" rx="2.5"/><path d="M16 11h5v4h-5a2 2 0 0 1 0-4z"/></svg></div><div class="ct"><div class="t">종합위탁계좌</div><div class="d">123-4567-8901</div></div><div class="chev">›</div></div>
+              <div class="listrow" data-d1acct="1"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M3 7h18v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 7l2-3h14l2 3"/><line x1="3" y1="11" x2="21" y2="11"/></svg></div><div class="ct"><div class="t">CMA 계좌</div><div class="d">234-5678-9012</div></div><div class="chev">›</div></div>
+              <div class="listrow" data-d1acct="2"><div class="ic-wrap"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></div><div class="ct"><div class="t">연금저축계좌</div><div class="d">345-6789-0123</div></div><div class="chev">›</div></div>
+            </div>
+            <div class="d1a-note">인증할 계좌를 선택하면 비밀번호 입력 키패드가 나타납니다.</div>
+          </div>
+        </div>
+
+        <!-- 뷰: 본인인증 완료 -->
+        <div class="dars darsv44-view" data-view="authdone">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader"><span class="pt">본인인증 완료</span></div>
+          <div class="d-body">
+            <div class="voice-connect">
+              <div class="vc-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+              <div class="vc-t" id="d1v44doneTitle">본인인증이 완료되었습니다</div>
+              <div class="vc-d"><span class="d1done-svc" id="d1v44doneSvc">서비스</span> 화면은<br>현재 준비 중입니다.</div>
+              <div class="vc-btn" data-d1authhome>확인</div>
+              <div class="vc-note">본인인증 후 해당 서비스를 이용하실 수 있습니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 뷰: 대메뉴의 서비스 목록 (그리드 대메뉴 → 인증 → 중/소메뉴 선택) -->
+        <div class="dars darsv44-view" data-view="svcmenu">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader"><span class="back" data-back>‹</span><span class="pt" id="d1v44svcMenuTitle">셀프서비스</span></div>
+          <div class="d-body" id="d1v44svcMenuBody"></div>
+        </div>
+
+        <!-- 뷰: 셀프서비스 중/소메뉴 세부화면 (메뉴명별 · JS 렌더) -->
+        <div class="dars darsv44-view" data-view="svcdetail">
+          <div class="d-status"><span>9:41</span><span class="r">●●● 5G ▮</span></div>
+          <div class="pageheader"><span class="back" data-back>‹</span><span class="pt" id="d1v44svcTitle">서비스</span></div>
+          <div class="d-body" id="d1v44svcBody"></div>
+        </div>
+
+        <!-- 음성 ARS 연결 안내 팝업 (시안2 디자인) -->
+        <div class="dars-pop" id="darsv44-voicepop">
           <div class="dp-card">
             <div class="dp-ic"><svg viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.6a11 11 0 0 0 4.9 4.9l1.6-2.3 4.5 1.8V18a2 2 0 0 1-2 2A14 14 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div>
             <div class="dp-t">음성 ARS 연결 안내</div>
@@ -4886,6 +5782,777 @@ body{
 
     // 외부(왼쪽 패널 탭 클릭)에서 시안2 메인 뷰로 복귀 — 탭·드릴다운 상태도 초기화
     window.__darsHome1 = function(){ d1arsPath = []; d1staffPath = []; d1setTab('self'); d1show('main', false); };
+  // Ver 4.4 · 단일 화면 내 뷰 전환 (dars1 동일 구조 · v44 전용 ID)
+  var d1 = document.getElementById('darsv44-phone');
+  if(d1){
+    var d1views = d1.querySelectorAll('.darsv44-view');
+    var d1hist = [];
+    function d1show(view, push){
+      var target = d1.querySelector('.darsv44-view[data-view="'+view+'"]');
+      if(!target) return;
+      d1closeKeypad(); d1closeMenu();
+      var cur = d1.querySelector('.darsv44-view.active');
+      if(cur === target) return;
+      if(push && cur) d1hist.push(cur.getAttribute('data-view'));
+      if(view === 'main') d1hist = [];
+      d1views.forEach(function(v){ v.classList.remove('active'); });
+      target.classList.add('active');
+      var body = target.querySelector('.d-body'); if(body) body.scrollTop = 0;
+    }
+    d1.querySelectorAll('[data-go]').forEach(function(el){
+      el.addEventListener('click', function(e){ e.preventDefault(); d1show(el.getAttribute('data-go'), true); });
+    });
+    d1.querySelectorAll('[data-back]').forEach(function(el){
+      el.addEventListener('click', function(){ d1show(d1hist.pop() || 'main', false); });
+    });
+    // 음성 ARS: 연결 안내 팝업 → '연결하기' 시 음성 ARS 연결 화면으로 이동
+    var vpop = document.getElementById('darsv44-voicepop');
+    d1.querySelectorAll('[data-voicepop]').forEach(function(el){
+      el.addEventListener('click', function(){ if(vpop) vpop.classList.add('on'); });
+    });
+    if(vpop){
+      var vok = vpop.querySelector('[data-voiceok]');
+      var vcancel = vpop.querySelector('[data-voicecancel]');
+      if(vok) vok.addEventListener('click', function(){ vpop.classList.remove('on'); d1show('voice', true); });
+      if(vcancel) vcancel.addEventListener('click', function(){ vpop.classList.remove('on'); });
+      vpop.addEventListener('click', function(e){ if(e.target === vpop) vpop.classList.remove('on'); });
+    }
+    // 하단 '홈' 탭 → 메인 뷰로 복귀
+    d1.querySelectorAll('.d-bottom .bnav.on').forEach(function(el){
+      el.addEventListener('click', function(){ d1show('main', false); });
+    });
+    // ── 메인 탭 (셀프서비스 / ARS메뉴 / 상담원연결) + 번호 드릴다운 ──
+    var d1main = d1.querySelector('.darsv44-view[data-view="main"]');
+    var d1tab = 'self', d1arsPath = [], d1staffPath = [];
+    function d1stripNum(t){ return t.replace(/^[0-9#]+\.\s*/, ''); }
+    function d1walk(tree, path){
+      var items = tree, trail = [];
+      for(var i=0;i<path.length;i++){ var n = items[path[i]]; if(!n || !n.subs) break; trail.push(n); items = n.subs; }
+      return { items: items, trail: trail };
+    }
+    function d1treeHTML(tree, path, isStaff){
+      var w = d1walk(tree, path);
+      var head = w.trail.length
+        ? '<div class="d1-path">' + (isStaff ? '상담원 연결 · ' : '음성 ARS · ') + w.trail.map(function(n){ return d1stripNum(n.t); }).join(' › ') + '</div>'
+        : '<div class="d1-guide">' + (isStaff ? '상담 분야의 번호를 선택하세요.' : '음성 ARS 메뉴 · 원하시는 번호를 선택하세요.') + '</div>';
+      var back = path.length ? '<div class="d1-back" data-d1up><span>‹</span><span>이전 메뉴</span></div>' : '';
+      var rows = w.items.map(function(m, i){
+        var num = (m.t.match(/^[0-9#]+/) || [''])[0];
+        var name = d1stripNum(m.t);
+        if(m.subs && m.subs.length){
+          return '<div class="d1-row nav" data-d1down="' + i + '"><span class="d1-num">' + num + '</span><div class="d1-t">' + name + '</div><span class="d1-arw">›</span></div>';
+        }
+        var tag = isStaff ? '<span class="d1-end staff">연결</span>' : '<span class="d1-end">최종</span>';
+        return '<div class="d1-row leaf' + (isStaff ? ' staff" data-d1leaf="' + name + '"' : '"') + '><span class="d1-num">' + (num || '·') + '</span><div class="d1-t">' + name + '</div>' + tag + '</div>';
+      }).join('');
+      return head + back + '<div class="d1-list">' + rows + '</div>';
+    }
+    function d1renderPane(){
+      if(d1tab === 'ars'){ var a = document.getElementById('d1v44ars'); if(a) a.innerHTML = d1treeHTML(window.IVR || [], d1arsPath, false); }
+      else if(d1tab === 'staff'){ var s = document.getElementById('d1v44staff'); if(s) s.innerHTML = d1treeHTML(window.FAV_MENU || [], d1staffPath, true); }
+    }
+    // 상담 분야(FAV_MENU 대분류)별 담당 부서 실데이터 — 직통 내선/대기/채널
+    var D1_STAFF_DESK = {
+      '국내주식':        {dept:'국내주식 상담팀',        ext:'1', wait:'3명 · 약 1분',  ch:'전화 · 채팅'},
+      'ID/PW · 인증서':  {dept:'디지털인증 상담팀',       ext:'2', wait:'1명 · 약 30초', ch:'전화 · 채팅'},
+      '미수 · 신용대출': {dept:'신용대출 상담팀',        ext:'3', wait:'5명 · 약 2분',  ch:'전화 상담'},
+      '권리':            {dept:'권리·공모 상담팀',        ext:'4', wait:'2명 · 약 1분',  ch:'전화 · 채팅'},
+      '시스템':          {dept:'IT시스템 상담팀 (HTS/MTS)', ext:'5', wait:'4명 · 약 2분', ch:'전화 · 채팅 · 원격지원'},
+      '선물옵션':        {dept:'파생상품 상담팀',        ext:'6', wait:'1명 · 약 40초', ch:'전화 상담'},
+      '해외주식':        {dept:'글로벌주식 상담팀',       ext:'7', wait:'3명 · 약 1분',  ch:'전화 · 채팅'},
+      '금융상품':        {dept:'금융상품 상담팀 (연금·펀드)', ext:'8', wait:'2명 · 약 1분', ch:'전화 · 채팅'},
+      'CFD':             {dept:'CFD·파생 상담팀',        ext:'9', wait:'1명 · 약 50초', ch:'전화 상담'},
+      '_default':        {dept:'대표 상담센터',          ext:'0', wait:'약 1분',        ch:'전화 · 채팅'}
+    };
+    function d1staffDeskFor(field){
+      var cat = '';
+      (window.FAV_MENU || []).forEach(function(c){
+        (c.subs || []).forEach(function(s){ if(d1stripNum(s.t) === field) cat = d1stripNum(c.t); });
+      });
+      return { cat: cat, desk: D1_STAFF_DESK[cat] || D1_STAFF_DESK['_default'] };
+    }
+    // 상담원 연결 화면 진입 (선택한 상담 분야 → 담당 부서 실데이터 반영) — Ver 2.1 상담원연결 참고, Ver 3.0 디자인
+    function d1openAgent(field){
+      field = field || '';
+      var descEl = d1.querySelector('#d1agentDesc');
+      var infoEl = d1.querySelector('#d1agentInfo');
+      var btnEl  = d1.querySelector('#d1agentBtn');
+      var info = d1staffDeskFor(field);
+      var d = info.desk;
+      var rows = '';
+      if(field) rows += '<div class="vc-row"><span class="k">상담 분야</span><span class="v">' + field + '</span></div>';
+      rows += '<div class="vc-row"><span class="k">담당 부서</span><span class="v">' + d.dept + '</span></div>'
+        + '<div class="vc-row"><span class="k">직통 번호</span><span class="v">1544-9000 · 내선 ' + d.ext + '</span></div>'
+        + '<div class="vc-row"><span class="k">상담 채널</span><span class="v">' + d.ch + '</span></div>'
+        + '<div class="vc-row"><span class="k">현재 대기</span><span class="v">' + d.wait + '</span></div>'
+        + '<div class="vc-row"><span class="k">운영 시간</span><span class="v">평일 08:00 ~ 18:00</span></div>';
+      if(infoEl) infoEl.innerHTML = rows;
+      if(descEl){
+        descEl.innerHTML = field
+          ? '‘' + field + '’ 문의는<br><b>' + d.dept + '</b>으로 연결해 드립니다.'
+          : '상담원(직원)에게 바로 연결해 드립니다.<br>아래 버튼을 눌러 상담을 시작하세요.';
+      }
+      if(btnEl) btnEl.setAttribute('data-d1flash', d.dept + '(내선 ' + d.ext + ')으로 상담원을 연결합니다. (시연용)');
+      d1show('agent', true);
+    }
+    function d1setTab(tab){
+      d1tab = tab;
+      if(!d1main) return;
+      d1main.querySelectorAll('.d1-tab').forEach(function(el){ el.classList.toggle('on', el.getAttribute('data-d1tab') === tab); });
+      d1main.querySelectorAll('.d1-pane').forEach(function(el){ el.hidden = (el.getAttribute('data-pane') !== tab); });
+      d1renderPane();
+    }
+    if(d1main){
+      d1main.querySelectorAll('.d1-tab').forEach(function(el){
+        el.addEventListener('click', function(){ d1setTab(el.getAttribute('data-d1tab')); });
+      });
+      d1main.addEventListener('click', function(e){
+        if(!e.target.closest) return;
+        var down = e.target.closest('[data-d1down]');
+        if(down){ (d1tab === 'ars' ? d1arsPath : d1staffPath).push(+down.getAttribute('data-d1down')); d1renderPane(); return; }
+        var up = e.target.closest('[data-d1up]');
+        if(up){ (d1tab === 'ars' ? d1arsPath : d1staffPath).pop(); d1renderPane(); return; }
+        var leaf = e.target.closest('[data-d1leaf]');
+        if(leaf){ d1openAgent(leaf.getAttribute('data-d1leaf') || ''); return; }  // 상담원 연결 리프 → 상담원 연결 화면
+      });
+    }
+    // ── 본인인증 절차 (Ver 1.2 디자인) : 셀프서비스 셀 탭 → 방법선택 → 진행 → 완료(준비중 안내) ──
+    var d1authSvc = '', d1authMethod = '', d1authOtp = false, d1Authed = false, d1authPw = '', d1kpCtx = '', d1acctSel = -1, d1authTarget = 'ready', d1daeIdx = -1;
+    var D1_ACCTS = [{nm:'종합위탁계좌',no:'123-4567-8901'},{nm:'CMA 계좌',no:'234-5678-9012'},{nm:'연금저축계좌',no:'345-6789-0123'}];
+    var D1_PROVS = [
+      {nm:'카카오톡',s:'talk',bg:'#FEE500',fg:'#3A2A00'},{nm:'네이버',s:'N',bg:'#03C75A',fg:'#fff'},
+      {nm:'토스',s:'toss',bg:'#0064FF',fg:'#fff'},{nm:'KB국민',s:'KB',bg:'#FFB300',fg:'#fff'},
+      {nm:'통신사PASS',s:'PASS',bg:'#E4002B',fg:'#fff'},{nm:'신한인증서',s:'신한',bg:'#0046FF',fg:'#fff'},
+      {nm:'NH인증서',s:'NH',bg:'#19A85B',fg:'#fff'},{nm:'페이코',s:'PAYCO',bg:'#FF1F40',fg:'#fff'}
+    ];
+    function d1authStepHTML(){
+      if(d1authMethod === 'phone'){
+        if(!d1authOtp){
+          return '<div class="d1a-head">본인 명의 휴대폰으로<br>인증을 진행해주세요</div>'
+            + '<div class="vc-card">'
+            + '<div class="vc-row"><span class="k">고객명</span><span class="v">홍길동</span></div>'
+            + '<div class="vc-row"><span class="k">생년월일</span><span class="v">1990년 01월 01일</span></div>'
+            + '<div class="vc-row"><span class="k">통신사</span><span class="v">SKT</span></div>'
+            + '<div class="vc-row"><span class="k">휴대폰 번호</span><span class="v">010-1234-5678</span></div></div>'
+            + '<div class="d1a-note">위 정보로 휴대폰 본인인증을 진행합니다.</div>'
+            + '<div class="vc-btn" data-d1otpreq>인증 요청하기</div>';
+        }
+        return '<div class="d1a-head">인증번호를<br>입력해주세요</div>'
+          + '<div class="d1a-field"><label>인증번호</label><input class="d1a-input" type="text" inputmode="numeric" maxlength="6" placeholder="인증번호 6자리 입력"></div>'
+          + '<div class="d1a-note">인증번호를 발송했습니다. 문자를 확인해주세요.</div>'
+          + '<div class="vc-btn" data-d1otpdone>인증 완료</div>';
+      }
+      if(d1authMethod === 'simple'){
+        var grid = D1_PROVS.map(function(p){
+          return '<div class="d1a-prov" data-d1prov="'+p.nm+'"><div class="d1a-badge" style="background:'+p.bg+';color:'+p.fg+'">'+p.s+'</div><div class="d1a-pnm">'+p.nm+'</div></div>';
+        }).join('');
+        return '<div class="d1a-head">간편인증서를<br>선택해주세요</div><div class="d1a-prov-grid">'+grid+'</div>';
+      }
+      return '<div class="d1a-head">계좌번호로<br>인증을 진행해주세요</div>'
+        + '<div class="d1a-field"><label>계좌번호</label><input class="d1a-input" type="text" inputmode="numeric" placeholder="계좌번호 입력"></div>'
+        + '<div class="d1a-field"><label>계좌 비밀번호</label><div class="d1pw-card" data-d1pwopen="field"><span id="d1pwDisp" class="d1pw-dots" data-ph="숫자 4~8자리 입력"></span></div></div>'
+        + '<div class="d1a-note">본인 명의 계좌번호와 비밀번호로 인증합니다.</div>'
+        + '<div class="vc-btn" data-d1acctdone>인증 완료</div>';
+    }
+    function d1renderAuthStep(){
+      var body = document.getElementById('d1v44authBody'); if(!body) return;
+      var titleEl = document.getElementById('d1v44authTitle');
+      var titles = { phone:'휴대폰 인증', simple:'간편 인증', account:'계좌번호 인증' };
+      if(titleEl) titleEl.textContent = titles[d1authMethod] || '본인인증';
+      body.innerHTML = d1authStepHTML();
+    }
+    function d1gotoDone(skipped){   // 준비중 안내(그리드 대메뉴 진입)
+      var el = document.getElementById('d1v44doneSvc'); if(el) el.textContent = "'" + (d1authSvc || '해당') + "'";
+      var tt = document.getElementById('d1v44doneTitle'); if(tt) tt.textContent = skipped ? '이미 본인인증이 완료되었습니다' : '본인인증이 완료되었습니다';
+      d1show('authdone', true);
+    }
+    function d1won(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function d1detailHoldings(){   // 보유잔고조회 — 실제 데이터 형태(요약 + 종목 리스트)
+      var stk = [{n:'삼성전자',q:10,avg:78000,cur:83200},{n:'SK하이닉스',q:3,avg:198000,cur:212500},{n:'현대차',q:5,avg:241000,cur:228000},{n:'카카오',q:20,avg:54200,cur:49800}];
+      var totEval=0, totCost=0, rows='';
+      stk.forEach(function(s){
+        var ev=s.q*s.cur, pl=(s.cur-s.avg)*s.q, rt=(s.cur-s.avg)/s.avg*100; totEval+=ev; totCost+=s.q*s.avg;
+        var up=pl>=0, cls=up?'d1up':'d1down', sg=up?'+':'';
+        rows += '<div class="d1hold-row"><div><div class="d1hold-nm">'+s.n+'</div><div class="d1hold-sub">'+s.q+'주 · 평단 '+d1won(s.avg)+'</div></div>'
+          + '<div class="d1hold-r"><div class="d1hold-ev">'+d1won(ev)+'</div><div class="d1hold-pl '+cls+'">'+sg+d1won(pl)+' ('+sg+rt.toFixed(1)+'%)</div></div></div>';
+      });
+      var totPl=totEval-totCost, totRt=totPl/totCost*100, up=totPl>=0, cls=up?'d1up':'d1down', sg=up?'+':'';
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">총 평가금액</span><span class="v">'+d1won(totEval)+'원</span></div>'
+        + '<div class="vc-row"><span class="k">총 평가손익</span><span class="v '+cls+'">'+sg+d1won(totPl)+'원 ('+sg+totRt.toFixed(1)+'%)</span></div>'
+        + '<div class="vc-row"><span class="k">출금가능 예수금</span><span class="v">2,150,000원</span></div>'
+        + '</div>'
+        + '<div class="d1sec">보유 종목 '+stk.length+'</div>'
+        + '<div class="vc-card">'+rows+'</div>';
+    }
+    function d1detailCertBal(){   // 잔고증명서 — 실제 데이터 형태(계좌·증명잔고·발급옵션 + 발급)
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">증명 계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">예금주</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">기준일자</span><span class="v">2026-07-01</span></div>'
+        + '</div>'
+        + '<div class="d1sec">증명 잔고 내역</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">보유 종목 평가금액</span><span class="v">3,605,500원</span></div>'
+        + '<div class="vc-row"><span class="k">예수금</span><span class="v">2,150,000원</span></div>'
+        + '<div class="vc-row"><span class="k">잔고 합계</span><span class="v">5,755,500원</span></div>'
+        + '</div>'
+        + '<div class="d1sec">발급 옵션</div>'
+        + '<div class="vc-card" style="margin-bottom:16px">'
+        + '<div class="vc-row"><span class="k">제출 용도</span><span class="v">은행 제출용</span></div>'
+        + '<div class="vc-row"><span class="k">발급 통수</span><span class="v">1통</span></div>'
+        + '<div class="vc-row"><span class="k">발급 형식</span><span class="v">전자문서(PDF)</span></div>'
+        + '</div>'
+        + '<div class="vc-btn" data-d1flash="잔고증명서가 발급되었습니다. 등록된 이메일로 발송됩니다. (시연용)">잔고증명서 발급</div>'
+        + '<div class="d1a-note">기준일 현재 보유 종목 평가금액과 예수금이 증명서에 표기됩니다.</div>';
+    }
+    function d1detailCertTx(){   // 거래내역서 — 실제 데이터 형태(발급정보 + 거래내역 + 발급옵션)
+      var tx = [{d:'06.20',n:'삼성전자',s:'매수',a:780000},{d:'06.18',n:'카카오',s:'매도',a:1010000},{d:'06.16',n:'SK하이닉스',s:'매수',a:594000}];
+      var rows = tx.map(function(x){ var buy=(x.s==='매수'), cls=buy?'d1up':'d1down', sg=buy?'-':'+';
+        return '<div class="vc-row"><span class="k">'+x.d+' · '+x.n+' '+x.s+'</span><span class="v '+cls+'">'+sg+d1won(x.a)+'원</span></div>';
+      }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">발급 계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">예금주</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">조회 기간</span><span class="v">2026-01-01 ~ 2026-07-01</span></div>'
+        + '</div>'
+        + '<div class="d1sec">거래 내역 '+tx.length+'건</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+rows+'</div>'
+        + '<div class="d1sec">발급 옵션</div>'
+        + '<div class="vc-card" style="margin-bottom:16px">'
+        + '<div class="vc-row"><span class="k">거래 유형</span><span class="v">전체 (매매·입출금)</span></div>'
+        + '<div class="vc-row"><span class="k">발급 형식</span><span class="v">전자문서(PDF)</span></div>'
+        + '</div>'
+        + '<div class="vc-btn" data-d1flash="거래내역서가 발급되었습니다. 등록된 이메일로 발송됩니다. (시연용)">거래내역서 발급</div>'
+        + '<div class="d1a-note">최근 5년 이내의 매매·입출금 거래내역서를 발급할 수 있습니다.</div>';
+    }
+    function d1detailDeposit(){   // 예수금조회 — 실제 데이터 형태(예수금/출금가능/D+1·D+2/미수)
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">예금주</span><span class="v">홍길동</span></div>'
+        + '</div>'
+        + '<div class="d1sec">예수금 내역</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">예수금 (D+0)</span><span class="v">2,150,000원</span></div>'
+        + '<div class="vc-row"><span class="k">출금가능금액</span><span class="v">2,150,000원</span></div>'
+        + '<div class="vc-row"><span class="k">D+1 추정예수금</span><span class="v">2,150,000원</span></div>'
+        + '<div class="vc-row"><span class="k">D+2 추정예수금</span><span class="v">2,150,000원</span></div>'
+        + '<div class="vc-row"><span class="k">미수금</span><span class="v">0원</span></div>'
+        + '</div>'
+        + '<div class="d1a-note">출금가능금액은 미수·미납금 및 결제예정 금액을 반영한 금액입니다.</div>';
+    }
+    function d1detailIpoRate(){   // 청약경쟁률조회 — 실제 데이터 형태(진행 공모주 경쟁률 리스트)
+      var r = [{n:'에이펙스반도체',rate:'1,420 : 1',st:'live',lb:'청약중',d:'06.24~06.25 청약중'},
+               {n:'그린에너지솔루션',rate:'예정',st:'wait',lb:'예정',d:'06.26~06.27 예정'},
+               {n:'대명에너지',rate:'875 : 1',st:'done',lb:'마감',d:'06.18 청약마감'}];
+      var rows = r.map(function(x){
+        return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.n+'<span class="d1tag '+x.st+'">'+x.lb+'</span></div><div class="d1ipo-d">'+x.d+'</div></div>'
+          + '<div class="d1ipo-rate'+(x.st==='wait'?' wait':'')+'">'+x.rate+'</div></div>';
+      }).join('');
+      return '<div class="d1sec">진행 공모주 청약 경쟁률</div>'
+        + '<div class="vc-card">'+rows+'</div>'
+        + '<div class="d1a-note">기관 수요예측 경쟁률이며, 일반 청약 경쟁률은 청약 마감 후 확정됩니다.</div>';
+    }
+    function d1detailFilled(){   // 체결내역조회 — 실제 데이터 형태(당일 체결 주문 리스트)
+      var f = [{n:'삼성전자',s:'매수',q:10,p:78000,t:'09:12'},{n:'SK하이닉스',s:'매수',q:3,p:198000,t:'10:34'},{n:'현대차',s:'매도',q:2,p:235000,t:'13:05'}];
+      var rows = f.map(function(x){ var cls=(x.s==='매수')?'buy':'sell';
+        return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.n+'<span class="d1tag '+cls+'">'+x.s+'</span></div><div class="d1ipo-d">'+x.q+'주 · '+d1won(x.p)+'원 · '+x.t+' 체결</div></div>'
+          + '<div class="d1ipo-rate" style="color:#0f172a">'+d1won(x.q*x.p)+'원</div></div>';
+      }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">조회 기간</span><span class="v">2026-07-01 (당일)</span></div>'
+        + '</div>'
+        + '<div class="d1sec">체결 내역 '+f.length+'건</div>'
+        + '<div class="vc-card">'+rows+'</div>'
+        + '<div class="d1a-note">당일 체결된 주문 내역입니다. 미체결·예약 주문은 별도 메뉴에서 확인하세요.</div>';
+    }
+    function d1detailTrades(){   // 거래내역조회 — 실제 데이터 형태(기간별 매매 내역 · 조회형)
+      var tx = [{d:'06.20',n:'삼성전자',s:'매수',a:780000},{d:'06.18',n:'카카오',s:'매도',a:1010000},{d:'06.16',n:'SK하이닉스',s:'매수',a:594000}];
+      var rows = tx.map(function(x){ var buy=(x.s==='매수'), cls=buy?'d1up':'d1down', sg=buy?'-':'+';
+        return '<div class="vc-row"><span class="k">'+x.d+' · '+x.n+' '+x.s+'</span><span class="v '+cls+'">'+sg+d1won(x.a)+'원</span></div>';
+      }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">조회 기간</span><span class="v">2026-06-01 ~ 2026-07-01</span></div>'
+        + '</div>'
+        + '<div class="d1sec">거래 내역 '+tx.length+'건</div>'
+        + '<div class="vc-card">'+rows+'</div>'
+        + '<div class="d1a-note">매수는 출금(-), 매도는 입금(+)으로 표기됩니다.</div>';
+    }
+    function d1detailIpoHist(){   // 청약신청내역조회 — 실제 데이터 형태(나의 청약 신청 내역)
+      var h = [{n:'미래모빌리티',st:'done',lb:'배정완료',d:'청약 100주 · 배정 7주 · 환불 2,790,000원'},
+               {n:'에이펙스반도체',st:'live',lb:'청약중',d:'청약 50주 · 증거금 900,000원 · 06.25 마감'}];
+      var rows = h.map(function(x){
+        return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.n+'<span class="d1tag '+x.st+'">'+x.lb+'</span></div><div class="d1ipo-d">'+x.d+'</div></div></div>';
+      }).join('');
+      return '<div class="d1sec">나의 청약 신청 내역 '+h.length+'건</div>'
+        + '<div class="vc-card">'+rows+'</div>'
+        + '<div class="d1a-note">최근 1년간의 공모주 청약 신청 내역을 조회할 수 있습니다.</div>';
+    }
+    function d1detailIpoSchedule(){   // 청약일정 — 실제 데이터 형태(종목별 청약기간·환불·상장일)
+      var s = [{n:'에이펙스반도체',st:'live',lb:'청약중',sub:'06.24 ~ 06.25',refund:'06.27',list:'07.03'},
+               {n:'그린에너지솔루션',st:'wait',lb:'예정',sub:'06.26 ~ 06.27',refund:'07.01',list:'07.08'},
+               {n:'대명에너지',st:'done',lb:'마감',sub:'06.16 ~ 06.17',refund:'06.19',list:'06.25'}];
+      var cards = s.map(function(x){
+        return '<div class="vc-card" style="margin-bottom:12px">'
+          + '<div class="d1sched-hd">'+x.n+'<span class="d1tag '+x.st+'">'+x.lb+'</span></div>'
+          + '<div class="vc-row"><span class="k">청약 기간</span><span class="v">'+x.sub+'</span></div>'
+          + '<div class="vc-row"><span class="k">환불일</span><span class="v">'+x.refund+'</span></div>'
+          + '<div class="vc-row"><span class="k">상장(예정)일</span><span class="v">'+x.list+'</span></div>'
+          + '</div>';
+      }).join('');
+      return '<div class="d1sec">공모주 청약 일정</div>' + cards
+        + '<div class="d1a-note">청약 일정은 시장 상황에 따라 변경될 수 있습니다.</div>';
+    }
+    function d1detailIdFind(){   // ID조회 — 실제 데이터 형태(본인정보 + 마스킹 아이디 목록)
+      var ids = [{id:'kiwoom_h****',tag:'대표',sub:'2019.03.14 가입 · 최근 로그인 2026.06.21'},
+                 {id:'hong****90',tag:'',sub:'2021.08.02 가입 · 최근 로그인 2025.11.02'}];
+      var rows = ids.map(function(x){
+        return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.id+(x.tag?'<span class="d1tag live">'+x.tag+'</span>':'')+'</div><div class="d1ipo-d">'+x.sub+'</div></div>'
+          + '<span class="d1mini" data-d1flash="해당 아이디로 로그인 화면으로 이동합니다. (시연용)">로그인</span></div>';
+      }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">실명 확인</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">본인인증</span><span class="v" style="color:#16a34a">휴대폰 인증 완료</span></div>'
+        + '<div class="vc-row"><span class="k">가입일</span><span class="v">2019.03.14</span></div>'
+        + '</div>'
+        + '<div class="d1sec">회원님의 아이디</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+rows+'</div>'
+        + '<div class="vc-btn" data-d1flash="가입 이메일(ho**@kiwoom.com)로 아이디 전체를 발송했습니다. (시연용)">이메일로 전체 아이디 받기</div>'
+        + '<div class="d1a-note">보안을 위해 아이디 일부는 마스킹(****)되어 표시됩니다.</div>';
+    }
+    function d1detailIdReset(){   // PW재설정 — 실제 데이터 형태(본인정보 + 새 비밀번호 입력폼)
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">아이디</span><span class="v">kiwoom_h****</span></div>'
+        + '<div class="vc-row"><span class="k">본인인증</span><span class="v" style="color:#16a34a">휴대폰 인증 완료</span></div>'
+        + '</div>'
+        + '<div class="d1a-field"><label>새 비밀번호</label><input class="d1a-input" type="password" placeholder="새 비밀번호 입력"></div>'
+        + '<div class="d1a-field"><label>비밀번호 확인</label><input class="d1a-input" type="password" placeholder="비밀번호 다시 입력"></div>'
+        + '<div class="d1a-note">영문·숫자·특수문자를 조합해 8~20자로 설정해 주세요. 직전에 사용한 비밀번호는 다시 사용할 수 없습니다.</div>'
+        + '<div class="vc-btn" data-d1flash="비밀번호가 재설정되었습니다. 새 비밀번호로 다시 로그인해 주세요. (시연용)">비밀번호 재설정</div>';
+    }
+    function d1detailIdLink(){   // ID계좌연결/해지 — 실제 데이터 형태(로그인 ID 연결 계좌 목록 + 연결/해지)
+      var accts = [{nm:'종합위탁계좌',no:'123-4567-8901',on:true},{nm:'CMA 계좌',no:'234-5678-9012',on:true},{nm:'연금저축계좌',no:'345-6789-0123',on:false}];
+      var rows = accts.map(function(a){
+        var tag = a.on ? '<span class="d1tag live">연결됨</span>' : '<span class="d1tag done">미연결</span>';
+        var btn = a.on ? '<span class="d1mini" data-d1flash="계좌 연결을 해지했습니다. (시연용)">해지</span>' : '<span class="d1mini" data-d1flash="계좌를 연결했습니다. (시연용)">연결</span>';
+        return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+a.nm+' '+tag+'</div><div class="d1ipo-d">'+a.no+'</div></div>'+btn+'</div>';
+      }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">아이디</span><span class="v">kiwoom_h****</span></div>'
+        + '<div class="vc-row"><span class="k">본인인증</span><span class="v" style="color:#16a34a">휴대폰 인증 완료</span></div>'
+        + '</div>'
+        + '<div class="d1sec">연결 계좌</div>'
+        + '<div class="vc-card">'+rows+'</div>'
+        + '<div class="d1a-note">로그인 아이디에 연결할 계좌를 선택하거나 연결을 해지할 수 있습니다.</div>';
+    }
+    function d1detailIdRelease(){   // 장기미사용 ID 제한해제 — 실제 데이터 형태(계정 제한 상태 + 해제)
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">아이디</span><span class="v">hong****90</span></div>'
+        + '<div class="vc-row"><span class="k">계정 상태</span><span class="v" style="color:#e11900">로그인 제한 (장기미사용)</span></div>'
+        + '<div class="vc-row"><span class="k">마지막 로그인</span><span class="v">2025.11.02</span></div>'
+        + '<div class="vc-row"><span class="k">제한 적용일</span><span class="v">2026.11.02</span></div>'
+        + '<div class="vc-row"><span class="k">본인인증</span><span class="v" style="color:#16a34a">휴대폰 인증 완료</span></div>'
+        + '</div>'
+        + '<div class="d1a-note">1년 이상 로그인하지 않아 계정이 제한되었습니다. 본인인증 후 제한을 해제하면 다시 로그인할 수 있습니다.</div>'
+        + '<div class="vc-btn" data-d1flash="장기미사용 ID 제한이 해제되었습니다. 다시 로그인하실 수 있습니다. (시연용)">제한 해제</div>';
+    }
+    // 비대면업무 신청현황 9종 (접수정보 + 처리상태 + 신청내용, 상태별 액션)
+    var D1_UNTACT = {
+      '비대면 계좌개설':{no:'NA-20260620-0481',at:'2026-06-20 14:22',st:'완료',c:'done',rows:[['신청 유형','종합위탁 계좌개설'],['개설 계좌','종합위탁 123-4567-8901'],['처리 완료','2026-06-20 14:40']]},
+      '계좌비밀번호 재설정':{no:'NP-20260627-0193',at:'2026-06-27 09:11',st:'완료',c:'done',rows:[['대상 계좌','종합위탁 123-4567-8901'],['처리 완료','2026-06-27 09:15']]},
+      '모바일OTP 발급':{no:'OT-20260701-0022',at:'2026-07-01 08:50',st:'처리중',c:'wait',rows:[['발급 수단','모바일 OTP'],['심사 상태','발급 심사 중'],['예상 완료','2026-07-01 중']]},
+      '출금계좌 등록':{no:'WD-20260625-0310',at:'2026-06-25 16:03',st:'완료',c:'done',rows:[['등록 은행','국민은행'],['계좌번호','1234-56-****78'],['처리 완료','2026-06-25 16:20']]},
+      '외화 출금계좌 등록':{no:'FW-20260630-0077',at:'2026-06-30 11:40',st:'처리중',c:'wait',rows:[['통화','USD'],['등록 은행','신한은행'],['심사 상태','서류 심사 중']]},
+      '계좌사고해지':{no:'AC-20260628-0155',at:'2026-06-28 10:05',st:'완료',c:'done',rows:[['사고 유형','분실·도난 신고'],['대상 계좌','종합위탁 123-4567-8901'],['처리 완료','2026-06-28 10:30']]},
+      '온라인 실명확인':{no:'RN-20260619-0402',at:'2026-06-19 13:12',st:'완료',c:'done',rows:[['확인 방법','휴대폰 실명확인'],['처리 완료','2026-06-19 13:14']]},
+      '계좌폐쇄 신청':{no:'CL-20260629-0088',at:'2026-06-29 15:47',st:'반려',c:'reject',rows:[['대상 계좌','CMA 234-5678-9012'],['반려 사유','예수금·보유종목 잔여']],note:'잔여 자산 출금·이전 후 다시 신청해 주세요.',action:{t:'재신청',msg:'계좌폐쇄를 다시 신청합니다. (시연용)'}},
+      '유가증권 대체출고(타명의)':{no:'TR-20260701-0013',at:'2026-07-01 09:30',st:'처리중',c:'wait',rows:[['출고 유형','타명의 대체출고'],['대상 종목','삼성전자 5주'],['심사 상태','서류 심사 중']],action:{t:'신청 취소',msg:'대체출고 신청을 취소했습니다. (시연용)',warn:true}}
+    };
+    function d1detailUntact(svc){
+      var d = D1_UNTACT[svc]; if(!d) return '';
+      var col = {done:'#16a34a',wait:'#e08600',reject:'#e11900'}[d.c] || '#0f172a';
+      var content = d.rows.map(function(r){ return '<div class="vc-row"><span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>'; }).join('');
+      var html = '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">접수번호</span><span class="v">'+d.no+'</span></div>'
+        + '<div class="vc-row"><span class="k">신청일시</span><span class="v">'+d.at+'</span></div>'
+        + '<div class="vc-row"><span class="k">처리상태</span><span class="v" style="color:'+col+';font-weight:800">'+d.st+'</span></div>'
+        + '</div>'
+        + '<div class="d1sec">신청 내용</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+content+'</div>';
+      if(d.note) html += '<div class="d1a-note">'+d.note+'</div>';
+      if(d.action) html += '<div class="vc-btn'+(d.action.warn?' d1btn-warn':'')+'" data-d1flash="'+d.action.msg+'">'+d.action.t+'</div>';
+      return html;
+    }
+    // 계좌 사고 해지 3종 (거래제한 계좌 상태 + 해제 신청)
+    var D1_ACCIDENT = {
+      '단기간 다수개설계좌 해지':{acct:'CMA 234-5678-9012',rows:[['제한 유형','단기간 다수 계좌개설'],['제한 사유','최근 20영업일 내 2개 이상 개설'],['제한 적용일','2026-06-22']],note:'금융거래목적확인서 제출 후 거래제한을 해제할 수 있습니다.',action:{t:'거래제한 해제 신청',msg:'금융거래목적확인서 제출 화면으로 이동합니다. (시연용)'}},
+      '장기미사용계좌 해지':{acct:'연금저축 345-6789-0123',rows:[['제한 유형','장기미사용 거래제한'],['제한 사유','최근 1년 이상 거래 없음'],['제한 적용일','2026-05-30']],note:'본인인증 및 목적 확인 후 거래제한을 해제할 수 있습니다.',action:{t:'거래제한 해제 신청',msg:'거래제한 해제를 신청했습니다. (시연용)'}},
+      '한도제한계좌 해제 (영웅문S# 연동)':{acct:'종합위탁 123-4567-8901',rows:[['제한 유형','한도제한계좌'],['현재 한도','1일 이체 100만원'],['제한 적용일','2026-06-10']],note:'영웅문S#에서 증빙서류 제출 후 한도제한을 해제할 수 있습니다.',action:{t:'영웅문S#에서 해제하기',msg:'영웅문S#으로 연결합니다. 계좌 연동 후 한도제한 해제 화면으로 이동합니다. (시연용)'}}
+    };
+    function d1detailAccident(svc){
+      var d = D1_ACCIDENT[svc]; if(!d) return '';
+      var content = d.rows.map(function(r){ return '<div class="vc-row"><span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>'; }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">대상 계좌</span><span class="v">'+d.acct+'</span></div>'
+        + '<div class="vc-row"><span class="k">제한 상태</span><span class="v" style="color:#e11900;font-weight:800">거래제한 중</span></div>'
+        + '</div>'
+        + '<div class="d1sec">제한 상세</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+content+'</div>'
+        + '<div class="d1a-note">'+d.note+'</div>'
+        + '<div class="vc-btn" data-d1flash="'+d.action.msg+'">'+d.action.t+'</div>';
+    }
+    function d1detailCdd(){   // 고객확인등록(CDD/EDD) — 실제 데이터 형태(확인 상태 + 확인 정보 + 등록·갱신)
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">실명 확인</span><span class="v">홍길동 (****-1******)</span></div>'
+        + '<div class="vc-row"><span class="k">고객확인 등급</span><span class="v">CDD · 일반</span></div>'
+        + '<div class="vc-row"><span class="k">최근 확인일</span><span class="v">2025.06.20</span></div>'
+        + '<div class="vc-row"><span class="k">갱신 예정일</span><span class="v" style="color:#16a34a;font-weight:800">2026.06.20</span></div>'
+        + '</div>'
+        + '<div class="d1sec">확인 정보</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">실제 소유자</span><span class="v">본인</span></div>'
+        + '<div class="vc-row"><span class="k">직업</span><span class="v">회사원</span></div>'
+        + '<div class="vc-row"><span class="k">거래 목적</span><span class="v">자산운용·투자</span></div>'
+        + '<div class="vc-row"><span class="k">자금 원천</span><span class="v">근로소득</span></div>'
+        + '</div>'
+        + '<div class="d1a-note">CDD/EDD는 고객확인제도에 따른 신원·거래목적 확인 절차입니다.</div>'
+        + '<div class="vc-btn" data-d1flash="영웅문S#으로 연결합니다. 계좌 연동 후 고객확인 정보 등록·갱신 화면으로 이동합니다. (시연용)">고객확인 정보 등록 · 갱신</div>';
+    }
+    function d1detailCredit(){   // 신용/대출 만기연장 — 실제 데이터 형태(대출현황 + 연장 가능 목록)
+      var loans = [{n:'신용융자 만기연장',d:'잔액 12,400,000원 · 만기 2026.07.10 (D-14)',msg:'신용융자 만기연장이 신청되었습니다. (시연용)'},
+                   {n:'매도대금 담보대출 만기연장',d:'잔액 3,000,000원 · 만기 2026.07.05 (D-9)',msg:'담보대출 만기연장이 신청되었습니다. (시연용)'}];
+      var rows = loans.map(function(x){ return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.n+'</div><div class="d1ipo-d">'+x.d+'</div></div><span class="d1mini" data-d1flash="'+x.msg+'">연장신청</span></div>'; }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">대출 계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">신용·대출 잔액</span><span class="v">15,400,000원</span></div>'
+        + '<div class="vc-row"><span class="k">담보비율</span><span class="v" style="color:#16a34a;font-weight:800">182%</span></div>'
+        + '</div>'
+        + '<div class="d1sec">연장 가능 2건</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+rows+'</div>'
+        + '<div class="d1a-note">만기연장은 약정 한도·담보비율 충족 시 신청 당일 처리됩니다.</div>';
+    }
+    // 권리업무 소메뉴 11종 (신청폼 / 신청취소 / 신청내역·현황 조회)
+    var D1_RIGHTS = {
+      '유상청약 신청':{sec:'청약 정보',rows:[['대상 종목','OO에너지(우)'],['청약 유형','유상증자 신주인수권'],['배정 수량','30주'],['청약 기간','07.02 ~ 07.03'],['예상 청약대금','450,000원']],action:{t:'유상청약 신청',msg:'유상청약을 신청했습니다. (시연용)'}},
+      '유상청약예약 신청':{sec:'예약 정보',rows:[['대상 종목','OO에너지(우)'],['예약 실행일','07.02 09:00'],['배정 수량','30주'],['예상 청약대금','450,000원']],action:{t:'유상청약 예약 신청',msg:'유상청약 예약을 신청했습니다. (시연용)'}},
+      '유상청약 취소':{sec:'신청 내역',rows:[['신청 종목','OO에너지(우)'],['청약 수량','30주'],['청약 기간','07.02 ~ 07.03'],['상태','청약 접수완료']],note:'청약 마감 전까지 취소할 수 있습니다.',action:{t:'유상청약 취소',msg:'유상청약을 취소했습니다. (시연용)',warn:true}},
+      '유상청약신청내역':{sec:'유상청약 신청 내역',items:[{n:'OO에너지(우)',tag:'청약완료',c:'done',d:'30주 · 청약대금 450,000원 · 06.28'},{n:'XX바이오(우)',tag:'배정완료',c:'done',d:'10주 · 배정 3주 · 환불 105,000원'}]},
+      '주주반대의사 신청':{sec:'반대의사 신청 정보',rows:[['대상 종목','ABC주식회사'],['안건','합병계약 승인의 건'],['주주총회일','2026.07.15'],['보유 수량','50주']],action:{t:'반대의사 신청',msg:'주주반대의사를 신청했습니다. (시연용)'}},
+      '주주반대의사 신청취소':{sec:'신청 내역',rows:[['신청 종목','ABC주식회사'],['안건','합병계약 승인의 건'],['신청일','2026.06.30'],['상태','접수완료']],action:{t:'반대의사 신청 취소',msg:'주주반대의사 신청을 취소했습니다. (시연용)',warn:true}},
+      '주주반대의사신청내역':{sec:'반대의사 신청 내역',items:[{n:'ABC주식회사',tag:'접수완료',c:'wait',d:'합병계약 승인의 건 · 06.30 신청'},{n:'DEF코퍼레이션',tag:'처리완료',c:'done',d:'분할합병 승인의 건 · 05.12 처리'}]},
+      '주식매수청구 신청':{sec:'매수청구 정보',rows:[['대상 종목','ABC주식회사'],['매수청구가','12,500원'],['청구 가능 수량','50주'],['청구 기간','07.16 ~ 07.29']],action:{t:'매수청구 신청',msg:'주식매수청구를 신청했습니다. (시연용)'}},
+      '주식매수청구 신청취소':{sec:'신청 내역',rows:[['신청 종목','ABC주식회사'],['청구 수량','50주'],['청구가','12,500원'],['상태','접수완료']],action:{t:'매수청구 신청 취소',msg:'주식매수청구 신청을 취소했습니다. (시연용)',warn:true}},
+      '주식매수청구신청내역':{sec:'매수청구 신청 내역',items:[{n:'ABC주식회사',tag:'접수완료',c:'wait',d:'50주 · 12,500원 · 07.18 신청'}]},
+      '권리현황':{sec:'보유 종목 권리 현황',items:[{n:'OO에너지(우)',tag:'유상증자',c:'live',d:'신주 배정 07.02~07.03 · 30주'},{n:'ABC주식회사',tag:'주주총회',c:'wait',d:'반대의사·매수청구 대상 · 07.15'},{n:'GH전자',tag:'무상증자',c:'done',d:'배정기준일 07.20 · 5주 예정'}]}
+    };
+    function d1detailRights(svc){
+      var d = D1_RIGHTS[svc]; if(!d) return '';
+      var html = '';
+      if(d.rows){ html += '<div class="d1sec">'+(d.sec||'신청 정보')+'</div><div class="vc-card" style="margin-bottom:14px">'
+        + d.rows.map(function(r){ return '<div class="vc-row"><span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>'; }).join('') + '</div>'; }
+      if(d.items){ html += '<div class="d1sec">'+(d.sec||'내역')+' '+d.items.length+'건</div><div class="vc-card" style="margin-bottom:14px">'
+        + d.items.map(function(x){ return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.n+(x.tag?' <span class="d1tag '+x.c+'">'+x.tag+'</span>':'')+'</div><div class="d1ipo-d">'+x.d+'</div></div></div>'; }).join('') + '</div>'; }
+      if(d.note) html += '<div class="d1a-note">'+d.note+'</div>';
+      if(d.action) html += '<div class="vc-btn'+(d.action.warn?' d1btn-warn':'')+'" data-d1flash="'+d.action.msg+'">'+d.action.t+'</div>';
+      return html;
+    }
+    function d1detailBankTx(){   // 은행이체거래내역서 — 발급형(이체 입출금 내역)
+      var tx = [{d:'06.21',n:'타행 입금',a:3000000,plus:true},{d:'06.20',n:'주식 매수 대금',a:780000,plus:false},{d:'06.18',n:'타행 출금',a:500000,plus:false}];
+      var rows = tx.map(function(x){ var cls=x.plus?'d1down':'d1up', sg=x.plus?'+':'-';
+        return '<div class="vc-row"><span class="k">'+x.d+' · '+x.n+'</span><span class="v '+cls+'">'+sg+d1won(x.a)+'원</span></div>'; }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">발급 계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">예금주</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">조회 기간</span><span class="v">2026-06-01 ~ 2026-07-01</span></div>'
+        + '</div>'
+        + '<div class="d1sec">은행 이체 내역 '+tx.length+'건</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+rows+'</div>'
+        + '<div class="d1sec">발급 옵션</div>'
+        + '<div class="vc-card" style="margin-bottom:16px"><div class="vc-row"><span class="k">발급 형식</span><span class="v">전자문서(PDF)</span></div></div>'
+        + '<div class="vc-btn" data-d1flash="은행이체거래내역서가 발급되었습니다. 등록된 이메일로 발송됩니다. (시연용)">은행이체거래내역서 발급</div>'
+        + '<div class="d1a-note">타행 입출금·이체 내역이 확인서에 표기됩니다.</div>';
+    }
+    function d1detailFinIncome(){   // 금융소득내역서 — 발급형(배당·이자 소득)
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">발급 계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">예금주</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">과세 연도</span><span class="v">2025년</span></div>'
+        + '</div>'
+        + '<div class="d1sec">금융소득 내역</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">배당소득</span><span class="v">320,000원</span></div>'
+        + '<div class="vc-row"><span class="k">이자소득(예탁금 이용료)</span><span class="v">45,000원</span></div>'
+        + '<div class="vc-row"><span class="k">금융소득 합계</span><span class="v">365,000원</span></div>'
+        + '<div class="vc-row"><span class="k">원천징수세액</span><span class="v">56,210원</span></div>'
+        + '</div>'
+        + '<div class="vc-btn" data-d1flash="금융소득내역서가 발급되었습니다. 등록된 이메일로 발송됩니다. (시연용)">금융소득내역서 발급</div>'
+        + '<div class="d1a-note">연간 배당·이자 등 금융소득과 원천징수세액이 표기됩니다.</div>';
+    }
+    function d1detailLevETP(){   // 레버리지ETP거래확인서 — 발급형(레버리지·인버스 ETP 거래)
+      var tx = [{n:'KODEX 레버리지',s:'매수',q:10,a:250000,d:'06.24'},{n:'TIGER 200선물인버스2X',s:'매도',q:5,a:60000,d:'06.27'}];
+      var rows = tx.map(function(x){ var buy=(x.s==='매수'), cls=buy?'buy':'sell';
+        return '<div class="d1ipo-row"><div><div class="d1ipo-nm">'+x.n+'<span class="d1tag '+cls+'">'+x.s+'</span></div><div class="d1ipo-d">'+x.q+'주 · '+d1won(x.a)+'원 · '+x.d+'</div></div></div>'; }).join('');
+      return '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">발급 계좌</span><span class="v">종합위탁 123-4567-8901</span></div>'
+        + '<div class="vc-row"><span class="k">예금주</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">조회 기간</span><span class="v">2026-01-01 ~ 2026-07-01</span></div>'
+        + '</div>'
+        + '<div class="d1sec">레버리지 ETP 거래 내역 '+tx.length+'건</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'+rows+'</div>'
+        + '<div class="d1sec">발급 옵션</div>'
+        + '<div class="vc-card" style="margin-bottom:16px">'
+        + '<div class="vc-row"><span class="k">사전교육 이수</span><span class="v" style="color:#16a34a;font-weight:800">이수 완료</span></div>'
+        + '<div class="vc-row"><span class="k">발급 형식</span><span class="v">전자문서(PDF)</span></div>'
+        + '</div>'
+        + '<div class="vc-btn" data-d1flash="레버리지ETP거래확인서가 발급되었습니다. 등록된 이메일로 발송됩니다. (시연용)">레버리지ETP거래확인서 발급</div>'
+        + '<div class="d1a-note">레버리지·인버스 ETP는 사전 의무교육 이수 후 거래할 수 있습니다.</div>';
+    }
+    function d1detailIpoCancel(){   // 청약취소 — 신청 내역 + 취소
+      return '<div class="d1sec">청약 신청 내역</div>'
+        + '<div class="vc-card" style="margin-bottom:14px">'
+        + '<div class="vc-row"><span class="k">대상 종목</span><span class="v">에이펙스반도체</span></div>'
+        + '<div class="vc-row"><span class="k">청약 수량</span><span class="v">50주</span></div>'
+        + '<div class="vc-row"><span class="k">증거금</span><span class="v">900,000원</span></div>'
+        + '<div class="vc-row"><span class="k">청약 마감</span><span class="v">2026.06.25</span></div>'
+        + '<div class="vc-row"><span class="k">상태</span><span class="v" style="color:#e08600;font-weight:800">청약중</span></div>'
+        + '</div>'
+        + '<div class="d1a-note">청약 마감 전까지 취소할 수 있으며, 증거금은 취소 즉시 환불됩니다.</div>'
+        + '<div class="vc-btn d1btn-warn" data-d1flash="공모주 청약을 취소했습니다. 증거금은 환불 처리됩니다. (시연용)">청약 취소</div>';
+    }
+    function d1renderSvcDetail(){   // 중/소메뉴별 세부화면 (실데이터 매핑 + 그 외 공통)
+      var tt = document.getElementById('d1v44svcTitle'); if(tt) tt.textContent = d1authSvc || '서비스';
+      var bd = document.getElementById('d1v44svcBody'); if(!bd) return;
+      if(D1_UNTACT[d1authSvc]){ bd.innerHTML = d1detailUntact(d1authSvc); return; }   // 비대면업무 신청현황 9종
+      if(D1_ACCIDENT[d1authSvc]){ bd.innerHTML = d1detailAccident(d1authSvc); return; }   // 계좌 사고 해지 3종
+      if(d1authSvc === '고객확인등록(CDD/EDD) (영웅문S# 연동)'){ bd.innerHTML = d1detailCdd(); return; }
+      if(d1authSvc === '신용/대출 만기연장'){ bd.innerHTML = d1detailCredit(); return; }   // 신용/대출 만기연장
+      if(D1_RIGHTS[d1authSvc]){ bd.innerHTML = d1detailRights(d1authSvc); return; }   // 권리업무 소메뉴 11종
+      if(d1authSvc === '은행이체거래내역서'){ bd.innerHTML = d1detailBankTx(); return; }
+      if(d1authSvc === '금융소득내역서'){ bd.innerHTML = d1detailFinIncome(); return; }
+      if(d1authSvc === '레버리지ETP거래확인서'){ bd.innerHTML = d1detailLevETP(); return; }
+      if(d1authSvc === '청약취소'){ bd.innerHTML = d1detailIpoCancel(); return; }
+      if(d1authSvc === 'ID조회'){ bd.innerHTML = d1detailIdFind(); return; }
+      if(d1authSvc === 'PW재설정'){ bd.innerHTML = d1detailIdReset(); return; }
+      if(d1authSvc === 'ID계좌연결 / 해지'){ bd.innerHTML = d1detailIdLink(); return; }
+      if(d1authSvc === '장기미사용 ID 제한해제'){ bd.innerHTML = d1detailIdRelease(); return; }
+      if(d1authSvc === '보유잔고조회'){ bd.innerHTML = d1detailHoldings(); return; }
+      if(d1authSvc === '잔고증명서'){ bd.innerHTML = d1detailCertBal(); return; }
+      if(d1authSvc === '거래내역서'){ bd.innerHTML = d1detailCertTx(); return; }
+      if(d1authSvc === '예수금조회'){ bd.innerHTML = d1detailDeposit(); return; }
+      if(d1authSvc === '청약경쟁률조회'){ bd.innerHTML = d1detailIpoRate(); return; }
+      if(d1authSvc === '체결내역조회'){ bd.innerHTML = d1detailFilled(); return; }
+      if(d1authSvc === '거래내역조회'){ bd.innerHTML = d1detailTrades(); return; }
+      if(d1authSvc === '청약신청내역조회'){ bd.innerHTML = d1detailIpoHist(); return; }
+      if(d1authSvc === '청약일정'){ bd.innerHTML = d1detailIpoSchedule(); return; }
+      var acct = D1_ACCTS[d1acctSel] || D1_ACCTS[0];
+      bd.innerHTML = '<div class="d1a-head">' + (d1authSvc || '서비스') + '</div>'
+        + '<div class="vc-card">'
+        + '<div class="vc-row"><span class="k">서비스</span><span class="v">' + (d1authSvc || '-') + '</span></div>'
+        + '<div class="vc-row"><span class="k">고객명</span><span class="v">홍길동</span></div>'
+        + '<div class="vc-row"><span class="k">계좌</span><span class="v">' + acct.nm + ' ' + acct.no + '</span></div>'
+        + '<div class="vc-row"><span class="k">처리일시</span><span class="v">2026-07-01 09:41</span></div>'
+        + '</div>'
+        + '<div class="d1a-note">‘' + (d1authSvc || '서비스') + '’ 세부 화면입니다.</div>'
+        + '<div class="vc-btn" data-d1authhome>홈으로</div>';
+    }
+    function d1leaves(node){   // 대메뉴 하위의 모든 리프(중·소메뉴) 이름 평탄화
+      var out = [];
+      (node.subs || []).forEach(function(s){ if(s.subs && s.subs.length) out = out.concat(d1leaves(s)); else out.push(d1stripNum(s.t)); });
+      return out;
+    }
+    function d1renderSvcMenu(){   // 대메뉴의 서비스(중/소메뉴) 목록
+      var node = D1_SELF[d1daeIdx]; if(!node) return;
+      var nm = d1stripNum(node.t);
+      var tt = document.getElementById('d1v44svcMenuTitle'); if(tt) tt.textContent = nm;
+      var bd = document.getElementById('d1v44svcMenuBody'); if(!bd) return;
+      var leaves = d1leaves(node);
+      bd.innerHTML = '<div class="d1sec" style="padding-top:8px">' + nm + ' · ' + leaves.length + '개 서비스</div>'
+        + leaves.map(function(l){ return '<div class="listrow" data-d1svcpick="'+l+'"><div class="ct"><div class="t">'+l+'</div></div><div class="chev">›</div></div>'; }).join('');
+    }
+    function d1authRoute(skipped){   // 인증 후 목적지 분기: detail=세부화면 / menu=대메뉴 서비스목록 / ready=준비중
+      if(d1authTarget === 'detail'){ d1renderSvcDetail(); d1show('svcdetail', true); }
+      else if(d1authTarget === 'menu'){ d1renderSvcMenu(); d1show('svcmenu', true); }
+      else d1gotoDone(skipped);
+    }
+    function d1authFinish(){   // 인증 완료 → 세션 생략 on + 목적지 이동 + 안내 토스트
+      d1Authed = true; d1authRoute(false);
+      if(typeof window.flash === 'function') window.flash('본인인증 완료 · 이후 서비스는 인증이 생략됩니다');
+    }
+    // ── 계좌 비밀번호 플로팅 키패드 (Ver 1.2 디자인) ──
+    function d1pwStr(){ return '●'.repeat((d1authPw || '').length); }
+    function d1pwRefresh(){ var s = d1pwStr(); ['d1pwDisp','d1v44kpDots'].forEach(function(id){ var d = document.getElementById(id); if(d) d.textContent = s; }); }
+    function d1closeKeypad(){ var el = document.getElementById('d1v44keypad'); if(el){ el.classList.remove('on'); setTimeout(function(){ if(el.parentNode) el.remove(); }, 220); } }
+    function d1openKeypad(ctx){
+      d1kpCtx = ctx || 'auth';
+      d1closeKeypad();
+      var screen = d1.querySelector('.screen'); if(!screen) return;
+      var digits = ['1','2','3','4','5','6','7','8','9'];
+      var acct = D1_ACCTS[d1acctSel] || D1_ACCTS[0];
+      var el = document.createElement('div'); el.className = 'd1v44kp-ov'; el.id = 'd1v44keypad';
+      el.innerHTML = '<div class="d1kp-sheet">'
+        + '<div class="d1kp-grab"></div>'
+        + '<div class="d1kp-title">계좌 비밀번호 입력</div>'
+        + '<div class="d1kp-acct" data-d1kpacct><span class="ka-nm">' + acct.nm + '</span><span class="ka-no">' + acct.no + '</span><span class="ka-chev">계좌 변경</span></div>'
+        + '<div class="d1kp-pw"><span id="d1v44kpDots" class="d1pw-dots" data-ph="계좌 비밀번호 (4~8자리)">' + d1pwStr() + '</span></div>'
+        + '<div class="d1kp-grid">' + digits.map(function(k){ return '<div class="d1kp-key" data-d1kpkey="'+k+'">'+k+'</div>'; }).join('')
+          + '<div class="d1kp-key blank"></div><div class="d1kp-key" data-d1kpkey="0">0</div><div class="d1kp-key back" data-d1kpkey="back">⌫</div></div>'
+        + '<div class="d1kp-actions"><div class="d1kp-cancel" data-d1kpcancel>취소</div><div class="d1kp-done" data-d1kpdone>입력완료</div></div>'
+        + '</div>';
+      screen.appendChild(el);
+      requestAnimationFrame(function(){ el.classList.add('on'); });
+    }
+    // ── 전체메뉴 드로어 (V2.1 형식: 좌 3대메뉴 + 우 중첩 아코디언 · Ver 1.2 디자인) ──
+    var d1menuCat = 'self', d1menuOpen = {};
+    // 셀프서비스 대/중/소메뉴 (메뉴구조도/셀프서비스 메뉴구조도.jpg 1~9번 반영)
+    var D1_SELF = [
+      {t:'1. ID조회 / PW초기화', subs:[
+        {t:'ID조회'}, {t:'PW재설정'}, {t:'ID계좌연결 / 해지'}, {t:'장기미사용 ID 제한해제'}
+      ]},
+      {t:'2. 비대면업무 신청현황', subs:[
+        {t:'비대면 계좌개설'}, {t:'계좌비밀번호 재설정'}, {t:'모바일OTP 발급'}, {t:'출금계좌 등록'},
+        {t:'외화 출금계좌 등록'}, {t:'계좌사고해지'}, {t:'온라인 실명확인'}, {t:'계좌폐쇄 신청'}, {t:'유가증권 대체출고(타명의)'}
+      ]},
+      {t:'3. 계좌잔고 및 거래내역 조회', subs:[
+        {t:'보유잔고조회'}, {t:'예수금조회'}, {t:'체결내역조회'}, {t:'거래내역조회'}
+      ]},
+      {t:'4. 계좌 사고 해지', subs:[
+        {t:'단기간 다수개설계좌 해지'}, {t:'장기미사용계좌 해지'}, {t:'한도제한계좌 해제 (영웅문S# 연동)'}
+      ]},
+      {t:'5. 고객확인등록(CDD/EDD) (영웅문S# 연동)'},
+      {t:'6. 서류발급', subs:[
+        {t:'잔고증명서'}, {t:'거래내역서'}, {t:'은행이체거래내역서'}, {t:'금융소득내역서'}, {t:'레버리지ETP거래확인서'}
+      ]},
+      {t:'7. 신용/대출 만기연장'},
+      {t:'8. 공모주청약', subs:[
+        {t:'청약경쟁률조회'}, {t:'청약신청내역조회'}, {t:'청약취소'}, {t:'청약일정'}
+      ]},
+      {t:'9. 권리업무', subs:[
+        {t:'유상청약', subs:[
+          {t:'유상청약 신청'}, {t:'유상청약예약 신청'}, {t:'유상청약 취소'}, {t:'유상청약신청내역'}
+        ]},
+        {t:'주주반대의사', subs:[
+          {t:'주주반대의사 신청'}, {t:'주주반대의사 신청취소'}, {t:'주주반대의사신청내역'}
+        ]},
+        {t:'주식매수청구', subs:[
+          {t:'주식매수청구 신청'}, {t:'주식매수청구 신청취소'}, {t:'주식매수청구신청내역'}
+        ]},
+        {t:'권리현황'}
+      ]}
+    ];
+    function d1menuTree(items, prefix){
+      return items.map(function(m, i){
+        var path = prefix ? prefix + '_' + i : '' + i;
+        if(m.subs && m.subs.length){
+          var open = !!d1menuOpen[path];
+          var kids = open ? '<div class="d1m-sub">' + d1menuTree(m.subs, path) + '</div>' : '';
+          return '<div class="d1m-node ' + (open ? 'open' : '') + '"><div class="d1m-row nav" data-d1macc="' + path + '"><div class="d1m-t">' + m.t + '</div><div class="d1m-arw"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div></div>' + kids + '</div>';
+        }
+        return '<div class="d1m-row leaf" data-d1mleaf="' + d1stripNum(m.t) + '"><div class="d1m-t">' + m.t + '</div><div class="d1m-arw">›</div></div>';
+      }).join('');
+    }
+    function d1menuData(){ return d1menuCat === 'ars' ? (window.IVR || []) : d1menuCat === 'staff' ? (window.FAV_MENU || []) : D1_SELF; }
+    function d1menuBodyHTML(){
+      var cats = [['self','셀프서비스'],['ars','ARS메뉴'],['staff','상담원연결']];
+      var left = cats.map(function(c){ return '<div class="d1m-cat ' + (c[0] === d1menuCat ? 'on' : '') + '" data-d1mcat="' + c[0] + '">' + c[1] + '</div>'; }).join('');
+      return '<div class="d1menu-left">' + left + '</div><div class="d1menu-right" id="d1v44menuRight">' + d1menuTree(d1menuData(), '') + '</div>';
+    }
+    function d1renderMenu(){ var b = document.getElementById('d1v44menuBody'); if(b) b.innerHTML = d1menuBodyHTML(); }
+    function d1closeMenu(){ var el = document.getElementById('d1v44menu'); if(el){ el.classList.remove('on'); setTimeout(function(){ if(el.parentNode) el.remove(); }, 280); } }
+    function d1openMenu(){
+      d1closeMenu();
+      var screen = d1.querySelector('.screen'); if(!screen) return;
+      var el = document.createElement('div'); el.className = 'd1v44menu-ov'; el.id = 'd1v44menu';
+      el.innerHTML = '<div class="d1menu-panel">'
+        + '<div class="d1menu-head">'
+        + '<div class="d1menu-home" data-d1menuhome title="홈"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></div>'
+        + '<div class="d1menu-title">전체메뉴</div>'
+        + '<div class="d1menu-x" data-d1menuclose title="닫기">✕</div>'
+        + '</div>'
+        + '<div class="d1menu-body" id="d1v44menuBody">' + d1menuBodyHTML() + '</div>'
+        + '</div>';
+      screen.appendChild(el);
+      requestAnimationFrame(function(){ el.classList.add('on'); });
+    }
+    function d1skipOn(){   // 인증 생략 여부: dars1 세션(d1Authed) 또는 좌측 패널 [본인인증 생략] 활성
+      var sk = document.querySelector('#sianList [data-skipauth]');
+      return d1Authed || !!(sk && sk.classList.contains('on'));
+    }
+    function d1startAuth(svc, target){   // 본인인증 시작(생략 상태면 인증 건너뜀). target='detail'(세부화면)|'ready'(준비중)
+      d1authSvc = svc; d1authTarget = target || 'ready'; d1authMethod = ''; d1authOtp = false; d1authPw = ''; d1acctSel = -1;
+      if(d1skipOn()){ d1authRoute(true); } else { d1show('authsel', true); }
+    }
+    d1.addEventListener('click', function(e){
+      if(!e.target.closest) return;
+      // 전체메뉴 열기 (메인 우상단 햄버거)
+      if(e.target.closest('.icon-btn[title="전체메뉴"]')){ d1openMenu(); return; }
+      // 고객센터 현황 탭 → 왼쪽 패널 [본인인증 생략] 토글과 연동 (시연용)
+      var hc = e.target.closest('.topbar .hd-center');
+      if(hc){
+        var sk = document.querySelector('#sianList [data-skipauth]');
+        if(sk){ sk.click(); d1Authed = sk.classList.contains('on'); }   // 좌측 패널 항목 활성/해제 + 세션 동기화
+        else { d1Authed = !d1Authed; if(typeof window.flash==='function') window.flash(d1Authed?'본인인증 절차를 생략합니다. (시연)':'본인인증 생략을 해제했습니다.'); }
+        return; }
+      // 드로어 배경/닫기/홈
+      if(e.target.classList && e.target.classList.contains('d1v44menu-ov')){ d1closeMenu(); return; }
+      if(e.target.closest('[data-d1menuclose]')){ d1closeMenu(); return; }
+      if(e.target.closest('[data-d1menuhome]')){ d1closeMenu(); d1setTab('self'); return; }
+      // 드로어 좌측 대메뉴 전환
+      var mc = e.target.closest('[data-d1mcat]');
+      if(mc){ d1menuCat = mc.getAttribute('data-d1mcat'); d1menuOpen = {}; d1renderMenu(); return; }
+      // 드로어 중첩 아코디언 토글
+      var macc = e.target.closest('[data-d1macc]');
+      if(macc){ var p = macc.getAttribute('data-d1macc'); d1menuOpen[p] = !d1menuOpen[p]; d1renderMenu(); return; }
+      // 드로어 리프: 셀프=본인인증 / 상담원=연결팝업 / ARS=안내
+      var mleaf = e.target.closest('[data-d1mleaf]');
+      if(mleaf){ var lb = mleaf.getAttribute('data-d1mleaf');
+        if(d1menuCat === 'self'){ d1startAuth(lb, 'detail'); }   // 중/소메뉴 → 인증 후 세부화면
+        else if(d1menuCat === 'staff'){ d1closeMenu(); d1openAgent(lb); }
+        else { if(typeof window.flash === 'function') window.flash('음성 ARS · ‘' + lb + '’ 안내 메뉴입니다'); }
+        return; }
+      // 키패드 배경(시트 밖) 탭 → 닫기
+      if(e.target.classList && e.target.classList.contains('d1v44kp-ov')){ d1closeKeypad(); return; }
+      // 셀프서비스 그리드 대메뉴 → 인증 후 (하위 있으면)서비스목록 / (리프면)세부화면
+      var dae = e.target.closest('.d1-pane[data-pane="self"] .cell[data-d1dae]');
+      if(dae){ d1daeIdx = +dae.getAttribute('data-d1dae'); var node = D1_SELF[d1daeIdx];
+        d1startAuth(d1stripNum(node.t), (node.subs && node.subs.length) ? 'menu' : 'detail'); return; }
+      // 대메뉴 서비스목록에서 서비스 선택 → 세부화면 (이미 인증됨)
+      var pick = e.target.closest('[data-d1svcpick]');
+      if(pick){ d1authSvc = pick.getAttribute('data-d1svcpick'); d1renderSvcDetail(); d1show('svcdetail', true); return; }
+      // 인증 방법 선택 (계좌번호 인증은 곧바로 계좌 선택 화면)
+      var m = e.target.closest('[data-d1auth]');
+      if(m){ d1authMethod = m.getAttribute('data-d1auth'); d1authOtp = false; d1authPw = ''; d1acctSel = -1;
+        if(d1authMethod === 'account'){ d1show('authpw', true); } else { d1renderAuthStep(); d1show('authstep', true); } return; }
+      // 휴대폰: 인증요청 → OTP 입력
+      if(e.target.closest('[data-d1otpreq]')){ d1authOtp = true; d1renderAuthStep(); return; }
+      // 휴대폰 OTP 완료 / 간편 인증서 선택 → 계좌 선택 화면(리스트)
+      if(e.target.closest('[data-d1otpdone]') || e.target.closest('[data-d1prov]')){ d1authPw = ''; d1acctSel = -1; d1show('authpw', true); return; }
+      // 계좌 선택 → 선택한 계좌의 비밀번호 입력 키패드 플로팅
+      var acctRow = e.target.closest('[data-d1acct]');
+      if(acctRow){ d1acctSel = +acctRow.getAttribute('data-d1acct'); d1authPw = '';
+        var lst = acctRow.parentNode; if(lst) Array.prototype.forEach.call(lst.querySelectorAll('[data-d1acct]'), function(x){ x.classList.toggle('sel', x === acctRow); });
+        d1openKeypad('auth'); return; }
+      // 키패드 상단 '계좌 변경' → 키패드 닫고 계좌 선택으로
+      if(e.target.closest('[data-d1kpacct]')){ d1closeKeypad(); return; }
+      // 키패드 숫자/삭제
+      var kk = e.target.closest('[data-d1kpkey]');
+      if(kk){ var k = kk.getAttribute('data-d1kpkey'); if(k === 'back') d1authPw = d1authPw.slice(0,-1); else if(d1authPw.length < 8) d1authPw += k; d1pwRefresh(); return; }
+      // 키패드 취소
+      if(e.target.closest('[data-d1kpcancel]')){ d1closeKeypad(); return; }
+      // 키패드 입력완료 → 인증 완료(준비중 안내 + 세션 생략)
+      if(e.target.closest('[data-d1kpdone]')){
+        if((d1authPw || '').length < 4){ if(typeof window.flash === 'function') window.flash('계좌 비밀번호를 4자리 이상 입력해주세요'); return; }
+        d1closeKeypad(); d1authFinish(); return; }
+      // 세부화면 액션 버튼(발급 등) → 안내 토스트
+      var fl = e.target.closest('[data-d1flash]');
+      if(fl){ if(typeof window.flash === 'function') window.flash(fl.getAttribute('data-d1flash')); return; }
+      // 완료 화면 확인 → 메인
+      if(e.target.closest('[data-d1authhome]')){ d1show('main', false); return; }
+    });
+
+    // 외부(왼쪽 패널 탭 클릭)에서 Ver 4.4 메인 뷰로 복귀 — 탭·드릴다운 상태도 초기화
+    window.__darsHome1v44 = function(){ d1arsPath = []; d1staffPath = []; d1setTab('self'); d1show('main', false); };
   }
 
   // 시안3 · 단일 화면 내 뷰 전환 (메인 → 인라인 리스트 항목 → 상세)

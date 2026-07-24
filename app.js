@@ -6098,6 +6098,8 @@ const SCHEME_META = {
       kpi:[['넘버 인덱스','대→중→소 3단 트리'],['최종메뉴','음성ARS 연결 안내'],['0.직원연결','상담원 연결 안내']]},
   dform3:{cap:'Digital Form_v0.1 · 서류제출 엔진 흐름 재현', label:'Digital Form_v0.1 · 서류제출 엔진 흐름 재현 (5단계 상태머신 · 업무 11종)',
       kpi:[['5단계','인증→준비→첨부→제출→완료'],['상태머신','업로드→확인중→확인/보완'],['업무 11종','접수번호 발급']]},
+  dars1v44:{cap:'Ver 4.4 · 인디고 디자인 시스템', label:'Ver 4.4 · oklch 인디고 팔레트 · Pill 탭 · underline 입력 · 바텀시트 모달',
+      kpi:[['인디고','oklch(0.50 0.27 272) 기반'],['Pill 탭','셀프서비스/ARS/상담원'],['바텀시트','모달·팝업 UX']]},
 };
 
 let refFirm = 'kiwoom';   // 참고 탭에서 현재 선택된 증권사 (기본: 키움증권 현행)
@@ -6117,7 +6119,7 @@ function switchScheme(s){
   document.querySelectorAll('#schemeTabs .tab').forEach(t=>t.classList.toggle('active', t.dataset.scheme===s));
   document.querySelectorAll('.flow').forEach(f=>f.classList.toggle('active', f.dataset.scheme===activeFlow));
   // 폰 스테이지(시안1·참고) ↔ 시안2/3 덱 전환
-  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2' || activeFlow==='dform3' || activeFlow==='dform4');
+  const isDarsView = (activeFlow==='dars1' || activeFlow==='dars2' || activeFlow==='dform' || activeFlow==='dform2' || activeFlow==='dform3' || activeFlow==='dform4' || activeFlow==='dars1v44');
   const mainStage = document.getElementById('mainStage');
   if(mainStage) mainStage.style.display = isDarsView ? 'none' : '';
   document.querySelectorAll('.dars-deck').forEach(d=>d.classList.toggle('active', d.dataset.scheme===activeFlow));
@@ -6169,6 +6171,7 @@ const DEFAULT_SCENARIO = {
   v42: '안녕하세요, 키움증권입니다.\n무엇을 도와드릴까요? 원하시는 메뉴를 선택해 주세요.',
   dars1: '[Ver 3.0 · 밝은 버전 디자인]\n안녕하세요, 키움증권입니다.\n이용하실 서비스를 선택해 주세요.',
   dars2: '[Ver 1.2.1 · 큰 카드 + 인라인]\n안녕하세요, 키움증권입니다.\n큰 카드를 누르면 그 자리에서 바로 펼쳐지는 메뉴를 이용하세요.',
+  dars1v44: '[Ver 4.4 · 인디고 디자인]\n안녕하세요, 키움증권입니다.\n원하시는 서비스를 선택해 주세요.',
 };
 /* 버전 탭 설명(rf-tel) 소스 기본값 — 사이드바에서 편집한 멀티라인 설명을 소스에 고정(모든 접속자 동일 표시) */
 const DEFAULT_TAB_LABELS = {
@@ -6245,6 +6248,7 @@ function selectSian(v, ver){
   else if(v==='dform2'){ if(window.__dform2Home) window.__dform2Home(); }
   else if(v==='dform3'){ if(window.__dform3Home) window.__dform3Home(); }
   else if(v==='dform4'){ if(window.__dform4Home) window.__dform4Home(); }
+  else if(v==='dars1v44'){ if(window.__darsHome1v44) window.__darsHome1v44(); }
   switchScheme('sian');
 }
 (function(){
